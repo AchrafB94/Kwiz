@@ -5,7 +5,7 @@ import TopUsersBySubject from "../cards/TopUsersBySubject";
 import TopSchoolsBySubject from "../cards/TopSchoolsBySubject";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProgressBar } from "react-bootstrap";
-
+import jwt_decode from 'jwt-decode'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
@@ -15,7 +15,7 @@ import {
 } from "../redux/actions/quizActions";
 
 import "./Quiz.css";
-import QuizList from "./QuizList";
+import QuizSuggestions from "./QuizSuggestions";
 
 class Quiz extends React.Component {
   constructor(props) {
@@ -32,6 +32,9 @@ class Quiz extends React.Component {
   componentWillMount() {
     const { id } = this.props.match.params;
     this.props.getQuiz(id);
+    
+    
+    
 
 
 
@@ -39,6 +42,7 @@ class Quiz extends React.Component {
 
 
   begin() {
+    
     this.setState({ currentQuestion: this.state.currentQuestion + 1 });
     this.startTimer();
   }
@@ -86,9 +90,11 @@ class Quiz extends React.Component {
     const score = Math.round(percentage * 100 / time);
     const medal = "none";
 
+    const decoded = jwt_decode(localStorage.usertoken)
+    const UserId = decoded.id
     const scoreData = {
       quizId: this.props.quiz.id,
-      userId: "user",
+      userId: UserId,
       schoolId: 1,
       levelId: this.props.quiz.levelId,
       subjectId: this.props.quiz.subjectId,
@@ -177,8 +183,6 @@ class Quiz extends React.Component {
     clearInterval(this.timer);
   }
 
-
-
   render() {
     const quiz = this.props.quiz;
 
@@ -254,7 +258,7 @@ class Quiz extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-9 mt-2">
+        <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-2">
           <div className="jumbotron">
      
      
@@ -284,12 +288,12 @@ class Quiz extends React.Component {
           </div>
 
           <div>
-            <h4>Liste des autres Quizz en {subject.id}:</h4>
-                        <QuizList link={subject.link}  filterId={quiz.id} />
+            <h4>Liste des autres Quizz en {subject.name}:</h4>
+                        <QuizSuggestions subjectLink={subject.link}  currentId={quiz.id} />
           </div>
         </div>
 
-        <div className="col-3 mt-2 ">
+        <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12 mt-2 ">
           <div className="mb-2">
             <Lots />
           </div>
@@ -305,6 +309,8 @@ class Quiz extends React.Component {
     );
   }
 }
+
+
 
 Quiz.propTypes = {
   quiz: PropTypes.object.isRequired,

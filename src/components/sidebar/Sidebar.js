@@ -2,7 +2,7 @@ import React from 'react';
 import SideBarLink from './SideBarLink';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getMatieres } from "../redux/actions/quizActions";
+import { getSubjects } from "../redux/actions/quizActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Link} from 'react-router-dom';
 import './Sidebar.css';
@@ -10,12 +10,12 @@ import './Sidebar.css';
 class Sidebar extends React.Component {
 
     componentDidMount() {
-        this.props.getMatieres();
+        this.props.getSubjects();
       }
     
 
-    mapMatieres() {
-        return this.props.matieres.map((m,i) => {
+    mapSubjects() {
+        return this.props.subjects.map((m,i) => {
             return (
               <SideBarLink
                 key={i}
@@ -31,7 +31,7 @@ class Sidebar extends React.Component {
         return (<div className="bg-light border-right" id="sidebar-wrapper">
         <div className="sidebar-heading">KWIZ LOGO </div>
         <div className="list-group list-group-flush">
-        {this.mapMatieres()}
+        {this.mapSubjects()}
         </div>
         
         <div className="list-group list-group-flush">
@@ -43,19 +43,19 @@ class Sidebar extends React.Component {
 
 
 Sidebar.propTypes = {
-    matieres: PropTypes.array.isRequired,
-    getMatieres: PropTypes.func.isRequired
+    subjects: PropTypes.array.isRequired,
+    getSubjects: PropTypes.func.isRequired
   };
   
 
 
 
   const mapStateToProps = state => ({
-    matieres: state.quiz.matieres
+    subjects: state.quiz.subjects
   });
   
   export default connect(
     mapStateToProps,
-    { getMatieres }
+    { getSubjects }
   )(Sidebar);
   

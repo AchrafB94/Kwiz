@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, withRouter } from 'react-router-dom'
 import Alert from './Alert'
 import jwt_decode from 'jwt-decode'
+import {Navbar, Nav} from 'react-bootstrap'
 
 class Header extends React.Component{
  
@@ -71,44 +72,16 @@ Username() {
 
         return(
 <div>
-          <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-          <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">
-              <FontAwesomeIcon icon="home" size="lg"/> Accueil <span className="sr-only">(current)</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link disabled" to="/stats">
-              <FontAwesomeIcon icon="list-ol" size="lg"/> Statistiques <span className="sr-only">(current)</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link disabled" to="/about">
-              <FontAwesomeIcon icon="info-circle" size="lg"/> Informations <span className="sr-only">(current)</span>
-              </Link>
-            </li>
-          </ul>
-
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-
-          <div
-            className="collapse navbar-collapse"
-            id="navbarSupportedContent"
-          >
-            {localStorage.usertoken ? userLink : loginRegLink}
-          </div>
-        </nav>
+<Navbar bg="light" expand="lg" className="border-bottom">
+  <Navbar.Toggle aria-controls="basic-navbar-nav" />
+  <Navbar.Collapse id="basic-navbar-nav">
+    <Nav className="mr-auto">
+      <Link to="/" className="nav-link"><FontAwesomeIcon icon="home" size="lg"/> Accueil <span className="sr-only">(current)</span></Link>
+      <Link to="/stats" className="nav-link"><FontAwesomeIcon icon="list-ol" size="lg"/> Statistiques <span className="sr-only">(current)</span></Link>
+    </Nav>
+    {localStorage.usertoken ? userLink : loginRegLink}
+  </Navbar.Collapse>
+</Navbar>
           {this.state.showAlert ? <Alert /> : ''}
 </div>
 

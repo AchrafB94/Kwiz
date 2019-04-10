@@ -1,8 +1,9 @@
 import React from "react";
-import QuizList from "../quiz/QuizList";
 import TopEtablissement from "../cards/TopSchools";
+import QuizBySubject from "../quiz/QuizBySubject";
+import UserCard from "../cards/UsersCard";
 
-
+import {Link} from 'react-router-dom'
 
 class Home extends React.Component {
   render() {
@@ -10,31 +11,19 @@ class Home extends React.Component {
       <div>
       <div className="row flex-xl-nowrap">
 
-            <div className="col-9 mt-4">
+            <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-4">
 
-              <QuizList link={this.props.match.params.subject_link} />
+              <QuizBySubject subjectLink={this.props.match.params.subject_link} />
             </div>
 
-            <div className="col-3">
+            <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12">
               <br />
               <TopEtablissement />
               <br />
-              <div className="card">
-                <div className="card-header">
-                  <small className="text-muted">
-                    Nouveau Membre: <b>User</b>
-                  </small>
-                </div>
-                <div className="card-footer">
-                  <small className="text-muted">
-                    <b>5</b> utilisateurs connectés - <b>35</b> utilisatuers
-                    inscrits
-                  </small>
-                </div>
-              </div>
+              <UserCard />
               <br />
-              <div><button type="button" className="btn btn-info btn-block">Toutes les Statistiques</button></div>
-            </div>
+              <Link to="/stats" type="button" className="btn btn-info btn-block">Toutes les Statistiques</Link></div>
+   
            
           </div>
           </div>

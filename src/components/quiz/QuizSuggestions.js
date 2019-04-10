@@ -13,11 +13,10 @@ import geographie from "../../images/7.png";
 import anglais from "../../images/8.png";
 import informatique from "../../images/9.png";
 import chimie from "../../images/10.png";
-import { Link } from "react-router-dom";
 
 class QuizList extends React.Component {
   componentWillMount() {
-   this.props.getQuizzes();
+    this.props.getQuizzes();
   }
 
   showImage(param) {
@@ -53,7 +52,7 @@ class QuizList extends React.Component {
         <div className="card ">
           <div className="row no-gutters">
             <div className="col-auto">
-              <Link to={"/quiz/" + quiz.id}>
+              <a href={"/quiz/" + quiz.id}>
                 <img
                   src={this.showImage(quiz.subject.id)}
                   className="img-fluid"
@@ -61,24 +60,24 @@ class QuizList extends React.Component {
                   height="60"
                   width="60"
                 />
-              </Link>
+              </a>
             </div>
 
             <div className="col">
               <div className="card-block">
                 <h5>
                   {" "}
-                  <Link to={"/quiz/" + quiz.id}>
+                  <a href={"/quiz/" + quiz.id}>
                     <span className="badge badge-info">
                       {quiz.subject.name}
                     </span>
-                  </Link>{" "}
-                  <Link to={"/quiz" + quiz.id}>
+                  </a>{" "}
+                  <a href={"/quiz" + quiz.id}>
                     <span className="badge badge-secondary">
                       Niveau {quiz.level.name}
                     </span>
-                  </Link>{" "}
-                  <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
+                  </a>{" "}
+                  <a href={"/quiz/" + quiz.id}>{quiz.name}</a>
                 </h5>
                 <small className="text-muted">
                   Ajouté par <b>Mr. Contributeur</b> le {quiz.created}
@@ -92,16 +91,11 @@ class QuizList extends React.Component {
   }
 
   render() {
-      return (
-        <div>
-          <h5>
-            {this.props.quizzes.length} nouveaux challenges sont disponibles!{" "}
-          </h5>
-          {this.props.quizzes.map(quiz => this.quizCard(quiz))}
-        </div>
-      );
+    const quizSuggestions = this.props.quizzes.filter(quiz => quiz.subject.link === this.props.subjectLink &&  quiz.id !== this.props.currentId);
+        return (quizSuggestions.map(quiz => this.quizCard(quiz)))
+    } 
   }
-}
+
 
 QuizList.propTypes = {
   quizzes: PropTypes.array.isRequired,

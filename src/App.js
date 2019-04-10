@@ -3,7 +3,7 @@ import Loadable from "react-loadable";
 import Header from "./components/header/Header";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
-import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
+import { Switch, BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Sidebar from "./components/sidebar/Sidebar";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -13,6 +13,8 @@ import Profile from './components/profile/Profile';
 import Footer from "./components/footer/Footer";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {faCheck, faIgloo, faUser, faComments, faClipboardList, faListOl, faHome, faInfoCircle, faStopwatch, faTimes, faCircle, faSignInAlt, faSignOutAlt, faCog } from '@fortawesome/free-solid-svg-icons'
+import Stats from "./components/pages/Stats";
+
 
 library.add(faIgloo);
 library.add(faHome);
@@ -57,23 +59,25 @@ const Subject = Loadable({
 
 class App extends Component {
 
-  
   render() {
     return (
       <Provider store={store}>
         <Router>
           <div className="App">
             <div className="d-flex">
-              <Sidebar />
+            
+            <Sidebar />
+            
             
 
             <div id="page-content-wrapper">
-              <Header />
+            <Header />
+           
 
               <div className="container-fluid">
                 <Switch>
                 <Route exact path="/" component={Home} />
-                <Route
+                <PrivateRoute
                   exact
                   path="/quiz/:id"
                   component={Quiz}
@@ -81,12 +85,16 @@ class App extends Component {
                 <Route exact path="/matieres/:subject_link" component={Subject} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
-                <Route exact path="/profile" component={Profile} />
+                <Route exact path="/stats" component={Stats} />
+                
+                <PrivateRoute path="/profile" component={Profile} />
+
                 <Route component={NotFound} />
               </Switch>
+              
+              <Footer />
             
               </div>
-              <Footer />
              
             </div>
             
@@ -100,4 +108,25 @@ class App extends Component {
   }
 }
 
-export default App;
+
+function PrivateRoute({ component: Component, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        localStorage.usertoken ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+export default App

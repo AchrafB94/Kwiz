@@ -2,8 +2,11 @@ import React from "react";
 import QuizList from "../quiz/QuizList";
 import TopThree from "../cards/TopThree";
 import TopEtablissement from "../cards/TopSchools";
+import UserCard from "../cards/UsersCard";
 
+import {Link} from 'react-router-dom'
 
+import './Home.css'
 
 class Home extends React.Component {
   render() {
@@ -11,33 +14,21 @@ class Home extends React.Component {
       <div>
       <div className="row flex-xl-nowrap mt-4">
 
-            <div className="col-9">
-            <div style={{height:500, overflowY: 'scroll'}} >
+            <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12">
+            <div id="quizlist">
               <QuizList link={this.props.match.params.subject_link} />
               </div>
               <br />
               <TopThree />
             </div>
 
-            <div className="col-3">
+            <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12">
               <br />
               <TopEtablissement />
               <br />
-              <div className="card">
-                <div className="card-header">
-                  <small className="text-muted">
-                    Nouveau Membre: <b>User</b>
-                  </small>
-                </div>
-                <div className="card-footer">
-                  <small className="text-muted">
-                    <b>5</b> utilisateurs connectés - <b>35</b> utilisatuers
-                    inscrits
-                  </small>
-                </div>
-              </div>
+              <UserCard />
               <br />
-              <div><button type="button" className="btn btn-info btn-block">Toutes les Statistiques</button></div>
+              <div><Link to="/stats" type="button" className="btn btn-info btn-block">Toutes les Statistiques</Link></div>
             </div>
            
           </div>

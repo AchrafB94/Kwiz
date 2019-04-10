@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 
 class QuizList extends React.Component {
   componentWillMount() {
-   this.props.getQuizzes();
+    this.props.getQuizzes();
   }
 
   showImage(param) {
@@ -68,7 +68,7 @@ class QuizList extends React.Component {
               <div className="card-block">
                 <h5>
                   {" "}
-                  <Link to={"/quiz/" + quiz.id}>
+                  <Link to={"/quiz/"+quiz.id}>
                     <span className="badge badge-info">
                       {quiz.subject.name}
                     </span>
@@ -92,16 +92,11 @@ class QuizList extends React.Component {
   }
 
   render() {
-      return (
-        <div>
-          <h5>
-            {this.props.quizzes.length} nouveaux challenges sont disponibles!{" "}
-          </h5>
-          {this.props.quizzes.map(quiz => this.quizCard(quiz))}
-        </div>
-      );
-  }
-}
+      const quizzesBySubject = this.props.quizzes.filter(quiz => quiz.subject.link === this.props.subjectLink)
+       return( quizzesBySubject.map(quiz => this.quizCard(quiz)))
+      }
+    }
+
 
 QuizList.propTypes = {
   quizzes: PropTypes.array.isRequired,

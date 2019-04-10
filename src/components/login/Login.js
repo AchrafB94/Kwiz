@@ -1,6 +1,5 @@
 import React from 'react';
-import './Login.css';
-import { login } from '../user/UserFunctions'
+import { login } from '../Functions'
 
 
 class Login extends React.Component{
@@ -31,6 +30,8 @@ class Login extends React.Component{
             if (res) {
                 this.props.history.push(`/profile`)
             }
+        }).catch(err => {
+            console.log(err)
         })
     }
 
