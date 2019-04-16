@@ -119,11 +119,12 @@ class Quiz extends React.Component {
               </div>
 
               <div className="card-body popup">
+            
                 <ProgressBar
+                animated
                   variant="info"
                   now={percentage}
-                  
-                  label={`Pourcentage: ${percentage}%`}
+                  label={`${percentage}%`}
                 />
                 <hr />
                 <p className="card-text">
@@ -245,7 +246,7 @@ class Quiz extends React.Component {
               >
                 {this.state.currentQuestion ===
                 questions.length
-                  ? "Terminer le quiz >"
+                  ? "Voir les resultats >"
                   : "Suivant >"}
               </button>
             </div>
@@ -260,11 +261,7 @@ class Quiz extends React.Component {
       <div className="row">
         <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-2">
           <div className="jumbotron">
-     
-     
-
             <h1 className="display-6">
-
               <span className="badge badge-info">
               {subject.name}</span>{" "}
               <span className="badge badge-secondary">
@@ -275,10 +272,11 @@ class Quiz extends React.Component {
             { }
             <p className="lead">
               Ce quiz contient <b>{questions.length} questions</b> et
-              a été pris <b>{quiz.times} fois</b>, aucune médaille
+              a été pris <b>{quiz.played} fois</b>, aucune médaille
               n'a encore été donnée. Cela pourrait être votre chance de gagner{" "}
               <b>une médaille d'or!</b>{" "}
             </p>
+            <p className="lead">{quiz.description}</p>
 
             {this.state.currentQuestion === 0 ? (
               quizStart
@@ -288,8 +286,8 @@ class Quiz extends React.Component {
           </div>
 
           <div>
-            <h4>Liste des autres Quizz en {subject.name}:</h4>
-                        <QuizSuggestions subjectLink={subject.link}  currentId={quiz.id} />
+            <h4>Autres quizz en {subject.name}:</h4>
+                        <QuizSuggestions subjectId={subject.id}  currentId={quiz.id} />
           </div>
         </div>
 
@@ -297,12 +295,10 @@ class Quiz extends React.Component {
           <div className="mb-2">
             <Lots />
           </div>
-          <div className="mb-2">
-            <TopUsersBySubject matiere={subject.name} />
-          </div>
-          <div className="mb-2">
-            <TopSchoolsBySubject matiere={subject.name} />
-          </div>
+          
+          <TopUsersBySubject limit="5" subjectId={subject.id} name={subject.name} />
+              <TopSchoolsBySubject limit="5" subjectId={subject.id} name={subject.name}/>
+
           <div><button type="button" className="btn btn-info btn-block">Toutes les Statistiques</button></div>
         </div>
       </div>

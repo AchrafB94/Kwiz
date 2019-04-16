@@ -1,7 +1,8 @@
 import React from "react";
 import QuizList from "../quiz/QuizList";
-import TopThree from "../cards/TopThree";
-import TopEtablissement from "../cards/TopSchools";
+import LastThree from "../cards/LastThree";
+import TopSchools from "../cards/TopSchools";
+import TopUsers from "../cards/TopUsers";
 import UserCard from "../cards/UsersCard";
 
 import {Link} from 'react-router-dom'
@@ -14,20 +15,18 @@ class Home extends React.Component {
       <div>
       <div className="row flex-xl-nowrap mt-4">
 
-            <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12">
-            <div id="quizlist">
+            <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 ">
+            <div>
               <QuizList link={this.props.match.params.subject_link} />
               </div>
               <br />
-              <TopThree />
+              <LastThree />
             </div>
 
             <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12">
-              <br />
-              <TopEtablissement />
-              <br />
+              <TopUsers limit="5" />
+              <TopSchools limit="5" />
               <UserCard />
-              <br />
               <div><Link to="/stats" type="button" className="btn btn-info btn-block">Toutes les Statistiques</Link></div>
             </div>
            

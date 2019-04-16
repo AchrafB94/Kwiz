@@ -1,6 +1,6 @@
 import React from 'react';
 import { login } from '../Functions'
-
+import { Link } from 'react-router-dom'
 
 class Login extends React.Component{
     constructor() {
@@ -70,8 +70,8 @@ class Login extends React.Component{
                             Connectez-vous
                         </button>
                         <div className="form-group">
-                            <a href="/oublie" className="ForgetPwd">Mot de passe oublié?</a>{" - "} 
-                            <a href="/register" className="ForgetPwd">Vous n'avez pas un compte encore?</a>
+                            <Link to="/oublie">Mot de passe oublié?</Link>{" - "} 
+                            <Link to="/register">Vous n'avez pas un compte encore?</Link>
                         </div>
 
                     </form>

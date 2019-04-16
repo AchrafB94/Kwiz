@@ -7,14 +7,16 @@ import { Switch, BrowserRouter as Router, Route, Redirect } from "react-router-d
 import Sidebar from "./components/sidebar/Sidebar";
 import { Provider } from "react-redux";
 import store from "./store";
-import NotFound from './components/pages/NotFound';
+import NotFound from './components/NotFound';
 import Profile from './components/profile/Profile';
 
 import Footer from "./components/footer/Footer";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {faCheck, faIgloo, faUser, faComments, faClipboardList, faListOl, faHome, faInfoCircle, faStopwatch, faTimes, faCircle, faSignInAlt, faSignOutAlt, faCog } from '@fortawesome/free-solid-svg-icons'
-import Stats from "./components/pages/Stats";
+import {faCheck, faIgloo, faBook, faBell, faQuestionCircle,faSchool, faUser, faPlus, faComments, faClipboardList, faListOl, faHome, faInfoCircle, faStopwatch, faTimes, faCircle, faSignInAlt, faSignOutAlt, faCog } from '@fortawesome/free-solid-svg-icons'
 
+import './bootstrap.min.css'
+import ProfileModify from "./components/profile/ProfileModify";
+import Settings from "./components/settings/Settings";
 
 library.add(faIgloo);
 library.add(faHome);
@@ -31,6 +33,11 @@ library.add(faTimes);
 library.add(faSignInAlt);
 library.add(faSignOutAlt);
 library.add(faCog);
+library.add(faPlus)
+library.add(faBook)
+library.add(faQuestionCircle)
+library.add(faSchool)
+library.add(faBell)
 
 function LoadingComponent() {
   return (
@@ -48,12 +55,17 @@ const Quiz = Loadable({
 });
 
 const Home = Loadable({
-  loader: () => import("./components/pages/Home"),
+  loader: () => import("./components/home/Home"),
   loading: LoadingComponent
 });
 
 const Subject = Loadable({
-  loader: () => import("./components/pages/Subject"),
+  loader: () => import("./components/subject/Subject"),
+  loading: LoadingComponent
+});
+
+const Stats = Loadable({
+  loader: () => import("./components/stats/Stats"),
   loading: LoadingComponent
 });
 
@@ -64,14 +76,15 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
+          <Header />
             <div className="d-flex">
             
             <Sidebar />
-            
-            
 
             <div id="page-content-wrapper">
-            <Header />
+           
+            
+            
            
 
               <div className="container-fluid">
@@ -82,24 +95,26 @@ class App extends Component {
                   path="/quiz/:id"
                   component={Quiz}
                 />
-                <Route exact path="/matieres/:subject_link" component={Subject} />
+                <Route exact path="/subject/:subjectId" component={Subject} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/stats" component={Stats} />
-                
+
+                <PrivateRoute path="/settings" component={Settings} />
+                <PrivateRoute path="/profilemodify" component={ProfileModify} />
                 <PrivateRoute path="/profile" component={Profile} />
 
                 <Route component={NotFound} />
               </Switch>
               
-              <Footer />
+             
             
               </div>
              
+            <Footer />
             </div>
             
             </div>
-            
            
           </div>
         </Router>

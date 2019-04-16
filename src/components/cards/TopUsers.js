@@ -2,27 +2,27 @@ import React from 'react';
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUsersBySubject } from "../redux/actions/scoreActions";
+import { getUsersThisWeek } from "../redux/actions/scoreActions";
 
-class TopSchools extends React.Component {
+class TopUsers extends React.Component {
 
 
   componentWillMount() {
-    this.props.getUsersBySubject(this.props.subjectId)
+    this.props.getUsersThisWeek()
   }
 
 
   render() {
 
-    const top = this.props.usersBySubject.slice(0,this.props.limit)
+    const top = this.props.popularUsers.slice(0,this.props.limit-1)
 
   
     return(
       <div class="card bg-light mb-3">
       <div class="card-body">
-        <h5 class="card-title">Top {this.props.limit} etablissments en {this.props.name}</h5>
+        <h4 class="card-title">Top {this.props.limit} élèves cette semaine</h4>
         <p class="card-text">
-        <table class="table table-striped">
+        <table class="table table-striped table-borderless">
 
   <tbody>
     {top.map((score,index) => {return <tr>
@@ -41,17 +41,17 @@ class TopSchools extends React.Component {
 
   }}
 
-  TopSchools.propTypes = {
-    usersBySubject: PropTypes.array.isRequired,
-    getUsersBySubject: PropTypes.func.isRequired
+  TopUsers.propTypes = {
+    popularUsers: PropTypes.array.isRequired,
+    getUsersThisWeek: PropTypes.func.isRequired
   };
   
   const mapStateToProps = state => ({
-    usersBySubject: state.score.usersBySubject
+    popularUsers: state.score.popularUsers
   });
   
   export default connect(
     mapStateToProps,
-    { getUsersBySubject }
-  )(TopSchools);
+    { getUsersThisWeek }
+  )(TopUsers);
   

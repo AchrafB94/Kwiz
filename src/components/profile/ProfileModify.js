@@ -1,27 +1,25 @@
 import React from "react";
-import { register } from "../Functions";
 
-class Register extends React.Component {
+import jwt_decode from "jwt-decode";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getUser, updateUser } from "../redux/actions/userActions";
+
+class ProfileModify extends React.Component {
   constructor() {
     super();
     this.state = {
+      id: null,
       firstname: "",
       lastname: "",
-      email: "",
-      password: "",
-      passwordconfirm: "",
       birthdate: "",
       phone: "",
-      levelId: 4,
-      schoolId: 1,
-      class: "",
+      levelId: null,
       district: "",
       city: "",
       province: "",
       image: "",
-      gender: "",
-
-      showPasswordAlert: false
+      gender: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -29,9 +27,43 @@ class Register extends React.Component {
     this.handleOptionChange = this.handleOptionChange.bind(this);
   }
 
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+  componentDidMount() {
+    const token = localStorage.usertoken;
+    const decoded = jwt_decode(token);
+    const userId = decoded.id;
+    this.props.getUser(userId);
+    this.setState({
+      gender: this.props.user.gender,
+      id: userId
+    });
   }
+
+  componentWillReceiveProps(nextProps, nextState) {
+    const {
+      firstname,
+      lastname,
+      birthdate,
+      district,
+      city,
+      province,
+      levelId,
+      phone,
+      gender
+    } = nextProps.user;
+    this.setState({
+      firstname,
+      lastname,
+      birthdate,
+      district,
+      city,
+      province,
+      levelId,
+      phone,
+      gender
+    });
+  }
+
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   handleOptionChange(changeEvent) {
     this.setState({
@@ -42,63 +74,71 @@ class Register extends React.Component {
   onSubmit(e) {
     e.preventDefault();
 
-    if (this.state.password === this.state.passwordconfirm) {
-      const user = {
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        email: this.state.email,
-        password: this.state.password,
-        birthdate: this.state.birthdate,
-        phone: this.state.phone,
-        levelId: this.state.levelId,
-        schoolId: this.state.schoolId,
-        class: this.state.class,
-        district: this.state.district,
-        city: this.state.city,
-        province: this.state.province,
-        image: this.state.image,
-        gender: this.state.gender
-      };
+    const {
+      id,
+      firstname,
+      lastname,
+      birthdate,
+      district,
+      city,
+      province,
+      levelId,
+      phone
+    } = this.state;
 
-      register(user).then(res => {
-        this.props.history.push(`/login`);
-      });
-    } else {
-      this.setState({
-        showPasswordAlert: true,
-        password: "",
-        passwordconfirm: ""
-      });
-    }
+    const updUser = {
+      id,
+      firstname,
+      lastname,
+      birthdate,
+      district,
+      city,
+      province,
+      levelId,
+      phone
+    };
+    
+  this.props.updateUser(updUser);
+
+  // Clear State
+  this.setState({
+      id: null,
+      firstname: "",
+      lastname: "",
+      birthdate: "",
+      phone: "",
+      levelId: null,
+      district: "",
+      city: "",
+      province: "",
+      image: "",
+      gender: ""
+  });
+
+  this.props.history.push('/');
   }
 
+  
+
   render() {
-    const passwordAlert = (
-      <div>
-        {" "}
-        <br />
-        <div
-          className="container alert alert-info alert-dismissible"
-          role="alert"
-        >
-          Oups, ces mots de passe ne correspondent pas.
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </div>
-    );
+    const {
+      firstname,
+      lastname,
+      birthdate,
+      district,
+      city,
+      province,
+      levelId,
+      phone,
+    } = this.state;
 
     return (
       <div className="container">
         <div className="col-md-8 mt-5 mx-auto">
           <form onSubmit={this.onSubmit}>
-            <h1 className="h3 mb-3 font-weight-normal">Inscription à KWIZ</h1>
+            <h1 className="h3 mb-3 font-weight-normal">
+              Modifier votre profile
+            </h1>
             <div className="form-group row">
               <div className="form-group col-6">
                 <label htmlFor="firstname">Prénom</label>
@@ -107,6 +147,7 @@ class Register extends React.Component {
                   className="form-control"
                   name="firstname"
                   placeholder="Votre prénom"
+                  value={firstname}
                   onChange={this.onChange}
                   required
                 />
@@ -118,23 +159,13 @@ class Register extends React.Component {
                   className="form-control"
                   name="lastname"
                   placeholder="Votre nom"
+                  value={lastname}
                   onChange={this.onChange}
                   required
                 />
               </div>
             </div>
             <div className="form-group row">
-              <div className="form-group col-8 ">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  placeholder="Votre Email"
-                  onChange={this.onChange}
-                  required
-                />
-              </div>
               <div className="form-group col-4">
                 <label htmlFor="birthdate">Date de naissance</label>
                 <input
@@ -142,42 +173,25 @@ class Register extends React.Component {
                   className="form-control"
                   name="birthdate"
                   onChange={this.onChange}
+                  value={birthdate}
                   required
                 />
               </div>
-            </div>
-            <div className="row">
-              {this.state.showPasswordAlert ? passwordAlert : ""}
-              <div className="form-group col-6">
-                <label htmlFor="password">Mot de passe</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  minLength="8"
-                  name="password"
-                  placeholder="Votre mot de passe"
-                  onChange={this.onChange}
-                  required
-                />
-
-                <small id="fileHelp" class="form-text text-muted">
-                  Minimum 8 caractéres.
-                </small>
-              </div>
-
-              <div className="form-group col-6">
-                <label htmlFor="passwordconfirm">
-                  Confirmez le mot de passe
+              <div className="form-group  col-3">
+                <label htmlFor="levelId">
+                  Niveau
+                  <select
+                    className="form-control"
+                    name="levelId"
+                    defaultValue={levelId}
+                    onChange={this.onChange}
+                  >
+                    <option value="1">Primaire</option>
+                    <option value="2">Secondaire</option>
+                    <option value="3">Universitaire</option>
+                    <option value="4">Tout Publique</option>
+                  </select>
                 </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="passwordconfirm"
-                  minLength="8"
-                  placeholder="Confirmez votre mot de passe"
-                  onChange={this.onChange}
-                  required
-                />
               </div>
             </div>
 
@@ -221,6 +235,7 @@ class Register extends React.Component {
                   type="tel"
                   className="form-control"
                   name="phone"
+                  value={phone}
                   onChange={this.onChange}
                 />
               </div>
@@ -231,6 +246,7 @@ class Register extends React.Component {
                   type="text"
                   className="form-control"
                   name="district"
+                  value={district}
                   onChange={this.onChange}
                 />
               </div>
@@ -240,6 +256,7 @@ class Register extends React.Component {
                   type="text"
                   className="form-control"
                   name="city"
+                  value={city}
                   onChange={this.onChange}
                 />
               </div>
@@ -249,49 +266,13 @@ class Register extends React.Component {
                   type="text"
                   className="form-control"
                   name="province"
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="form-group  col-3">
-                <label htmlFor="levelId">
-                  Niveau
-                  <select
-                    className="form-control"
-                    name="levelId"
-                    defaultValue={this.state.levelId}
-                    onChange={this.onChange}
-                  >
-                    <option value="1">Primaire</option>
-                    <option value="2">Secondaire</option>
-                    <option value="3">Universitaire</option>
-                    <option value="4">Tout Publique</option>
-                  </select>
-                </label>
-              </div>
-              <div className="form-group  col-7">
-                <label htmlFor="schoolId">Etablissement</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="schoolId"
-                  onChange={this.onSchoolChange}
-                />
-              </div>
-
-              <div className="form-group  col-2">
-                <label htmlFor="class">Classe</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="class"
+                  value={province}
                   onChange={this.onChange}
                 />
               </div>
             </div>
             <div class="form-group">
-              <label for="image">Photo de profile</label>
+              <label for="image">Changez votre photo de profile</label>
               <input
                 type="file"
                 class="form-control-file"
@@ -306,7 +287,7 @@ class Register extends React.Component {
             </div>
 
             <button type="submit" className="btn btn-lg btn-info btn-block">
-              S'incrire
+              Enregistrez
             </button>
           </form>
         </div>
@@ -315,4 +296,16 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+ProfileModify.propTypes = {
+  user: PropTypes.array.isRequired,
+  getUser: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  user: state.user.user
+});
+
+export default connect(
+  mapStateToProps,
+  { getUser, updateUser }
+)(ProfileModify);

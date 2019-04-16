@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
 
 function SideBarLink({ label, to, activeOnlyWhenExact }) {
     return (
@@ -7,12 +7,12 @@ function SideBarLink({ label, to, activeOnlyWhenExact }) {
         path={to}
         exact={activeOnlyWhenExact}
         children={({ match }) => (
-          <div id={match ? "current" : ""}>
-          <Link to={to}  className="list-group-item list-group-item-action bg-light">{label}</Link>
+          <div className={match ? "current" : ""}>
+          <a href={to}  className="list-group-item list-group-item-action">{label}</a>
           </div>
         )}
       />
     );
   }
 
-  export default SideBarLink;
+export default SideBarLink;

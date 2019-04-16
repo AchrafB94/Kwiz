@@ -24,7 +24,6 @@ class Question extends React.Component {
           return (
             <div key={answer.id} className="form-check">
 
-
 <label>
 						<input type="radio" name={this.props.data.id} value={answer.isCorrect} onChange={this.handleChange.bind(this)}/> <span className="label-text">{answer.text}</span>
 					</label>

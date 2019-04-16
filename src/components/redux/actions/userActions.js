@@ -1,9 +1,26 @@
 import {
     USERS_COUNT,
-    NEWEST_USER
+    NEWEST_USER,
+    GET_USER,
+    UPDATE_USER
   } from "./types";
   import axios from "axios";
   
+  export const getUser = (id) => async dispatch => {
+    const result = await axios.get(`http://localhost:4000/users/${id}`);
+    dispatch({
+      type: GET_USER,
+      payload: result.data
+    });
+  };
+
+  export const updateUser = (user) => async dispatch => {
+    const result = await axios.put(`http://localhost:4000/users/${user.id}`,user);
+    dispatch ({
+        type: UPDATE_USER,
+        payload: result.data
+    })
+}
   
   export const getNewestUser = () => async dispatch => {
     const result = await axios.get(`http://localhost:4000/users/newest`);
@@ -21,10 +38,4 @@ import {
       })
   }
 
-  export const getOnlineUsers = () => async dispatch => {
-    const result = await axios.get('http://localhost:4000/users/online')
-    dispatch({
-        type: USERS_COUNT,
-        payload: result.data
-    })
-}
+  

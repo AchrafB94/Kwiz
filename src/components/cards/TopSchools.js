@@ -1,24 +1,57 @@
 import React from 'react';
 
-const TopEtablissment = (props) => {
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getSchoolsThisWeek } from "../redux/actions/scoreActions";
+
+class TopSchools extends React.Component {
+
+
+  componentWillMount() {
+    this.props.getSchoolsThisWeek()
+  }
+
+
+  render() {
+
+    const top = this.props.popularSchools.slice(0,this.props.limit)
+
+  
     return(
-            <div className="card">
-  <div className="card-header">Top 5 Classement des Etablissments</div>
-  <div className="card-body">
-    <ol className="card-title">
-      
-            <li>LDD</li>
-            <li>LEE</li>
-            <li>LNLM</li>
-            <li>Besseiux</li>
-            <li>IMM</li>
-        </ol>
+      <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h4 class="card-title">Top {this.props.limit} etablissments cette semaine</h4>
+        <p class="card-text">
+        <table class="table table-striped">
+
+  <tbody>
+    {top.map((score,index) => {return <tr>
+      <th scope="row">{index + 1}</th>
+      <td>{score.school.name}</td>
+      <td>{score.total_score} points</td>
+    </tr>})}
     
-  </div>
-</div>
+  </tbody>
+</table>
+        
+        </p>
+      </div>
+    </div>
     )
 
-}
+  }}
 
-
-export default TopEtablissment;
+  TopSchools.propTypes = {
+    popularSchools: PropTypes.array.isRequired,
+    getSchoolsThisWeek: PropTypes.func.isRequired
+  };
+  
+  const mapStateToProps = state => ({
+    popularSchools: state.score.popularSchools
+  });
+  
+  export default connect(
+    mapStateToProps,
+    { getSchoolsThisWeek }
+  )(TopSchools);
+  

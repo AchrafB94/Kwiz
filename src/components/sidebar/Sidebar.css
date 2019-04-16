@@ -2,23 +2,15 @@
     overflow-x: hidden;
   }
 
-.current {
+  .current {
     color: rgb(129, 136, 136);
     font-weight: bold;
     font-size: 18px;
 }
-
-#forum {
-    color: darkorange;
-}
-
-#settings {
-    color: lightslategray;
-}
   
   #sidebar-wrapper {
-    min-height: 100vh;
-    margin-left: -15rem;
+    min-height: fit-content;
+    margin-left: -12rem;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;
@@ -31,7 +23,7 @@
   }
   
   #sidebar-wrapper .list-group {
-    width: 15rem;
+    width: 12rem;
   }
   
   #page-content-wrapper {
