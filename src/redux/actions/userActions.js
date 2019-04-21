@@ -14,6 +14,7 @@ import {
     });
   };
 
+
   export const updateUser = (user) => async dispatch => {
     const result = await axios.put(`http://localhost:4000/users/${user.id}`,user);
     dispatch ({

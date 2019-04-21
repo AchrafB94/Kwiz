@@ -23,6 +23,7 @@ export const register = newUser => {
         })
 }
 
+
 export const login = user => {
     return axios
         .post('http://localhost:4000/users/login', {

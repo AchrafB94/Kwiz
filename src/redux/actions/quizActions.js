@@ -11,13 +11,24 @@ import {
   TOP_QUIZZES_BY_SUBJECT,
   TOP_QUIZZES_BY_USER,
   GET_SUBJECT,
-  SUGGEST_QUIZZES
+  SUGGEST_QUIZZES,
+  RESET_CHOICES
 } from "./types";
 import axios from "axios";
 
-export const getQuizzes = () => async dispatch => {
+export const getAvailableQuizzes = (levelId) => async dispatch => {
 
-  const result = await axios.get(`http://localhost:4000/quiz/all`);
+  const result = await axios.get(`http://localhost:4000/quiz/available/${levelId}`);
+    dispatch({
+      type: GET_QUIZZES,
+      payload: result.data
+    });
+  
+};
+
+export const getAllQuizzes = () => async dispatch => {
+
+  const result = await axios.get(`http://localhost:4000/quiz/`);
     dispatch({
       type: GET_QUIZZES,
       payload: result.data
@@ -26,7 +37,7 @@ export const getQuizzes = () => async dispatch => {
 };
 
 export const getQuiz = id => async dispatch => {
-  const result = await axios.get(`http://localhost:4000/quiz/get/${id}`);
+  const result = await axios.get(`http://localhost:4000/quiz/${id}`);
   dispatch({
     type: GET_QUIZ,
     payload: result.data
@@ -34,7 +45,7 @@ export const getQuiz = id => async dispatch => {
 };
 
 export const getSubjects = () => async dispatch => {
-  const result = await axios.get(`http://localhost:4000/subjects/all`);
+  const result = await axios.get(`http://localhost:4000/subjects/`);
   dispatch({
     type: GET_SUBJECTS,
     payload: result.data
@@ -42,7 +53,7 @@ export const getSubjects = () => async dispatch => {
 };
 
 export const getSubject = (id) => async dispatch => {
-  const result = await axios.get(`http://localhost:4000/subjects/get/${id}`);
+  const result = await axios.get(`http://localhost:4000/subjects/${id}`);
   dispatch({
     type: GET_SUBJECT,
     payload: result.data
@@ -60,10 +71,16 @@ export const suggestQuizzes = (subjectId, currentId) => async dispatch => {
 
 
 
-export const saveAnswer = text => async dispatch => {
+export const saveAnswer = text => dispatch => {
   dispatch({
     type: SAVE_ANSWER,
     payload: text
+  });
+};
+
+export const resetChoices = () => async dispatch => {
+  dispatch({
+    type: RESET_CHOICES
   });
 };
 
@@ -73,6 +90,14 @@ export const addScore = scoreData => async dispatch => {
     scoreData
   );
   await axios.put(`http://localhost:4000/quiz/updatePlayed/${scoreData.quizId}`);
+
+  if(scoreData.medal !== 0) {
+    await axios.put(`http://localhost:4000/quiz/updateMedals/${scoreData.quizId}/${scoreData.medal}`)
+  }
+
+  if(scoreData.medal === 1) {
+    await axios.put(`http://localhost:4000/quiz/closeQuiz/${scoreData.quizId}`)
+  }
   
   dispatch({
     type: ADD_SCORE,
@@ -80,6 +105,7 @@ export const addScore = scoreData => async dispatch => {
   });
   
 };
+
 
 
 export const topQuizzesBySubject = () => async dispatch => {

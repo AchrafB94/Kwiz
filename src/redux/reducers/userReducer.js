@@ -1,4 +1,4 @@
-import {NEWEST_USER, USERS_COUNT, GET_USER, UPDATE_USER} from '../actions/types';
+import {NEWEST_USER, USERS_COUNT, GET_USER, UPDATE_USER, LOGIN} from '../actions/types';
 
 
 const initialState = {
@@ -13,6 +13,7 @@ export default function(state = initialState, action) {
         case USERS_COUNT: return {...state, count: action.payload};
         case GET_USER: return {...state, user: action.payload};
         case UPDATE_USER: return {...state, user: action.payload};
+        case LOGIN: return {...state, user: action.payload}
          default: return state;
     }
 }

@@ -5,7 +5,7 @@ import QuizBySubject from "../quiz/QuizBySubject";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {getSubject} from '../redux/actions/quizActions'
+import {getSubject} from '../../redux/actions/quizActions'
 
 import { Link } from "react-router-dom";
 
@@ -13,11 +13,19 @@ import { Link } from "react-router-dom";
 import {withRouter} from 'react-router-dom'
 class Subject extends React.Component {
 
-  componentWillMount() {
-    this.props.getSubject(this.props.match.params.subjectId)
+
+
+  componentDidMount() {
+    const { subjectId } = this.props.match.params
+    this.props.getSubject(subjectId)
   }
 
-  
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.subjectId !== prevProps.match.params.subjectId){
+      const { subjectId } = this.props.match.params
+      this.props.getSubject(subjectId)
+    }
+  }
 
   render() {
 
@@ -50,7 +58,6 @@ class Subject extends React.Component {
 
 Subject.propTypes = {
   subject: PropTypes.object.isRequired,
-  getSubject: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getSchoolsBySubject } from "../redux/actions/scoreActions";
+import { getSchoolsBySubject } from "../../redux/actions/scoreActions";
 
 class TopSchools extends React.Component {
 
@@ -18,14 +18,14 @@ class TopSchools extends React.Component {
 
   
     return(
-      <div class="card bg-light mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Top {this.props.limit} etablissments en {this.props.name}</h5>
-        <p class="card-text">
-        <table class="table table-striped">
+      <div className="card bg-light mb-3">
+      <div className="card-body">
+        <h5 className="card-title">Top {this.props.limit} etablissments en {this.props.name}</h5>
+        <div className="card-text">
+        <table className="table table-striped">
 
   <tbody>
-    {top.map((score,index) => {return <tr>
+    {top.map((score,index) => {return <tr key={index}>
       <th scope="row">{index + 1}</th>
       <td>{score.school.name}</td>
       <td>{score.total_score} points</td>
@@ -34,7 +34,7 @@ class TopSchools extends React.Component {
   </tbody>
 </table>
         
-        </p>
+        </div>
       </div>
     </div>
     )

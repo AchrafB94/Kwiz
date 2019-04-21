@@ -2,10 +2,8 @@
     overflow-x: hidden;
   }
 
-  .current {
-    color: rgb(129, 136, 136);
-    font-weight: bold;
-    font-size: 18px;
+  .subjects {
+    font-size: 20px;
 }
   
   #sidebar-wrapper {

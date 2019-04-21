@@ -1,13 +1,15 @@
 import React from "react";
-
+import jwt_decode from "jwt-decode"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getQuizzes } from "../redux/actions/quizActions";
+import { getAvailableQuizzes } from "../../redux/actions/quizActions";
 import { Link } from "react-router-dom";
 
 class QuizList extends React.Component {
   componentWillMount() {
-    this.props.getQuizzes();
+    
+   const user =  jwt_decode(localStorage.usertoken)
+   this.props.getAvailableQuizzes(user.levelId);
   }
 
 
@@ -22,11 +24,7 @@ class QuizList extends React.Component {
               <div className="card-body">
                 <h2>
                   
-                  <Link to={"/quiz/" + quiz.id}>
-                    <span className="badge badge-secondary">
-                      Niveau {quiz.level.name}
-                    </span>
-                  </Link>{" "}
+                  
                   <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
                 </h2>
                 <p className="text-muted">
@@ -51,14 +49,15 @@ class QuizList extends React.Component {
 
 QuizList.propTypes = {
   quizzes: PropTypes.array.isRequired,
-  getQuizzes: PropTypes.func.isRequired
+  getAvailableQuizzes: PropTypes.func.isRequired,
+  
 };
 
 const mapStateToProps = state => ({
-  quizzes: state.quiz.quizzes
+  quizzes: state.quiz.quizzes,
 });
 
 export default connect(
   mapStateToProps,
-  { getQuizzes }
+  { getAvailableQuizzes }
 )(QuizList);

@@ -18,6 +18,8 @@ import './bootstrap.min.css'
 import ProfileModify from "./components/profile/ProfileModify";
 import Settings from "./components/settings/Settings";
 
+import Test from './Test'
+
 library.add(faIgloo);
 library.add(faHome);
 library.add(faUser);
@@ -38,6 +40,7 @@ library.add(faBook)
 library.add(faQuestionCircle)
 library.add(faSchool)
 library.add(faBell)
+
 
 function LoadingComponent() {
   return (
@@ -82,28 +85,24 @@ class App extends Component {
             <Sidebar />
 
             <div id="page-content-wrapper">
-           
             
             
            
 
-              <div className="container-fluid">
+              <div className="container-fluid">.
                 <Switch>
-                <Route exact path="/" component={Home} />
-                <PrivateRoute
-                  exact
-                  path="/quiz/:id"
-                  component={Quiz}
-                />
-                <Route exact path="/subject/:subjectId" component={Subject} />
+                
+
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
-                <Route exact path="/stats" component={Stats} />
-
+                <PrivateRoute exact path="/" component={Home} />
+                <PrivateRoute exact path="/stats" component={Stats} />
+                <PrivateRoute exact path="/subject/:subjectId" component={Subject} />
+                <PrivateRoute exact path="/quiz/:id" component={Quiz} />
                 <PrivateRoute path="/settings" component={Settings} />
                 <PrivateRoute path="/profilemodify" component={ProfileModify} />
                 <PrivateRoute path="/profile" component={Profile} />
-
+                <PrivateRoute path="/test" component={Test} />
                 <Route component={NotFound} />
               </Switch>
               
@@ -111,11 +110,10 @@ class App extends Component {
             
               </div>
              
-            <Footer />
-            </div>
-            
-            </div>
            
+            </div>
+            </div>
+            <Footer />
           </div>
         </Router>
       </Provider>

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUsersThisWeek } from "../redux/actions/scoreActions";
+import { getUsersThisWeek } from "../../redux/actions/scoreActions";
 
 class TopUsers extends React.Component {
 
@@ -18,14 +18,14 @@ class TopUsers extends React.Component {
 
   
     return(
-      <div class="card bg-light mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Top {this.props.limit} élèves cette semaine</h4>
-        <p class="card-text">
-        <table class="table table-striped table-borderless">
+      <div className="card bg-light mb-3">
+      <div className="card-body">
+        <h4 className="card-title">Top {this.props.limit} élèves cette semaine</h4>
+        <div className="card-text">
+        <table className="table table-striped table-borderless">
 
   <tbody>
-    {top.map((score,index) => {return <tr>
+    {top.map((score,index) => {return <tr key={index}>
       <th scope="row">{index + 1}</th>
       <td>{score.user.firstname+" "+score.user.lastname}</td>
       <td>{score.total_score} points</td>
@@ -34,7 +34,7 @@ class TopUsers extends React.Component {
   </tbody>
 </table>
         
-        </p>
+        </div>
       </div>
     </div>
     )

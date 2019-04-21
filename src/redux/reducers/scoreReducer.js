@@ -14,7 +14,8 @@ import {
     USER_SUM_MEDALS,
     POPULAR_SUBJECTS,
     TOP_SCHOOLS_THIS_WEEK,
-    TOP_USERS_THIS_WEEK
+    TOP_USERS_THIS_WEEK,
+    CHECK_WINNER
 
   } from "../actions/types";
 
@@ -35,7 +36,8 @@ const initialState = {
     medalSum: 0,
     popularSubjects: [],
     popularSchools: [],
-    popularUsers: []
+    popularUsers: [],
+    winner: []
 };
 
 export default function(state = initialState, action) {
@@ -55,7 +57,8 @@ export default function(state = initialState, action) {
         case USER_SUM_MEDALS: return {...state, medalSum: action.payload};
         case POPULAR_SUBJECTS: return {...state, popularSubjects: action.payload};
         case TOP_SCHOOLS_THIS_WEEK: return {...state, popularSchools: action.payload};
-        case TOP_USERS_THIS_WEEK: return {...state, popularUsers: action.payload}
+        case TOP_USERS_THIS_WEEK: return {...state, popularUsers: action.payload};
+        case CHECK_WINNER: return {...state, winner: [action.payload]};
          default: return state;
     }
 }

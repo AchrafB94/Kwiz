@@ -1,32 +1,91 @@
 import React from "react";
 
-import './Question.css'
+import "./Question.css";
+
+var multipleOptions = {}
+
+function allTrue(obj)
+{
+  for(var o in obj)
+      if(obj[o] === 'false') return false;
+    
+  return true;
+}
+
 
 class Question extends React.Component {
 
-  handleChange = (e) => {
-    var option = e.target.value;
-    this.props.onSelect(option);    
-    
+  state = {
+    isChecked: false
   }
 
+  handleChange = e => {
+    var option = e.target.value;
+    this.props.onSelect(option);
+  };
+
+  handleMultipleChange = e => {
+
+    var answer = 'false'
+
+    
+    if(!e.target.checked && multipleOptions.hasOwnProperty(e.target.name)) {
+      delete multipleOptions[e.target.name];
+      console.log(multipleOptions)}
+      else{
+    multipleOptions = {...multipleOptions, [e.target.name]: e.target.value}
+    console.log(multipleOptions)
+    }
+
+    
+    if(allTrue(multipleOptions)) {
+      answer = 'true';
+
+    }
+    
+    this.props.onSelect(answer)
+
+    console.log(allTrue(multipleOptions))
+
+
+
+  }
+
+
+
+    
+  
+  
   render() {
     return (
       <div>
         <h4 className="card-title">{this.props.data.text}</h4>
 
-        
-
-
-
-
         {this.props.data.answers.map(answer => {
           return (
+            this.props.data.type ? 
             <div key={answer.id} className="form-check">
-
-<label>
-						<input type="radio" name={this.props.data.id} value={answer.isCorrect} onChange={this.handleChange.bind(this)}/> <span className="label-text">{answer.text}</span>
-					</label>
+            <label>
+              <input
+                type="checkbox"
+                name={answer.id}
+                value={answer.isCorrect}
+                onChange={this.handleMultipleChange.bind(this)}
+                />{" "}
+              <span className="label-text"> {answer.text+" "+answer.isCorrect} </span>
+            </label>
+          </div>
+                 
+                 : <div key={answer.id} className="form-check">
+              <label>
+                <input
+                  type="radio"
+                  name={this.props.data.id}
+                  value={answer.isCorrect}
+                  onChange={this.handleChange.bind(this)}
+                />{" "}
+                <span className="label-text">{answer.text+" "+answer.isCorrect}</span>
+              </label>
             </div>
           );
         })}
@@ -34,6 +93,5 @@ class Question extends React.Component {
     );
   }
 }
-
 
 export default Question;

@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
   getNewestUser, usersCount
-} from "../redux/actions/userActions";
-import {getQuestionsCount, getQuizPlayedSum} from '../redux/actions/quizActions';
+} from "../../redux/actions/userActions";
+import {getQuestionsCount, getQuizPlayedSum} from '../../redux/actions/quizActions';
 import './UserCard.css'
 class UserCard extends React.Component{
 
@@ -26,20 +26,20 @@ class UserCard extends React.Component{
     if (this.props.newestUser == null) return null;
         
         return(
-            <div class="card bg-light mb-3">
-    <div class="card-header">
+            <div className="card bg-light mb-3">
+    <div className="card-header">
   <small className="text-muted">
                 Nouveau Membre: <b>{this.props.newestUser.map(user => user.firstname+" "+user.lastname)}</b>
               </small>
               </div>
-  <div class="card-body">
+  <div className="card-body">
 
-    <p class="card-text">
+    <div className="card-text">
     
     <p className="text-muted float-center"> <b  id="numbers">{this.props.questionsCount}</b> questions </p>
             <p className="text-muted text-center"> <b id="numbers">{this.props.count}</b> utilisateurs inscrits </p>
             <p className="text-muted float-right"> quizz joués <b  id="numbers">{this.props.quizzesSumPlayed}</b> fois  </p>
-            </p>
+            </div>
   </div>
 
 </div>

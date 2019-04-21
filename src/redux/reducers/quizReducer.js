@@ -5,7 +5,8 @@ import {GET_QUIZZES, GET_QUIZ, GET_SUBJECTS, SAVE_ANSWER, ADD_SCORE,   QUIZZES_C
     TOP_QUIZZES_BY_SUBJECT,
     TOP_QUIZZES_BY_USER,
     GET_SUBJECT,
-    SUGGEST_QUIZZES} from '../actions/types';
+    SUGGEST_QUIZZES,
+    RESET_CHOICES} from '../actions/types';
 
 
 const initialState = {
@@ -30,7 +31,7 @@ export default function(state = initialState, action) {
         case GET_QUIZZES: return {...state, quizzes: action.payload};
         case GET_QUIZ: return {...state, quiz: action.payload};
         case GET_SUBJECTS: return {...state, subjects: action.payload};
-        case SAVE_ANSWER: return {...state, choices: [action.payload, ...state.choices]};
+        case SAVE_ANSWER: return {...state, choices: [...state.choices, action.payload]};
         case ADD_SCORE: return {...state, score: [action.payload]};
         case QUIZZES_COUNT: return {...state, quizzesCount: action.payload};
         case QUIZZES_SUM_PLAYED: return {...state, quizzesSumPlayed: action.payload};
@@ -39,7 +40,8 @@ export default function(state = initialState, action) {
         case TOP_QUIZZES_BY_SUBJECT: return {...state, quizzesBySubject: action.payload};
         case TOP_QUIZZES_BY_USER: return {...state, quizzesByUsers: action.payload};
         case GET_SUBJECT: return {...state, subject: action.payload};
-        case SUGGEST_QUIZZES: return {...state, quizzesSuggestions: action.payload}
+        case SUGGEST_QUIZZES: return {...state, quizzesSuggestions: action.payload};
+        case RESET_CHOICES: return {...state, choices: []}
          default: return state;
     }
 }

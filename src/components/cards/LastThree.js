@@ -5,7 +5,7 @@ import bronze from "../../images/bronze.png";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getLastThreeWinners } from "../redux/actions/scoreActions";
+import { getLastThreeWinners } from "../../redux/actions/scoreActions";
 
 import "./LastThree.css";
 
@@ -72,14 +72,14 @@ class LastThree extends React.Component {
               return (
                 <div key={winner.id} className="col-4-xl">
                 <div className={"card mb-3 border-"+this.borderColor(winner.medal)} >
-  <div class="card-header">  <img
+  <div className="card-header">  <img
                             src={this.medalImage(winner.medal)}
                             alt=""
                             height="25"
                             className="float-right"
                           />{" "+this.medalName(winner.medal)} </div>
-  <div class="card-body">
-    <h4 class="card-title"><img
+  <div className="card-body">
+    <h4 className="card-title"><img
                             src={require(`../../images/${winner.user.image}`)}
                             alt=""
                             height="40"

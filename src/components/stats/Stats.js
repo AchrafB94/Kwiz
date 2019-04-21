@@ -12,7 +12,7 @@ import {
   getSchoolsByMedals,
   getSchoolsByLevel,
   getPopularSubjects
-} from "../redux/actions/scoreActions";
+} from "../../redux/actions/scoreActions";
 import {
   getQuizzesCount,
   getQuestionsCount,
@@ -20,9 +20,9 @@ import {
   topQuizzesBySubject,
   topQuizzesByUsers,
   getQuizPlayedSum
-} from "../redux/actions/quizActions";
+} from "../../redux/actions/quizActions";
 
-import { usersCount } from "../redux/actions/userActions";
+import { usersCount } from "../../redux/actions/userActions";
 import gold from "../../images/gold.png";
 import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
@@ -41,7 +41,7 @@ class Stats extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getUsersByScore();
     this.props.getUsersByMedals();
     this.props.getSchoolsByScore();
@@ -64,9 +64,9 @@ class Stats extends React.Component {
   }
 
   
-  onSubmit(e) {
+  onSubmit() {
     
-    this.props.getUsersByLevel(this.state.levelId);
+    //this.props.getUsersByLevel(this.state.levelId);
   }
 
   render() {
@@ -118,8 +118,9 @@ class Stats extends React.Component {
           </span>{" "}
         </h1>
 
+
         <div className="row">
-          <div className="col-9 bg-light ">
+          <div className="col-9 col-12-sm bg-light ">
             <Tabs defaultActiveKey="scores">
               <Tab eventKey="scores" title="Top Scores">
                 <table className="table table-sm table-hover">
@@ -291,7 +292,7 @@ class Stats extends React.Component {
             </Tabs>
           </div>
 
-          <div className="col-3">
+          <div className="col-3  col-12-sm">
             <div className="card bg-light mb-4">
               <div className="card-header">Top Matiéres</div>
               <div className="card-text">

@@ -15,10 +15,21 @@ import {
     USER_SUM_MEDALS,
     USER_FAVORITE,
     POPULAR_SUBJECTS,
-    TOP_USERS_THIS_WEEK
+    TOP_USERS_THIS_WEEK,
+    CHECK_WINNER
 
   } from "./types";
   import axios from "axios";
+
+
+  
+export const checkWinner = (quizId,userId) => async dispatch => {
+  const result = await axios.get(`http://localhost:4000/scores/checkWinner/${quizId}/${userId}`);
+  dispatch({
+    type: CHECK_WINNER,
+    payload: result.data
+  });
+};
   
   export const getLastThreeWinners = () => async dispatch => {
 

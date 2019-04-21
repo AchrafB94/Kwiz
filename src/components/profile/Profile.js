@@ -7,8 +7,8 @@ import './Profile.css'
 import {Link} from 'react-router-dom'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUser } from "../redux/actions/userActions";
-import { getUserAverage,getUserCountScore,getUserFavoriteSubject,getUserSumMedals,getUserSumScore } from "../redux/actions/scoreActions";
+import { getUser } from "../../redux/actions/userActions";
+import { getUserAverage,getUserCountScore,getUserFavoriteSubject,getUserSumMedals,getUserSumScore } from "../../redux/actions/scoreActions";
 import {Image} from 'react-bootstrap'
 
 class Profile extends Component {

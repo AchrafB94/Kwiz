@@ -3,7 +3,7 @@ import React from "react";
 import jwt_decode from "jwt-decode";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUser, updateUser } from "../redux/actions/userActions";
+import { getUser, updateUser } from "../../redux/actions/userActions";
 
 class ProfileModify extends React.Component {
   constructor() {

@@ -1,19 +1,23 @@
 import React from "react";
-
+import jwt_decode from "jwt-decode"
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getQuizzes } from "../redux/actions/quizActions";
+import { getAvailableQuizzes } from "../../redux/actions/quizActions";
 import { Link } from "react-router-dom";
+
+
+
+
 class QuizList extends React.Component {
   componentWillMount() {
-   this.props.getQuizzes();
+   const user =  jwt_decode(localStorage.usertoken)
+   this.props.getAvailableQuizzes(user.levelId);
   }
-
   quizCard(quiz) {
     var desc = quiz.description
     var trimmedDesc = desc.substring(0, 200);
-
+  
     return (
       <div key={quiz.id}>
         <div className="card ">
@@ -37,11 +41,6 @@ class QuizList extends React.Component {
                       {quiz.subject.name}
                     </span>
                   </Link>{" "}
-                  <Link to={"/quiz/" + quiz.id}>
-                    <span className="badge badge-secondary">
-                      Niveau {quiz.level.name}
-                    </span>
-                  </Link>{" "}
                   <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
                 </h4>
                 <p className="text-muted">
@@ -59,8 +58,12 @@ class QuizList extends React.Component {
       return (
         <div>
           <h2>
+          <span className="badge badge-secondary float-right">
+                      Niveau Tout Publique
+                    </span>
             {this.props.quizzes.length} nouveaux challenges sont disponibles!{" "}
           </h2>
+       
           {this.props.quizzes.map(quiz => this.quizCard(quiz))}
         </div>
       );
@@ -69,7 +72,7 @@ class QuizList extends React.Component {
 
 QuizList.propTypes = {
   quizzes: PropTypes.array.isRequired,
-  getQuizzes: PropTypes.func.isRequired
+  getAvailableQuizzes: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -78,5 +81,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getQuizzes }
+  { getAvailableQuizzes }
 )(QuizList);

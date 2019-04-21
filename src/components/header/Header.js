@@ -18,7 +18,7 @@ class Header extends React.Component{
     this.setState({
       showAlert: true
     })
-    this.props.history.push('/')
+    this.props.history.push('/home')
 
 
 }
@@ -43,7 +43,7 @@ Username() {
                 </Link>
             </li>
             <li className="nav-item">
-                <Link to="/login" className="nav-link">
+                <Link to="/" className="nav-link">
                 <FontAwesomeIcon icon="sign-in-alt" size="lg"/> Se connecter
                 </Link>
             </li>
