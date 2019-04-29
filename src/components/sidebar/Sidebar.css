@@ -2,12 +2,12 @@
     overflow-x: hidden;
   }
 
-  .subjects {
+  #subjects {
     font-size: 20px;
 }
   
   #sidebar-wrapper {
-    min-height: fit-content;
+    min-height: 87vh;
     margin-left: -12rem;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;

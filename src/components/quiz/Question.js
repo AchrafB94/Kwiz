@@ -30,11 +30,9 @@ class Question extends React.Component {
 
     
     if(!e.target.checked && multipleOptions.hasOwnProperty(e.target.name)) {
-      delete multipleOptions[e.target.name];
-      console.log(multipleOptions)}
+      delete multipleOptions[e.target.name];}
       else{
     multipleOptions = {...multipleOptions, [e.target.name]: e.target.value}
-    console.log(multipleOptions)
     }
 
     
@@ -45,7 +43,6 @@ class Question extends React.Component {
     
     this.props.onSelect(answer)
 
-    console.log(allTrue(multipleOptions))
 
 
 

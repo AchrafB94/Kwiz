@@ -2,9 +2,10 @@ import {
     USERS_COUNT,
     NEWEST_USER,
     GET_USER,
-    UPDATE_USER
+    UPDATE_USER,
   } from "./types";
   import axios from "axios";
+
   
   export const getUser = (id) => async dispatch => {
     const result = await axios.get(`http://localhost:4000/users/${id}`);
@@ -22,6 +23,11 @@ import {
         payload: result.data
     })
 }
+
+export const updateImage = (updImage) => async dispatch => {
+  await axios.put(`http://localhost:4000/users/image/${updImage.id}/`,updImage);
+}
+
   
   export const getNewestUser = () => async dispatch => {
     const result = await axios.get(`http://localhost:4000/users/newest`);

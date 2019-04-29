@@ -1,6 +1,7 @@
 import React from 'react';
 import { login } from '../Functions'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
 
 class Login extends React.Component{
     constructor() {
@@ -29,6 +30,7 @@ class Login extends React.Component{
         login(user).then(res => {
             if (res) {
                 this.props.history.push(`/`)
+           
             }
         }).catch(err => {
             console.log(err)
@@ -84,4 +86,4 @@ class Login extends React.Component{
 
 }
 
-export default Login;
+export default connect(null,{login})(Login);

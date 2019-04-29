@@ -1,5 +1,8 @@
 import React from "react";
 import { register } from "../Functions";
+import axios from 'axios'
+import { Alert } from "react-bootstrap";
+
 
 class Register extends React.Component {
   constructor() {
@@ -18,10 +21,15 @@ class Register extends React.Component {
       district: "",
       city: "",
       province: "",
-      image: "",
+      imageName: "",
       gender: "",
 
-      showPasswordAlert: false
+      file: null,
+
+      showPasswordAlert: false,
+      showFileAlert: false,
+      fileAlert: ""
+
     };
 
     this.onChange = this.onChange.bind(this);
@@ -34,15 +42,95 @@ class Register extends React.Component {
   }
 
   handleOptionChange(changeEvent) {
+   
     this.setState({
       gender: changeEvent.target.value
     });
   }
 
+  fileSelectedHandler(event) {
+    if(this.checkMimeType(event) && this.checkFileSize(event)) {
+
+      
+      
+    this.setState({
+      file: event.target.files[0]
+    })
+
+    }
+  }
+  checkMimeType=(event)=>{
+    //getting file object
+    let file = event.target.files[0]
+    //define message container
+    let err = ''
+    // list allow mime type
+   const types = ['image/png', 'image/jpeg', 'image/gif']
+   
+     // compare file type find doesn't matach
+         if (types.every(type => file.type !== type)) {
+         // create error message and assign to container   
+         err += 'Le format du fichier doit étre .png, .jpeg ou .gif\n';
+     };
+   if (err !== '') { // if message not same old that mean has error 
+        event.target.value = null // discard selected file
+    this.setState({
+      showFileAlert: true,
+      fileAlert: err
+    })
+         return false; 
+    }
+    this.setState({
+      showFileAlert: false
+    })
+   return true;
+  
+  }
+
+  checkFileSize=(event)=>{
+    let file = event.target.files[0]
+    let size = 150 * 150 
+    let err = ""; 
+    if (file.size > size) {
+     err += 'la taille du '+file.name+' est trés large, veuillez choisir un fichier plus petit\n';
+   
+ };
+ if (err !== '') {
+    event.target.value = null
+    this.setState({
+      showFileAlert: true,
+      fileAlert: err
+    })
+    return false
+}
+
+return true;
+
+}
+
+
   onSubmit(e) {
     e.preventDefault();
 
+   
+
+
     if (this.state.password === this.state.passwordconfirm) {
+
+      
+      
+      if(this.state.file) {
+        const filename = Date.now()+'-'+this.state.file.name
+        this.setState({
+          imageName: filename
+        })
+      const data = new FormData() 
+      data.append('file', this.state.file, filename)
+      
+  
+      axios.post("http://localhost:4000/users/upload", data, {
+    })
+  }
       const user = {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
@@ -56,8 +144,9 @@ class Register extends React.Component {
         district: this.state.district,
         city: this.state.city,
         province: this.state.province,
-        image: this.state.image,
-        gender: this.state.gender
+        imageName: this.state.imageName,
+        gender: this.state.gender,
+        
       };
 
       register(user).then(res => {
@@ -74,25 +163,24 @@ class Register extends React.Component {
 
   render() {
     const passwordAlert = (
-      <div>
-        {" "}
-        <br />
-        <div
-          className="container alert alert-info alert-dismissible"
-          role="alert"
-        >
-          Oups, ces mots de passe ne correspondent pas.
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </div>
+        <Alert dismissible variant="info">
+  <Alert.Heading>Oups, ces mots de passe ne correspondent pas!</Alert.Heading>
+  <p>
+  Assurez-vous de taper le mot de passe correct et essayez à nouveau!
+  </p>
+</Alert>
+       
     );
+
+    const fileAlert = (
+      <Alert dismissible variant="info">
+<Alert.Heading>Attention!</Alert.Heading>
+<p>
+{this.state.fileAlert}
+</p>
+</Alert>
+     
+  );
 
     return (
       <div className="container">
@@ -160,7 +248,7 @@ class Register extends React.Component {
                   required
                 />
 
-                <small id="fileHelp" class="form-text text-muted">
+                <small id="fileHelp" className="form-text text-muted">
                   Minimum 8 caractéres.
                 </small>
               </div>
@@ -182,9 +270,9 @@ class Register extends React.Component {
             </div>
 
             <center>
-              <div class="form-check form-check-inline">
+              <div className="form-check form-check-inline">
                 <input
-                  class="form-check-input"
+                  className="form-check-input"
                   type="radio"
                   name="gender"
                   id="Homme"
@@ -192,14 +280,14 @@ class Register extends React.Component {
                   onChange={this.handleOptionChange}
                   checked={this.state.gender === "Homme"}
                 />
-                <label class="form-check-label" htmlFor="Homme">
+                <label className="form-check-label" htmlFor="Homme">
                   <big>Homme</big>
                 </label>
               </div>
 
-              <div class="form-check form-check-inline">
+              <div className="form-check form-check-inline">
                 <input
-                  class="form-check-input"
+                  className="form-check-input"
                   type="radio"
                   name="gender"
                   id="Femme"
@@ -207,7 +295,7 @@ class Register extends React.Component {
                   onChange={this.handleOptionChange}
                   checked={this.state.gender === "Femme"}
                 />
-                <label class="form-check-label" htmlFor="Femme">
+                <label className="form-check-label" htmlFor="Femme">
                   <big>Femme</big>
                 </label>
               </div>
@@ -290,18 +378,19 @@ class Register extends React.Component {
                 />
               </div>
             </div>
-            <div class="form-group">
-              <label for="image">Photo de profile</label>
+            {this.state.showFileAlert ? fileAlert : ""}
+            <div className="form-group">
+              <label htmlFor="file">Photo de profile</label>
               <input
                 type="file"
-                class="form-control-file"
-                id="image"
+                name="file"
+                className="form-control-file"
+                id="file"
                 aria-describedby="fileHelp"
-                onChange={this.onChange}
+                onChange={this.fileSelectedHandler.bind(this)}
               />
-              <small id="fileHelp" class="form-text text-muted">
-                This is some placeholder block-level help text for the above
-                input. It's a bit lighter and easily wraps to a new line.
+              <small id="fileHelp" className="form-text text-muted">
+              La taille minimale de l'image doit être: 150 x 150 et son format doit être png, jpeg ou gif.
               </small>
             </div>
 

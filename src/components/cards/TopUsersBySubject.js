@@ -7,8 +7,14 @@ import { getUsersBySubject } from "../../redux/actions/scoreActions";
 class TopSchools extends React.Component {
 
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getUsersBySubject(this.props.subjectId)
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.subjectId !== prevProps.subjectId) {
+    this.props.getUsersBySubject(this.props.subjectId)
+    }
   }
 
 
@@ -20,7 +26,7 @@ class TopSchools extends React.Component {
     return(
       <div className="card bg-light mb-3">
       <div className="card-body">
-        <h5 className="card-title">Top {this.props.limit} etablissments en {this.props.name}</h5>
+        <h5 className="card-title">Top {this.props.limit} élèves en {this.props.name}</h5>
         <div className="card-text">
         <table className="table table-striped">
 

@@ -3,6 +3,7 @@ import MedalCard from "../cards/MedalCard";
 import Question from "./Question";
 import TopUsersBySubject from "../cards/TopUsersBySubject";
 import TopSchoolsBySubject from "../cards/TopSchoolsBySubject";
+import TopWinnersBySubject from "../cards/TopWinnersBySubject";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import jwt_decode from "jwt-decode";
 import { connect } from "react-redux";
@@ -31,7 +32,9 @@ class Quiz extends React.Component {
 
       show: false,
       modalTitle: "Bonne chance la prochaine fois!",
-      medal: ""
+      medal: "",
+      tryagain: true,
+      winner: false,
     };
   }
   componentDidMount() {
@@ -40,16 +43,21 @@ class Quiz extends React.Component {
       userId: decoded.id
     });
 
+    
+
     const { id } = this.props.match.params;
     this.props.getQuiz(id);
 
-    this.props.checkWinner(id,this.state.userId);
+    this.props.checkWinner(id,decoded.id).then(result => this.setState({
+      winner: result
+    }))
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       const { id } = this.props.match.params;
       this.props.getQuiz(id);
+      
     }
   }
 
@@ -72,7 +80,7 @@ class Quiz extends React.Component {
 
     const { option } = this.state;
 
-    // this.props.saveAnswer(option);
+    
     this.choices.push(option);
 
     this.setState({ option: "" }); //To reset the state before next question
@@ -107,8 +115,14 @@ class Quiz extends React.Component {
     var score = Math.round((percentage * 50) / time);
     var medal = 0;
 
+
+   
+
     //MEDAL
     if (percentage === 100) {
+      this.setState({
+        tryagain: false
+      })
       if (this.props.quiz.medals === 0) {
         medal = 100;
         score = score + 100;
@@ -160,6 +174,7 @@ class Quiz extends React.Component {
     this.setState({
       show: true
     });
+  
   }
 
   medalImage(medal) {
@@ -217,12 +232,12 @@ class Quiz extends React.Component {
           <Button variant="secondary" onClick={this.quit.bind(this)}>
             Quitter
           </Button>
-          {this.medal ? (
-            ""
-          ) : (
+          {this.state.tryagain ? (
             <Button variant="primary" onClick={this.restart.bind(this)}>
-              Essayez à nouveau
-            </Button>
+            Essayez à nouveau
+          </Button>
+          ) : ( ""
+            
           )}
         </Modal.Footer>
       </Modal>
@@ -242,7 +257,7 @@ class Quiz extends React.Component {
   }
 
   componentWillUnmount() {
-    //this.props.resetChoices()
+    
     clearInterval(this.timer);
   }
 
@@ -258,18 +273,16 @@ class Quiz extends React.Component {
   }
 
   render() {
-    console.log(this.props.winner);
 
-    const quiz = this.props.quiz;
+    const { quiz } = this.props;
+    const { subject, level, questions } = quiz;
 
-    const subject = quiz.subject;
     if (subject == null) return null;
-
-    const level = quiz.level;
     if (level == null) return null;
-
-    const questions = quiz.questions;
     if (questions == null) return null;
+
+    
+    console.log(this.props.winner)
 
     const quizStart = (
       <div>
@@ -327,6 +340,7 @@ class Quiz extends React.Component {
       </div>
     );
 
+
     return (
       <div className="row">
         <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-2">
@@ -341,8 +355,12 @@ class Quiz extends React.Component {
 
             <p className="lead">{quiz.description}</p>
             <br />
-            {quiz.rank === 1 ? (
-              this.state.currentQuestion === 0 ? (
+            {this.props.winner ? <Alert variant="info">
+                <Alert.Heading>Quiz fermé!</Alert.Heading>
+                <p>Vous avez déjà joué à ce quiz et remporté une médaille!</p>
+              </Alert> : 
+            quiz.rank === 1 ? (
+              this.state.currentQuestion === 0  ? (
                 quizStart
               ) : this.state.show ? (
                 this.resultsModal()
@@ -351,16 +369,22 @@ class Quiz extends React.Component {
               )
             ) : (
               <Alert variant="dark">
-                <Alert.Heading>Ce quiz est fermé!</Alert.Heading>
+                <Alert.Heading>Quiz fermé!</Alert.Heading>
                 <p>Vous ne pouvez plus jouer à ce quiz.</p>
               </Alert>
             )}
           </div>
-
-          <div>
+                <hr />
+              <div className="row">
+          <div className="col-6">
             <h4>Autres quizz en {subject.name}:</h4>
             <QuizSuggestions subjectId={subject.id} currentId={quiz.id} />
           </div>
+          <div className="col-6">
+            <h4>Top 5 Gagnants en {subject.name} (Niveau {level.name}):</h4>
+        <TopWinnersBySubject subject={subject.id} level={level.id} />
+          </div>
+        </div>
         </div>
 
         <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12 mt-2 ">
@@ -395,7 +419,7 @@ Quiz.propTypes = {
   getQuiz: PropTypes.func.isRequired,
   saveAnswer: PropTypes.func.isRequired,
   addScore: PropTypes.func.isRequired,
-  winner: PropTypes.array.isRequired
+  winner: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({

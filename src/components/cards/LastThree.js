@@ -13,7 +13,7 @@ class LastThree extends React.Component {
 
   
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getLastThreeWinners();
   }
 
@@ -80,7 +80,7 @@ class LastThree extends React.Component {
                           />{" "+this.medalName(winner.medal)} </div>
   <div className="card-body">
     <h4 className="card-title"><img
-                            src={require(`../../images/${winner.user.image}`)}
+                            src={`http://localhost/kwiz/public/images/${winner.user.image}`}
                             alt=""
                             height="40"
                            

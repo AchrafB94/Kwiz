@@ -1,24 +1,31 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, withRouter } from 'react-router-dom'
-import Alert from '../alert/Alert'
 import jwt_decode from 'jwt-decode'
-import {Navbar, Nav} from 'react-bootstrap'
+import {Navbar, Nav, OverlayTrigger, Popover} from 'react-bootstrap'
  
+
+const popover = (
+  <Popover id="popover-basic" title="Notifications">
+    And here's some <strong>amazing</strong> content. It's very engaging. right?
+  </Popover>
+);
+
+const Example = () => (
+  <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+     <div className="nav-link"><FontAwesomeIcon icon="bell" size="lg"    /></div>
+  </OverlayTrigger>
+);
 
 class Header extends React.Component{
  
-  state = {
-    showAlert: false
-  }
+
 
   logOut(e) {
     e.preventDefault()
     localStorage.removeItem('usertoken')
-    this.setState({
-      showAlert: true
-    })
-    this.props.history.push('/home')
+    localStorage.removeItem('userlevel')
+    this.props.history.push('/')
 
 
 }
@@ -43,7 +50,7 @@ Username() {
                 </Link>
             </li>
             <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/login" className="nav-link">
                 <FontAwesomeIcon icon="sign-in-alt" size="lg"/> Se connecter
                 </Link>
             </li>
@@ -52,9 +59,8 @@ Username() {
     )
     const userLink = (
         <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-            <li className="nav-item">
-              <div className="nav-link"><FontAwesomeIcon icon="bell" size="lg"    /></div>
-            </li>
+       
+  
 
             <li className="nav-item">
                 <Link to="/profile" className="nav-link">
@@ -63,7 +69,7 @@ Username() {
             </li>
             
             <li className="nav-item">
-                <Link to="/settings" className="nav-link">
+                <Link to="/settings/profile" className="nav-link">
                 <FontAwesomeIcon icon="cog" /> Paramètres
                 </Link>
             </li>
@@ -92,7 +98,6 @@ Username() {
   
   </Navbar.Collapse>
 </Navbar>
-          {this.state.showAlert ? <Alert color="warning" header="Vous avez été déconnecté!" text="" link="/login" linktext="Reconnectez-vous à nouveau!" /> : ''}
 </div>
 
         )

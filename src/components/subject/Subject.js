@@ -40,13 +40,17 @@ class Subject extends React.Component {
             <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-4">
             
               
-                <h1>{this.props.subject.name}</h1>
+                <h1><img
+                  src={require(`../../images/${image}.png`)}
+                  alt=""
+                  height="40"
+                />{this.props.subject.name}</h1>
              
 
               <QuizBySubject subjectId={subjectId} />
             </div>
             <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12 mt-4">
-            <center><img src={require(`../../images/${image}.png`)} alt="" /></center>
+           
               <br />
               <TopUsersBySubject limit="5" subjectId={subjectId} name={this.props.subject.name} />
               <TopSchoolsBySubject limit="5" subjectId={subjectId} name={this.props.subject.name}/>

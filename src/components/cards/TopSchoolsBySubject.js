@@ -7,10 +7,17 @@ import { getSchoolsBySubject } from "../../redux/actions/scoreActions";
 class TopSchools extends React.Component {
 
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getSchoolsBySubject(this.props.subjectId)
   }
 
+    
+  componentDidUpdate(prevProps) {
+    if (this.props.subjectId !== prevProps.subjectId) {
+      this.props.getSchoolsBySubject(this.props.subjectId)
+      
+    }
+  }
 
   render() {
 

@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-export const register = newUser => {
+import jwt_decode from "jwt-decode";
+
+export const register = (newUser) => {
     return axios
         .post('http://localhost:4000/users/register', {
             firstname: newUser.firstname,
@@ -16,7 +18,7 @@ export const register = newUser => {
             district: newUser.district,
             city: newUser.city,
             province: newUser.province,
-            image: newUser.image,
+            image: newUser.imageName
             
         })
         .then(res => {
@@ -33,6 +35,10 @@ export const login = user => {
         .then(res => {
                     
             localStorage.setItem('usertoken', res.data)
+            
+            const decoded = jwt_decode(localStorage.usertoken)
+            localStorage.setItem('userlevel', decoded.levelId)
+
             return res.data
             
             

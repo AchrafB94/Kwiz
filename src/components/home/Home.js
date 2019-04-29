@@ -2,7 +2,6 @@ import React from "react";
 import QuizList from "../quiz/QuizList";
 import LastThree from "../cards/LastThree";
 import TopSchools from "../cards/TopSchools";
-import TopUsers from "../cards/TopUsers";
 import UserCard from "../cards/UsersCard";
 import {Link} from 'react-router-dom'
 
@@ -22,7 +21,7 @@ class Home extends React.Component {
             <div>
             <div className="container">
 
-              <QuizList link={this.props.match.params.subject_link} />
+              <QuizList />
               <br />
               <LastThree />
               </div>
@@ -31,9 +30,9 @@ class Home extends React.Component {
             </div>
             </div>
             <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12">
-              <TopUsers limit="5" />
+            <UserCard />
               <TopSchools limit="5" />
-              <UserCard />
+              
               <div><Link to="/stats" type="button" className="btn btn-info btn-block">Toutes les Statistiques</Link></div>
             </div>
            

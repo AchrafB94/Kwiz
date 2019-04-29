@@ -7,7 +7,7 @@ import { getUsersThisWeek } from "../../redux/actions/scoreActions";
 class TopUsers extends React.Component {
 
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getUsersThisWeek()
   }
 

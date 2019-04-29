@@ -37,11 +37,9 @@ class Stats extends React.Component {
     this.state = {
       levelId: null
     };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getUsersByScore();
     this.props.getUsersByMedals();
     this.props.getSchoolsByScore();
@@ -54,20 +52,21 @@ class Stats extends React.Component {
     this.props.topQuizzesByUsers();
     this.props.usersCount();
     this.props.getQuizPlayedSum();
+    this.props.getUsersByLevel(localStorage.userlevel);
 
   }
-  
-
-  onChange(e) {
-    
-    this.setState({levelId: e.target.value });
+  renderLevelName(level) {
+    switch(level) {
+     
+      case '1': return "Primaire"
+      case '2': return "Secondaire"
+      case '3': return "Universitaire"
+      case '4': return "Tout Publique"
+      default: return ""
+     
+    }
   }
 
-  
-  onSubmit() {
-    
-    //this.props.getUsersByLevel(this.state.levelId);
-  }
 
   render() {
     const quizzesBySubjectData = [];
@@ -86,110 +85,13 @@ class Stats extends React.Component {
       })
     );
     return (
-      <div className="container-fluid mt-5">
-        <h1 className="display-5 mb-5">
-          <span class="badge badge-primary">
-            {" "}
-            <FontAwesomeIcon icon="book" size="lg" /> ? Matiéres
-          </span>{" "}
-          <span class="badge badge-secondary">
-            {" "}
-            <FontAwesomeIcon icon="clipboard-list" size="lg" />{" "}
-            {this.props.quizzesCount} Quizz
-          </span>{" "}
-          <span class="badge badge-success">
-            {" "}
-            <FontAwesomeIcon icon="question-circle" size="lg" />{" "}
-            {this.props.questionsCount} Questions
-          </span>{" "}
-          <span class="badge badge-danger">
-            {" "}
-            <FontAwesomeIcon icon="user" size="lg" /> {this.props.count}{" "}
-            Utilisateurs
-          </span>{" "}
-          <span class="badge badge-warning">
-            {" "}
-            <FontAwesomeIcon icon="school" size="lg" /> ? Etablissements
-          </span>{" "}
-          <span class="badge badge-info">
-            {" "}
-            <FontAwesomeIcon icon="check" size="lg" />{" "}
-            {this.props.quizzesSumPlayed} Participations
-          </span>{" "}
-        </h1>
-
+      <div className="container-fluid mt-4">
+       
 
         <div className="row">
           <div className="col-9 col-12-sm bg-light ">
-            <Tabs defaultActiveKey="scores">
-              <Tab eventKey="scores" title="Top Scores">
-                <table className="table table-sm table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Nom</th>
-                      <th scope="col">Etablissement</th>
-                      <th scope="col">Score total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.props.usersByScore.map((score, index) => {
-                      return (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>
-                            {score.user.firstname + " " + score.user.lastname}
-                          </td>
-                          <td>{score.school.name}</td>
-                          <td>{score.total_score}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </Tab>
-              <Tab eventKey="levels" title="Top Scores (Par niveau)">
-                <form class="form-group mt-5" onSubmit={this.onSubmit()}>
-                  <label for="levelSelect">Veuillez choisir le niveau</label>
-                  <select
-                    class="form-control"
-                    id="levelSelect"
-                    name="levelId"
-                    defaultValue={this.state.levelId}
-                    onChange={this.onChange}
-                  >
-                  <option selected>Choisir</option>
-                    <option value="1">Niveau Primaire</option>
-                    <option value="2">Niveau Secondaire</option>
-                    <option value="3">Niveau Universitaire</option>
-                    <option value="4">Tout Publique</option>
-                  </select>
-                </form>
-                <table className="table table-sm table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Nom</th>
-                      <th scope="col">Etablissement</th>
-                      <th scope="col">Score total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.props.usersByLevel.map((score, index) => {
-                      return (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>
-                            {score.user.firstname + " " + score.user.lastname}
-                          </td>
-                          <td>{score.school.name}</td>
-                          <td>{score.total_score}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </Tab>
+            <Tabs fill  defaultActiveKey="medals">
+           
               <Tab eventKey="medals" title="Classement des medailles">
                 <table className="table table-hover">
                   <thead>
@@ -223,28 +125,6 @@ class Stats extends React.Component {
                           <td>{Math.round(score.total_medals / 100)}</td>
                           <td>{Math.round(score.total_medals / 10) % 10}</td>
                           <td>{(Math.round(score.total_medals) % 100) % 10}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </Tab>
-              <Tab eventKey="topschools" title="Top Scores (Etablissments)">
-                <table className="table table-sm table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Nom</th>
-                      <th scope="col">Score total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.props.schoolsByScore.map((score, index) => {
-                      return (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>{score.school.name}</td>
-                          <td>{score.total_score}</td>
                         </tr>
                       );
                     })}
@@ -289,19 +169,109 @@ class Stats extends React.Component {
                   </tbody>
                 </table>
               </Tab>
+              <Tab eventKey="levels" title={"Top Scores ("+this.renderLevelName(localStorage.userlevel)+")"}>
+                <table className="table table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nom</th>
+                      <th scope="col">Etablissement</th>
+                      <th scope="col">Score total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.props.usersByLevel.map((score, index) => {
+                      return (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>
+                            {score.user.firstname + " " + score.user.lastname}
+                          </td>
+                          <td>{score.school.name}</td>
+                          <td>{score.total_score}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Tab>
+              <Tab eventKey="scores" title="Top Scores (Tous les niveaux)">
+                <table className="table table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nom</th>
+                      <th scope="col">Etablissement</th>
+                      <th scope="col">Score total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.props.usersByScore.map((score, index) => {
+                      return (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>
+                            {score.user.firstname + " " + score.user.lastname}
+                          </td>
+                          <td>{score.school.name}</td>
+                          <td>{score.total_score}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Tab>
+            
+              <Tab eventKey="topschools" title="Top Scores (Etablissments)">
+                <table className="table table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nom</th>
+                      <th scope="col">Score total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.props.schoolsByScore.map((score, index) => {
+                      return (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>{score.school.name}</td>
+                          <td>{score.total_score}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Tab>
+            
             </Tabs>
           </div>
 
           <div className="col-3  col-12-sm">
-            <div className="card bg-light mb-4">
+           
+
+            <TopSchools limit="25" />
+            <TopUsers limit="25" />
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+}
+
+/*  
+
+ <div className="card bg-light mb-4">
               <div className="card-header">Top Matiéres</div>
               <div className="card-text">
-                <ul class="list-group list-group-hover">
+                <ul className="list-group list-group-hover">
                   {this.props.popularSubjects.map(score => {
                     return (
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <li key={score.played} className="list-group-item d-flex justify-content-between align-items-center">
                         {score.subject.name}
-                        <span class="badge badge-primary badge-pill">
+                        <span className="badge badge-primary badge-pill">
                           {score.played}
                         </span>
                       </li>
@@ -310,37 +280,61 @@ class Stats extends React.Component {
                 </ul>
               </div>
             </div>
+            
+ <h1 className="display-5">
+          <span className="badge badge-primary">
+            {" "}
+            <FontAwesomeIcon icon="book" size="lg" /> ? Matiéres
+          </span>{" "}
+          <span className="badge badge-secondary">
+            {" "}
+            <FontAwesomeIcon icon="clipboard-list" size="lg" />{" "}
+            {this.props.quizzesCount} Quizz
+          </span>{" "}
+          <span className="badge badge-success">
+            {" "}
+            <FontAwesomeIcon icon="question-circle" size="lg" />{" "}
+            {this.props.questionsCount} Questions
+          </span>{" "}
+          <span className="badge badge-danger">
+            {" "}
+            <FontAwesomeIcon icon="user" size="lg" /> {this.props.count}{" "}
+            Utilisateurs
+          </span>{" "}
+          <span className="badge badge-warning">
+            {" "}
+            <FontAwesomeIcon icon="school" size="lg" /> ? Etablissements
+          </span>{" "}
+          <span className="badge badge-info">
+            {" "}
+            <FontAwesomeIcon icon="check" size="lg" />{" "}
+            {this.props.quizzesSumPlayed} Participations
+          </span>{" "}
+        </h1>
 
-            <TopSchools limit="25" />
-            <TopUsers limit="25" />
-          </div>
-        </div>
         <hr />
         <div className="row" style={{ justifyContent: "space-around" }}>
-          <div class="card border-info mb-3">
-            <div class="card-header">Distribution des Quizz</div>
-            <div class="card-body">
-              <h4 class="card-title">Selon les Matiéres</h4>
-              <p class="card-text">
+          <div className="card border-info mb-3">
+            <div className="card-header">Distribution des Quizz</div>
+            <div className="card-body">
+              <h4 className="card-title">Selon les Matiéres</h4>
+              <p className="card-text">
                 <DonutChart data={quizzesBySubjectData} />
               </p>
             </div>
           </div>
 
-          <div class="card border-info mb-3">
-            <div class="card-header">Distribution des Quizz</div>
-            <div class="card-body">
-              <h4 class="card-title">Selon les Niveaux</h4>
-              <p class="card-text">
+          <div className="card border-info mb-3">
+            <div className="card-header">Distribution des Quizz</div>
+            <div className="card-body">
+              <h4 className="card-title">Selon les Niveaux</h4>
+              <p className="card-text">
                 <DonutChart data={quizzesByLevelData} />
               </p>
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
-}
+        */
 
 Stats.propTypes = {
   usersByScore: PropTypes.array.isRequired,

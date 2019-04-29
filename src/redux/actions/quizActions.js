@@ -86,7 +86,7 @@ export const resetChoices = () => async dispatch => {
 
 export const addScore = scoreData => async dispatch => {
   const resultScore = await axios.post(
-    `http://localhost:4000/scores/add`,
+    `http://localhost:4000/scores/`,
     scoreData
   );
   await axios.put(`http://localhost:4000/quiz/updatePlayed/${scoreData.quizId}`);

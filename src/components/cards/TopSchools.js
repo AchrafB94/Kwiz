@@ -7,7 +7,7 @@ import { getSchoolsThisWeek } from "../../redux/actions/scoreActions";
 class TopSchools extends React.Component {
 
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getSchoolsThisWeek()
   }
 
@@ -20,7 +20,7 @@ class TopSchools extends React.Component {
     return(
       <div className="card bg-light mb-3">
       <div className="card-body">
-        <h4 className="card-title">Top {this.props.limit} etablissments cette semaine</h4>
+        <h5 className="card-title">Top {this.props.limit} etablissments cette semaine</h5>
         <div className="card-text">
         <table className="table table-striped">
 

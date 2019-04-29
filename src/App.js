@@ -3,22 +3,52 @@ import Loadable from "react-loadable";
 import Header from "./components/header/Header";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
-import { Switch, BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {
+  Switch,
+  BrowserRouter as Router,
+  Route,
+  Redirect
+} from "react-router-dom";
 import Sidebar from "./components/sidebar/Sidebar";
 import { Provider } from "react-redux";
 import store from "./store";
-import NotFound from './components/NotFound';
-import Profile from './components/profile/Profile';
+import NotFound from "./components/NotFound";
+import Profile from "./components/profile/Profile";
 
 import Footer from "./components/footer/Footer";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {faCheck, faIgloo, faBook, faBell, faQuestionCircle,faSchool, faUser, faPlus, faComments, faClipboardList, faListOl, faHome, faInfoCircle, faStopwatch, faTimes, faCircle, faSignInAlt, faSignOutAlt, faCog } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCheck,
+  faIgloo,
+  faBook,
+  faBell,
+  faQuestionCircle,
+  faSchool,
+  faUser,
+  faPlus,
+  faComments,
+  faClipboardList,
+  faListOl,
+  faHome,
+  faInfoCircle,
+  faStopwatch,
+  faTimes,
+  faCircle,
+  faSignInAlt,
+  faSignOutAlt,
+  faCog,
+  faEnvelope,
+  faBirthdayCake,
+  faPhone,
+  faLayerGroup,
+  faMapMarker,
+  faCalculator,
+} from "@fortawesome/free-solid-svg-icons";
 
-import './bootstrap.min.css'
-import ProfileModify from "./components/profile/ProfileModify";
+import "./bootstrap.min.css";
 import Settings from "./components/settings/Settings";
 
-import Test from './Test'
+import Test from "./Test";
 
 library.add(faIgloo);
 library.add(faHome);
@@ -35,12 +65,17 @@ library.add(faTimes);
 library.add(faSignInAlt);
 library.add(faSignOutAlt);
 library.add(faCog);
-library.add(faPlus)
-library.add(faBook)
-library.add(faQuestionCircle)
-library.add(faSchool)
-library.add(faBell)
-
+library.add(faPlus);
+library.add(faBook);
+library.add(faQuestionCircle);
+library.add(faSchool);
+library.add(faBell);
+library.add(faEnvelope);
+  library.add(faBirthdayCake);
+    library.add(faPhone);
+      library.add(faLayerGroup);
+        library.add(faMapMarker);
+          library.add(faCalculator);
 
 function LoadingComponent() {
   return (
@@ -79,39 +114,32 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-          <Header />
+            <Header />
             <div className="d-flex">
-            
-            <Sidebar />
+              <Sidebar />
 
-            <div id="page-content-wrapper">
-            
-            
-           
-
-              <div className="container-fluid">.
-                <Switch>
-                
-
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
-                <PrivateRoute exact path="/" component={Home} />
-                <PrivateRoute exact path="/stats" component={Stats} />
-                <PrivateRoute exact path="/subject/:subjectId" component={Subject} />
-                <PrivateRoute exact path="/quiz/:id" component={Quiz} />
-                <PrivateRoute path="/settings" component={Settings} />
-                <PrivateRoute path="/profilemodify" component={ProfileModify} />
-                <PrivateRoute path="/profile" component={Profile} />
-                <PrivateRoute path="/test" component={Test} />
-                <Route component={NotFound} />
-              </Switch>
-              
-             
-            
+              <div id="page-content-wrapper">
+                <div className="container-fluid">
+                  .
+                  <Switch>
+                    <PublicRoute exact path="/login" component={Login} />
+                    <PublicRoute exact path="/register" component={Register} />
+                    <PrivateRoute exact path="/" component={Home} />
+                    <PrivateRoute exact path="/stats" component={Stats} />
+                    <PrivateRoute
+                      exact
+                      path="/subject/:subjectId"
+                      component={Subject}
+                    />
+                    <PrivateRoute exact path="/quiz/:id" component={Quiz} />
+                    <PrivateRoute path="/settings/:setting" component={Settings} />
+                  
+                    <PrivateRoute path="/profile" component={Profile} />
+                    <PrivateRoute path="/test" component={Test} />
+                    <Route component={NotFound} />
+                  </Switch>
+                </div>
               </div>
-             
-           
-            </div>
             </div>
             <Footer />
           </div>
@@ -120,7 +148,6 @@ class App extends Component {
     );
   }
 }
-
 
 function PrivateRoute({ component: Component, ...rest }) {
   return (
@@ -142,4 +169,24 @@ function PrivateRoute({ component: Component, ...rest }) {
   );
 }
 
-export default App
+function PublicRoute({ component: Component, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        !localStorage.usertoken ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+export default App;

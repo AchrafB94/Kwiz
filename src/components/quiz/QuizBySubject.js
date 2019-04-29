@@ -1,15 +1,14 @@
 import React from "react";
-import jwt_decode from "jwt-decode"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAvailableQuizzes } from "../../redux/actions/quizActions";
 import { Link } from "react-router-dom";
 
 class QuizList extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     
-   const user =  jwt_decode(localStorage.usertoken)
-   this.props.getAvailableQuizzes(user.levelId);
+   const level =  localStorage.userlevel
+   this.props.getAvailableQuizzes(level);
   }
 
 
@@ -28,7 +27,7 @@ class QuizList extends React.Component {
                   <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
                 </h2>
                 <p className="text-muted">
-                  Ajouté le {quiz.created} par <b>Mr. {quiz.user.firstname+" "+quiz.user.lastname}</b>
+                  Ajouté le {quiz.created} par <b>{quiz.user.firstname+" "+quiz.user.lastname}</b>
                 </p>
                 <p className="text-muted">{quiz.description}</p>
               </div>

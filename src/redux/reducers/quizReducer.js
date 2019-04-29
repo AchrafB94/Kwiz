@@ -6,7 +6,9 @@ import {GET_QUIZZES, GET_QUIZ, GET_SUBJECTS, SAVE_ANSWER, ADD_SCORE,   QUIZZES_C
     TOP_QUIZZES_BY_USER,
     GET_SUBJECT,
     SUGGEST_QUIZZES,
-    RESET_CHOICES} from '../actions/types';
+    RESET_CHOICES,
+    SUBJECTS_ON} from '../actions/types';
+    
 
 
 const initialState = {
@@ -22,7 +24,8 @@ const initialState = {
     quizzesBySubject: [],
     quizzesByUsers: [],
     subject: {},
-    quizzesSuggestions: []
+    quizzesSuggestions: [],
+    loadSubjects: false
 
 };
 
@@ -42,6 +45,7 @@ export default function(state = initialState, action) {
         case GET_SUBJECT: return {...state, subject: action.payload};
         case SUGGEST_QUIZZES: return {...state, quizzesSuggestions: action.payload};
         case RESET_CHOICES: return {...state, choices: []}
+        case SUBJECTS_ON: return {...state, loadSubjects: true}
          default: return state;
     }
 }

@@ -16,7 +16,8 @@ import {
     USER_FAVORITE,
     POPULAR_SUBJECTS,
     TOP_USERS_THIS_WEEK,
-    CHECK_WINNER
+    CHECK_WINNER,
+    GET_WINNERS
 
   } from "./types";
   import axios from "axios";
@@ -28,16 +29,28 @@ export const checkWinner = (quizId,userId) => async dispatch => {
   dispatch({
     type: CHECK_WINNER,
     payload: result.data
-  });
+  })
 };
   
   export const getLastThreeWinners = () => async dispatch => {
 
     const result = await axios.get(`http://localhost:4000/scores/lastThreeWinners`);
-      dispatch({
-        type: LAST_THREE_WINNERS,
-        payload: result.data
-      });
+  
+    dispatch({
+      type: LAST_THREE_WINNERS,
+      payload: result.data
+    })
+    
+  };
+
+  export const getWinners = (subjectId, levelId) => async dispatch => {
+
+    const result = await axios.get(`http://localhost:4000/scores/winners/${subjectId}/${levelId}`);
+  
+    dispatch({
+      type: GET_WINNERS,
+      payload: result.data
+    })
     
   };
   
