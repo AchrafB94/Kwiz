@@ -6,9 +6,7 @@ import { Link } from 'react-router-dom'
 
 class QuizList extends React.Component {
   componentDidMount() {
-    
-   const level = localStorage.userlevel
-   this.props.getAvailableQuizzes(level);
+   this.props.getAvailableQuizzes();
   }
 
 
@@ -19,19 +17,15 @@ class QuizList extends React.Component {
       <div key={quiz.id}>
         <div className="card ">
           <div className="row no-gutters">
-            <div className="col-auto">
-              <Link to={"/quiz/" + quiz.id}>
-                <img
-                  src={require(`../../images/${quiz.subject.image}.png`)}
-                  alt=""
-                  height="40"
-                />
-              </Link>
-            </div>
 
             <div className="col">
               <div className="card-block">
                 <h4>
+                <Link to={"/quiz/" + quiz.id} ><span className="badge badge-secondary">
+          Niveau {quiz.level.name}
+                    </span>
+                    
+                    </Link>{" "}
                   <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
                 </h4>
               </div>

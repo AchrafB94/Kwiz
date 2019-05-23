@@ -6,7 +6,10 @@ import axios from 'axios'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getUser, updateUser, updateImage } from "../../redux/actions/userActions";
+import { getLevels } from "../../redux/actions/levelActions";
+import { getSchools, addSchool } from "../../redux/actions/schoolActions";
 
+import Select from 'react-select';
 
 class Settings extends React.Component {
   constructor(props) {
@@ -17,12 +20,11 @@ class Settings extends React.Component {
       lastname: "",
       birthdate: "",
       phone: "",
-      levelId: null,
-      district: "",
-      city: "",
-      province: "",
+      levelId: 1,
+      schoolId: null,
       image: "",
       gender: "",
+      userClass: "",
 
       oldPassword: "",
       newPassword: "",
@@ -51,6 +53,8 @@ class Settings extends React.Component {
       gender: this.props.user.gender,
       id: userId
     });
+    this.props.getSchools()
+    this.props.getLevels()
   }
 
   componentWillReceiveProps(nextProps, nextState) {
@@ -59,25 +63,40 @@ class Settings extends React.Component {
       firstname,
       lastname,
       birthdate,
-      district,
-      city,
-      province,
       levelId,
       phone,
-      gender
+      gender,
+      schoolId,
+      image,
+      userClass
     } = nextProps.user;
     this.setState({
       id,
       firstname,
       lastname,
       birthdate,
-      district,
-      city,
-      province,
       levelId,
       phone,
-      gender
+      gender,
+      schoolId,
+      image,
+      userClass
     });
+  }
+
+  
+  handleSchoolChange = (newValue, actionMeta) => {
+
+    if(newValue){
+      this.setState({
+        schoolId: newValue.value
+      })
+    }
+
+
+
+  };
+  handleSchoolInputChange = (inputValue, actionMeta) => {
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -95,22 +114,20 @@ class Settings extends React.Component {
       firstname,
       lastname,
       birthdate,
-      district,
-      city,
-      province,
       levelId,
+      schoolId,
       phone
     } = this.state;
+
+    console.log(schoolId)
 
     const updUser = {
       id,
       firstname,
       lastname,
       birthdate,
-      district,
-      city,
-      province,
       levelId,
+      schoolId,
       phone
     };
     
@@ -132,8 +149,7 @@ class Settings extends React.Component {
       image: "",
       gender: ""
   });
-
-  this.props.history.push('/');
+  window.location.replace("/profile")
   }
 
   
@@ -229,14 +245,14 @@ onSubmitFile(e) {
       const filename = Date.now()+'-'+this.state.file.name
     const data = new FormData() 
     data.append('file', this.state.file, filename)
-    
     axios.post("http://localhost:4000/users/upload", data, {
   })
 
   const {id} = this.state
   const updImage = {
     id,
-    filename
+    filename,
+    oldImage: this.state.image
   }
   this.props.updateImage(updImage)
 
@@ -245,12 +261,14 @@ onSubmitFile(e) {
 this.setState({
   image: ""
 })
-this.props.history.push('/');
+this.props.history.push("/")
 
 }
   
 
   render() {
+    const options = this.props.schools.map(school => {return {value: school.id, label: school.name}})
+  
     
     const fileAlert = (
       <Alert className="container" dismissible variant="info">
@@ -264,9 +282,6 @@ this.props.history.push('/');
       firstname,
       lastname,
       birthdate,
-      district,
-      city,
-      province,
       levelId,
       phone,
       oldPassword,
@@ -278,12 +293,13 @@ this.props.history.push('/');
       <div className="card container mt-5 mb-5">
         <Tabs fill defaultActiveKey={this.props.match.params.setting} id="uncontrolled-tab-example">
           <Tab eventKey="profile" id="profile" title="Profile">
-            <div className="container">
-              <div className="col-md-8 mt-5 mx-auto">
+         
+            <div className="container mt-5 mb-5">
+             
                 <form onSubmit={this.onSubmit}>
-                  <h1 className="h3 mb-3 font-weight-normal">
+                  <h3>
                     Modifier votre profile
-                  </h1>
+                  </h3>
                   <div className="form-group row">
                     <div className="form-group col-6">
                       <label htmlFor="firstname">Prénom</label>
@@ -322,6 +338,26 @@ this.props.history.push('/');
                         required
                       />
                     </div>
+                    <div className="form-group col-3">
+                      <label htmlFor="phone">Téléphone</label>
+                      <input
+                        type="tel"
+                        className="form-control"
+                        name="phone"
+                        value={phone}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div className="form-group col-3">
+                      <label htmlFor="class">Classe</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="class"
+                        value={this.state.class}
+                        onChange={this.onChange}
+                      />
+                    </div>
 
                   </div>
 
@@ -357,50 +393,7 @@ this.props.history.push('/');
                     </div>
                   </center>
 
-                  <hr />
-                  <div className="row">
-                    <div className="form-group col-3">
-                      <label htmlFor="phone">Téléphone</label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        name="phone"
-                        value={phone}
-                        onChange={this.onChange}
-                      />
-                    </div>
-
-                    <div className="form-group col-3">
-                      <label htmlFor="district">Quartier</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="district"
-                        value={district}
-                        onChange={this.onChange}
-                      />
-                    </div>
-                    <div className="form-group col-3">
-                      <label htmlFor="city">Ville</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="city"
-                        value={city}
-                        onChange={this.onChange}
-                      />
-                    </div>
-                    <div className="form-group col-3">
-                      <label htmlFor="province">Province</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="province"
-                        value={province}
-                        onChange={this.onChange}
-                      />
-                    </div>
-                  </div>
+                  <br />
 
                   <button
                     type="submit"
@@ -409,7 +402,6 @@ this.props.history.push('/');
                     Enregistrez
                   </button>
                 </form>
-              </div>
             </div>
           </Tab>
           <Tab eventKey="email" id="email" title="Email">
@@ -481,21 +473,17 @@ this.props.history.push('/');
               </form>
             </div>
           </Tab>
-          <Tab eventKey="level" title="Niveau des quizz">
+          <Tab eventKey="level" title="Niveau">
           <div className=" container mt-5 mb-5">
           <form onSubmit={this.onSubmit}>
-                <h3>Modifier le niveau des quizz</h3>
+                <h3>Modifier votre niveau</h3>
                 <div className="input-group">
   <select className="custom-select" 
   id="inputLevelSelect"
   name="levelId"
                           defaultValue={levelId}
                           onChange={this.onChange}>
-    <option defaultValue>Selectionnez un niveau</option>
-    <option value="1">Primaire</option>
-                          <option value="2">Secondaire</option>
-                          <option value="3">Universitaire</option>
-                          <option value="4">Tout Publique</option>
+   {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
   </select>
   <div className="input-group-append">
     <button className="btn btn-outline-info" type="submit">Enregistrer</button>
@@ -506,7 +494,22 @@ this.props.history.push('/');
           </Tab>
           
           <Tab eventKey="school" title="Etablissment">
-            Assurez-vous de taper le mot de passe correct et essayez à nouveau!
+          <div className=" container mt-5 mb-5">
+        
+                <h3>Modifier l'etablissment</h3>
+                <form onSubmit={this.onSubmit}>
+                <div className="input-group">
+                <Select className="col-10" name="schoolId"
+        isClearable
+        onChange={this.handleSchoolChange}
+        onInputChange={this.handleSchoolInputChange}
+        options={options}
+      />
+       <div className="input-group-append">
+    <button className="btn btn-outline-info" type="submit">Enregistrer</button>
+  </div></div>
+      </form>
+                   </div>
           </Tab>
           <Tab eventKey="photo" title="Photo de profile">
           <div className=" container mt-5 mb-5">
@@ -540,14 +543,18 @@ this.props.history.push('/');
 
 Settings.propTypes = {
   user: PropTypes.object.isRequired,
-  getUser: PropTypes.func.isRequired
+  getUser: PropTypes.func.isRequired,
+  schools: PropTypes.array.isRequired,
+
 };
 
 const mapStateToProps = state => ({
-  user: state.user.user
+  user: state.user.user,
+  schools: state.schools.schools,
+  levels: state.levels.levels
 });
 
 export default connect(
   mapStateToProps,
-  { getUser, updateUser, updateImage }
+  { getUser, updateUser, updateImage,  getSchools, addSchool, getLevels  }
 )(Settings);

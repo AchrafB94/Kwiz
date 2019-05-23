@@ -2,13 +2,27 @@
     overflow-x: hidden;
   }
 
-  #subjects {
-    font-size: 20px;
+#subject {
+  font-weight: bold
+}
+
+ #admin {
+    color: darkcyan;
+    font-weight: bold
+}
+
+#forum {
+  font-weight: bold;
+  color: orange
+}
+#contrib {
+  font-weight: bold;
+  color: orange
 }
   
   #sidebar-wrapper {
     min-height: 87vh;
-    margin-left: -12rem;
+    margin-left: -15rem;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;

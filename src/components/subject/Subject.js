@@ -5,7 +5,7 @@ import QuizBySubject from "../quiz/QuizBySubject";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {getSubject} from '../../redux/actions/quizActions'
+import {getSubject} from '../../redux/actions/subjectActions'
 
 import { Link } from "react-router-dom";
 
@@ -29,8 +29,6 @@ class Subject extends React.Component {
 
   render() {
 
-    const image = this.props.subject.image;
-    if (image == null ) return null;
 
     const subjectId = this.props.subject.id;
     if (subjectId == null ) return null;
@@ -40,11 +38,7 @@ class Subject extends React.Component {
             <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-4">
             
               
-                <h1><img
-                  src={require(`../../images/${image}.png`)}
-                  alt=""
-                  height="40"
-                />{this.props.subject.name}</h1>
+                <h1>{this.props.subject.name}</h1>
              
 
               <QuizBySubject subjectId={subjectId} />
@@ -65,7 +59,7 @@ Subject.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  subject: state.quiz.subject
+  subject: state.subjects.subject
 });
 
 export default withRouter(connect(

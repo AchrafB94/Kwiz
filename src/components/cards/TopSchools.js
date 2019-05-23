@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getSchoolsThisWeek } from "../../redux/actions/scoreActions";
 
+import { Link } from "react-router-dom"
 class TopSchools extends React.Component {
 
 
@@ -26,8 +27,8 @@ class TopSchools extends React.Component {
 
   <tbody>
     {top.map((score,index) => {return <tr key={index}>
-      <th scope="row">{index + 1}</th>
-      <td>{score.school.name}</td>
+      <th scope="row">#{index + 1}</th>
+      <td><Link to={"/school/"+score.school.id} >{score.school.name}</Link></td>
       <td>{score.total_score} points</td>
     </tr>})}
     

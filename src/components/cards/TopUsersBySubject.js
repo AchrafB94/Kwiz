@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getUsersBySubject } from "../../redux/actions/scoreActions";
-
 class TopSchools extends React.Component {
 
 

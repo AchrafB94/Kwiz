@@ -7,8 +7,7 @@ import { Link } from "react-router-dom";
 class QuizList extends React.Component {
   componentDidMount() {
     
-   const level =  localStorage.userlevel
-   this.props.getAvailableQuizzes(level);
+   this.props.getAvailableQuizzes();
   }
 
 
@@ -22,13 +21,14 @@ class QuizList extends React.Component {
             <div className="col">
               <div className="card-body">
                 <h2>
-                  
+                <Link to={"/quiz/" + quiz.id} ><span className="badge badge-secondary">
+          Niveau {quiz.level.name}
+                    </span>
+                    
+                    </Link>{" "}
                   
                   <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
                 </h2>
-                <p className="text-muted">
-                  Ajouté le {quiz.created} par <b>{quiz.user.firstname+" "+quiz.user.lastname}</b>
-                </p>
                 <p className="text-muted">{quiz.description}</p>
               </div>
             </div>

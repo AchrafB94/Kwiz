@@ -16,7 +16,11 @@ import {
     TOP_SCHOOLS_THIS_WEEK,
     TOP_USERS_THIS_WEEK,
     CHECK_WINNER,
-    GET_WINNERS
+    GET_WINNERS,
+    NEW_SCORES,
+    GET_WINNERS_BY_QUIZ,
+    USER_MEDALS_BY_SCHOOL,
+    SCHOOL_SUM_MEDALS,SAVE_ANSWER, ADD_SCORE, GET_SCORES, FILTER_SCORES
 
   } from "../actions/types";
 
@@ -35,15 +39,24 @@ const initialState = {
     scoreCount: 0,
     scoreSum: 0,
     medalSum: 0,
+    schoolMedalSum: 0,
     popularSubjects: [],
     popularSchools: [],
     popularUsers: [],
-    winners: []
+    winners: [],
+    scores: [],
+    userMedalsBySchool: [],
+    winnersByQuiz: [],
+    choices: [],
+    score: {},
+    filteredScores: []
     
 };
 
 export default function(state = initialState, action) {
     switch(action.type) {
+        case SAVE_ANSWER: return {...state, choices: [...state.choices, action.payload]};
+        case ADD_SCORE: return {...state, score: [action.payload]};
         case TOP_SCHOOLS_BY_LEVEL: return {...state, schoolsByLevel: action.payload};
         case TOP_SCHOOLS_BY_MEDALS:return {...state, schoolsByMedals: action.payload};
         case TOP_SCHOOLS_BY_SCORE: return {...state, schoolsByScore: action.payload};
@@ -61,7 +74,13 @@ export default function(state = initialState, action) {
         case TOP_SCHOOLS_THIS_WEEK: return {...state, popularSchools: action.payload};
         case TOP_USERS_THIS_WEEK: return {...state, popularUsers: action.payload};
         case CHECK_WINNER: return {...state, winner: action.payload};
-        case GET_WINNERS: return {...state, winners: action.payload}
+        case GET_WINNERS: return {...state, winners: action.payload};
+        case NEW_SCORES: return {...state, scores: action.payload};
+        case GET_WINNERS_BY_QUIZ: return {...state, winnersByQuiz: action.payload};
+        case USER_MEDALS_BY_SCHOOL: return {...state, userMedalsBySchool: action.payload};
+        case SCHOOL_SUM_MEDALS: return {...state, schoolMedalSum: action.payload};
+        case GET_SCORES: return {...state, scores: action.payload};
+        case FILTER_SCORES: return {...state, filteredScores: action.payload}
          default: return state;
     }
 }

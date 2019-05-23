@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import jwt_decode from "jwt-decode";
 import gold from "../../images/gold.png";
 import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getUser } from "../../redux/actions/userActions";
@@ -18,7 +16,9 @@ import { Image } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Profile.css";
 import defaultImage from "../../images/default.png"
-class Profile extends Component {
+import {Link} from "react-router-dom"
+
+class PublicProfile extends Component {
   constructor() {
     super();
     this.state = {
@@ -29,26 +29,22 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    const token = localStorage.usertoken;
-    const decoded = jwt_decode(token);
-    const userId = decoded.id;
-    this.props.getUser(userId);
-    this.props.getUserAverage(userId);
-    this.props.getUserCountScore(userId);
-    this.props.getUserFavoriteSubject(userId);
-    this.props.getUserSumMedals(userId);
-    this.props.getUserSumScore(userId);
+      
+    const { id } = this.props.match.params;
+    this.props.getUser(id);
+    this.props.getUserAverage(id);
+    this.props.getUserCountScore(id);
+    this.props.getUserFavoriteSubject(id);
+    this.props.getUserSumMedals(id);
+    this.props.getUserSumScore(id);
   }
 
   
 
   render() {
-    
-    if (this.props.user.role == null) return null;
     if (this.props.user.level == null) return null;
     if (this.props.user.school == null) return null;
     if (this.props.user.image == null) return null;
-
     return (
       <div className="container card bg-light mt-5 mb-5">
         <div className="row">
@@ -58,13 +54,13 @@ class Profile extends Component {
               thumbnail
               
             /> 
-            <Link to="/settings/photo" params={{ setting: "photo" }} ><button className="btn btn-sm btn-light center">Change votre photo de profil</button></Link></div> :
+            </div> :
             <div>
             <Image
               src={defaultImage}
               thumbnail
               
-            /> <Link to="/settings/photo" ><button className="btn btn-sm btn-light center">Ajouter une photo de profil</button></Link></div>}
+            /> </div>}
             
             <hr />
             <div id="medals" className="row">
@@ -101,7 +97,7 @@ class Profile extends Component {
           <div className="col-9">
             <div>
               <h1 className="display-4">
-                {this.props.user.roleId > 1 ? <span className="badge badge-secondary">{this.props.user.role.name}</span> : ""}
+              {this.props.user.roleId > 1 ? <span className="badge badge-secondary">{this.props.user.role.name}</span> : ""}
                 {" "}
                 {this.props.user.firstname + " " + this.props.user.lastname}
               </h1>
@@ -114,31 +110,17 @@ class Profile extends Component {
                 </td>
                 <td>
                   {this.props.user.email}{" "}
-                  <Link to="/settings/email" >
-                    <button className="btn-light btn-sm">Modifier</button>
-                  </Link>
+         
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <FontAwesomeIcon icon="birthday-cake" /> Date de naissance
-                </td>
-                <td>{this.props.user.birthdate}</td>
-              </tr>
-              <tr>
-                <td>
-                  <FontAwesomeIcon icon="phone" /> Téléphone
-                </td>
-                <td>{this.props.user.phone}</td>
-              </tr>
+              
+           
               <tr>
                 <td>
                   <FontAwesomeIcon icon="layer-group" /> Niveau
                 </td>
                 <td>{this.props.user.level.name}
-                <Link to="/settings/level">
-                    <button className="btn-light btn-sm">Modifier</button>
-                  </Link>
+       
                   </td>
                 
               </tr>
@@ -147,10 +129,8 @@ class Profile extends Component {
                   <FontAwesomeIcon icon="school" /> Etablissement
                 </td>
                 <td>
-                  <Link to={"/school/"+this.props.user.school.id}> {this.props.user.school.name}</Link>
-                  <Link to="/settings/school">
-                    <button className="btn-light btn-sm">Modifier</button>
-                  </Link>
+                  <Link to={"/school/"+this.props.user.school.id} >{this.props.user.school.name}</Link> 
+                 
                 </td>
               </tr>
               <tr>
@@ -159,6 +139,7 @@ class Profile extends Component {
                 </td>
                 <td>{this.props.user.class}</td>
               </tr>
+           
               </tbody>
             </table>
           </div>
@@ -168,7 +149,7 @@ class Profile extends Component {
   }
 }
 
-Profile.propTypes = {
+PublicProfile.propTypes = {
   user: PropTypes.object.isRequired,
   average: PropTypes.array.isRequired,
   scoreCount: PropTypes.number,
@@ -201,4 +182,4 @@ export default connect(
     getUserSumMedals,
     getUserSumScore
   }
-)(Profile);
+)(PublicProfile);

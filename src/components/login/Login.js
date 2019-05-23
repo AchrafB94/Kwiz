@@ -1,14 +1,16 @@
 import React from 'react';
-import { login } from '../Functions'
+import { login } from '../../redux/actions/userActions'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
+import { Alert } from 'react-bootstrap';
 
 class Login extends React.Component{
     constructor() {
         super()
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            showAlert: false,
         }
 
         this.onChange = this.onChange.bind(this)
@@ -27,24 +29,34 @@ class Login extends React.Component{
             password: this.state.password
         }
 
-        login(user).then(res => {
-            if (res) {
-                this.props.history.push(`/`)
+        this.props.login(user).then(res => {
+            
+            window.location.replace('/')
            
-            }
+            
         }).catch(err => {
-            console.log(err)
+            
+            this.setState({
+                showAlert: true
+            })
         })
     }
 
 
     render() {
+        const handleClose = () => this.setState({ showAlert: false });
         return(
             <div className="container">
             <div className="row">
                 <div className="col-md-6 mt-5 mx-auto">
-                    <form  onSubmit={this.onSubmit}>
+           <form  onSubmit={this.onSubmit}>
                         <h1 className="h3 mb-3 font-weight-normal">Bienvenue sur KWIZ!</h1>
+                        {this.state.showAlert ?  <Alert dismissible onClose={handleClose} variant="info">  <p>
+  L'adresse Email ou le mot de passe est incorrect. Veuillez essayer à nouveau. 
+  </p>
+</Alert> : ""}
+                       
+         
                         <div className="form-group">
                             <label htmlFor="email">Email</label>
                             <input type="email"

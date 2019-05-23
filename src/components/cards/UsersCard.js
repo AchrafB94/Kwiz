@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
@@ -29,7 +30,7 @@ class UserCard extends React.Component{
             <div className="card bg-light mb-3">
     <div className="card-header">
   <small className="text-muted">
-                Nouveau Membre: <b>{this.props.newestUser.map(user => user.firstname+" "+user.lastname)}</b>
+                Nouveau Membre: <b>{this.props.newestUser.map(user => <Link key={user.id} to={"/user/"+user.id} >{user.firstname+" "+user.lastname}</Link> )}</b>
               </small>
               </div>
   <div className="card-body">

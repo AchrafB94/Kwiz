@@ -3,13 +3,12 @@ import MedalCard from "../cards/MedalCard";
 import Question from "./Question";
 import TopUsersBySubject from "../cards/TopUsersBySubject";
 import TopSchoolsBySubject from "../cards/TopSchoolsBySubject";
-import TopWinnersBySubject from "../cards/TopWinnersBySubject";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import jwt_decode from "jwt-decode";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getQuiz, saveAnswer, addScore } from "../../redux/actions/quizActions";
-import { checkWinner } from "../../redux/actions/scoreActions";
+import { getQuiz } from "../../redux/actions/quizActions";
+import { checkWinner, addScore } from "../../redux/actions/scoreActions";
 import "./Quiz.css";
 import QuizSuggestions from "./QuizSuggestions";
 import { Modal, Button, ProgressBar, Alert } from "react-bootstrap";
@@ -29,6 +28,7 @@ class Quiz extends React.Component {
       option: "",
 
       userId: 0,
+      schoolId: 0,
 
       show: false,
       modalTitle: "Bonne chance la prochaine fois!",
@@ -40,7 +40,8 @@ class Quiz extends React.Component {
   componentDidMount() {
     const decoded = jwt_decode(localStorage.usertoken);
     this.setState({
-      userId: decoded.id
+      userId: decoded.id,
+      schoolId: decoded.schoolId
     });
 
     
@@ -112,7 +113,7 @@ class Quiz extends React.Component {
     const percentage = Math.round((correct * 100) / total);
     const time = this.state.count;
 
-    var score = Math.round((percentage * 50) / time);
+    var score = Math.round((percentage * 10) / time);
     var medal = 0;
 
 
@@ -153,7 +154,7 @@ class Quiz extends React.Component {
     const scoreData = {
       quizId: this.props.quiz.id,
       userId: this.state.userId,
-      schoolId: 1,
+      schoolId: this.state.schoolId,
       levelId: this.props.quiz.levelId,
       subjectId: this.props.quiz.subjectId,
       score,
@@ -162,7 +163,7 @@ class Quiz extends React.Component {
       medal
     };
 
-    this.props.addScore(scoreData);
+    this.props.addScore(scoreData,this.props.quiz.userId);
 
     this.setState({
       score: score,
@@ -281,9 +282,6 @@ class Quiz extends React.Component {
     if (level == null) return null;
     if (questions == null) return null;
 
-    
-    console.log(this.props.winner)
-
     const quizStart = (
       <div>
         <hr className="my-4" />
@@ -359,7 +357,7 @@ class Quiz extends React.Component {
                 <Alert.Heading>Quiz fermé!</Alert.Heading>
                 <p>Vous avez déjà joué à ce quiz et remporté une médaille!</p>
               </Alert> : 
-            quiz.rank === 1 ? (
+            quiz.rank === 0 ? (
               this.state.currentQuestion === 0  ? (
                 quizStart
               ) : this.state.show ? (
@@ -375,16 +373,10 @@ class Quiz extends React.Component {
             )}
           </div>
                 <hr />
-              <div className="row">
-          <div className="col-6">
             <h4>Autres quizz en {subject.name}:</h4>
-            <QuizSuggestions subjectId={subject.id} currentId={quiz.id} />
-          </div>
-          <div className="col-6">
-            <h4>Top 5 Gagnants en {subject.name} (Niveau {level.name}):</h4>
-        <TopWinnersBySubject subject={subject.id} level={level.id} />
-          </div>
-        </div>
+           
+            <QuizSuggestions subjectId={subject.id} currentId={quiz.id}  />
+      
         </div>
 
         <div className="col-lg-3 col-xl-3 col-md-12 col-sm-12 mt-2 ">
@@ -417,9 +409,8 @@ class Quiz extends React.Component {
 Quiz.propTypes = {
   quiz: PropTypes.object.isRequired,
   getQuiz: PropTypes.func.isRequired,
-  saveAnswer: PropTypes.func.isRequired,
   addScore: PropTypes.func.isRequired,
-  winner: PropTypes.bool.isRequired
+  winner: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
@@ -429,5 +420,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getQuiz, saveAnswer, addScore, checkWinner }
+  { getQuiz, addScore, checkWinner }
 )(Quiz);

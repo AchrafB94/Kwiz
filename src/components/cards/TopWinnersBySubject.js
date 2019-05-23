@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getWinners } from "../../redux/actions/scoreActions";
 
+import { Link } from "react-router-dom"
 import gold from "../../images/gold.png";
 import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
@@ -32,7 +33,7 @@ class TopWinnersBySubject extends React.Component {
     return <tr key={index}>
                           <th scope="row">{index + 1}</th>
                           <td>
-                            {score.user.firstname + " " + score.user.lastname}
+                          <Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname}</Link>
                           </td>
                           <td>  <img src={gold} alt="" height="25" /> {Math.round(score.total_medals / 100)}</td>
                           <td>  <img src={silver} alt="" height="25" /> {Math.round(score.total_medals / 10) % 10}</td>

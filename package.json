@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
+    "britecharts-react": "^0.5.1",
     "jquery": "^3.4.0",
     "jwt-decode": "^2.2.0",
     "node-sass": "^4.11.0",
@@ -22,6 +23,7 @@
     "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.8",
+    "react-select": "^2.4.3",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "sequelize": "^5.2.8"

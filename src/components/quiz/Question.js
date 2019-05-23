@@ -60,7 +60,7 @@ class Question extends React.Component {
 
         {this.props.data.answers.map(answer => {
           return (
-            this.props.data.type ? 
+            this.props.data.type === 'multiple' ? 
             <div key={answer.id} className="form-check">
             <label>
               <input

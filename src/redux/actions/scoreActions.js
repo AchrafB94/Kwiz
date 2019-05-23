@@ -17,12 +17,41 @@ import {
     POPULAR_SUBJECTS,
     TOP_USERS_THIS_WEEK,
     CHECK_WINNER,
-    GET_WINNERS
+    GET_WINNERS,
+    NEW_SCORES,
+    GET_WINNERS_BY_QUIZ,
+    USER_MEDALS_BY_SCHOOL,
+    SCHOOL_SUM_MEDALS,
+    ADD_SCORE,
+    GET_SCORES,
+    FILTER_SCORES
 
   } from "./types";
   import axios from "axios";
 
 
+  export const addScore = (scoreData,contribId) => async dispatch => {
+    const resultScore = await axios.post(
+      `http://localhost:4000/scores/`,
+      scoreData
+    );
+    await axios.put(`http://localhost:4000/quiz/updatePlayed/${scoreData.quizId}`);
+  
+    if(scoreData.medal !== 0) {
+      await axios.put(`http://localhost:4000/quiz/updateMedals/${scoreData.quizId}/${scoreData.medal}`)
+    }
+  
+    if(scoreData.medal === 1) {
+      
+      await axios.put(`http://localhost:4000/quiz/close/${scoreData.quizId}`,contribId)
+    }
+    
+    dispatch({
+      type: ADD_SCORE,
+      payload: resultScore.data
+    });
+    
+  };
   
 export const checkWinner = (quizId,userId) => async dispatch => {
   const result = await axios.get(`http://localhost:4000/scores/checkWinner/${quizId}/${userId}`);
@@ -31,81 +60,88 @@ export const checkWinner = (quizId,userId) => async dispatch => {
     payload: result.data
   })
 };
+
+export const getNewScores = () => async dispatch => {
+  const result = await axios.get('http://localhost:4000/scores/new')
+  dispatch({
+    type: NEW_SCORES,
+    payload: result.data
+  })
+}
+
+export const getScores = () => async dispatch => {
+  const result = await axios.get('http://localhost:4000/scores/')
+  dispatch({
+    type: GET_SCORES,
+    payload: result.data
+  })
+}
   
   export const getLastThreeWinners = () => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/lastThreeWinners`);
-  
     dispatch({
       type: LAST_THREE_WINNERS,
       payload: result.data
     })
-    
   };
 
   export const getWinners = (subjectId, levelId) => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/winners/${subjectId}/${levelId}`);
-  
     dispatch({
       type: GET_WINNERS,
       payload: result.data
     })
-    
+  };
+
+  export const getWinnersByQuiz = (quizId) => async dispatch => {
+    const result = await axios.get(`http://localhost:4000/scores/quizwinners/${quizId}`);
+    dispatch({
+      type: GET_WINNERS_BY_QUIZ,
+      payload: result.data
+    })
   };
   
   export const getSchoolsByScore = () => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/schoolsByScore`);
       dispatch({
         type: TOP_SCHOOLS_BY_SCORE,
         payload: result.data
       });
-    
   };
 
   export const getSchoolsThisWeek = () => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/topschoolsThisWeek`);
       dispatch({
         type: TOP_SCHOOLS_THIS_WEEK,
         payload: result.data
       });
-    
   };
 
   export const getSchoolsByMedals = () => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/schoolsByMedals`);
       dispatch({
         type: TOP_SCHOOLS_BY_MEDALS,
         payload: result.data
       });
-    
   };
 
   export const getSchoolsByLevel = (id) => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/schoolsByLevel/${id}`);
       dispatch({
         type: TOP_SCHOOLS_BY_LEVEL,
         payload: result.data
       });
-    
   };
 
   export const getSchoolsBySubject = (id) => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/schoolsBySubject/${id}`);
       dispatch({
         type: TOP_SCHOOLS_BY_SUBJECT,
         payload: result.data
       });
-    
   };
 
   export const getUsersByScore = () => async dispatch => {
-
     const result = await axios.get(`http://localhost:4000/scores/usersByScore`);
       dispatch({
         type: TOP_USERS_BY_SCORE,
@@ -183,6 +219,16 @@ export const checkWinner = (quizId,userId) => async dispatch => {
     
   };
 
+  
+  export const getUserMedalsBySchool = (id) => async dispatch => {
+
+    const result = await axios.get(`http://localhost:4000/scores/usermedalsbyschool/${id}`);
+      dispatch({
+        type: USER_MEDALS_BY_SCHOOL,
+        payload: result.data
+      });
+    
+  };
  
 
   export const getUserSumMedals = (id) => async dispatch => {
@@ -190,6 +236,16 @@ export const checkWinner = (quizId,userId) => async dispatch => {
     const result = await axios.get(`http://localhost:4000/scores/userSumMedals/${id}`);
       dispatch({
         type: USER_SUM_MEDALS,
+        payload: result.data
+      });
+    
+  };
+
+  export const getSchoolSumMedals = (id) => async dispatch => {
+
+    const result = await axios.get(`http://localhost:4000/scores/schoolSumMedals/${id}`);
+      dispatch({
+        type: SCHOOL_SUM_MEDALS,
         payload: result.data
       });
     
@@ -210,6 +266,23 @@ export const checkWinner = (quizId,userId) => async dispatch => {
     const result = await axios.get(`http://localhost:4000/scores/userSumScore/${id}`);
       dispatch({
         type: USER_SUM_SCORE,
+        payload: result.data
+      });
+    
+  };
+
+  export const filterScores = (levelId, subjectId) => async dispatch => {
+
+    let result = []
+    if(subjectId === "all") {
+      result = await axios.get(`http://localhost:4000/scores/filter/${levelId}/`);
+    } else {
+      result = await axios.get(`http://localhost:4000/scores/filter/${levelId}/${subjectId}`);
+    }
+
+    
+      dispatch({
+        type: FILTER_SCORES,
         payload: result.data
       });
     

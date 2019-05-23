@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Loadable from "react-loadable";
+import jwt_decode from "jwt-decode";
 import Header from "./components/header/Header";
-import Login from "./components/login/Login";
-import Register from "./components/register/Register";
+import './App.css'
 import {
   Switch,
   BrowserRouter as Router,
@@ -12,9 +12,6 @@ import {
 import Sidebar from "./components/sidebar/Sidebar";
 import { Provider } from "react-redux";
 import store from "./store";
-import NotFound from "./components/NotFound";
-import Profile from "./components/profile/Profile";
-
 import Footer from "./components/footer/Footer";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -43,12 +40,26 @@ import {
   faLayerGroup,
   faMapMarker,
   faCalculator,
+  faTrashAlt,
+  faBan,
+  faEdit,
+  faUserEdit,
+  faExclamationCircle,
+  faExclamationTriangle,
+  faCommentAlt,
+  faGripHorizontal,
+  faCogs,
+  faSearch,
+  faBars,
+  faClipboardCheck,
+  faAngleDown,
+  faAngleUp,
+  faMedal
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./bootstrap.min.css";
-import Settings from "./components/settings/Settings";
-
-import Test from "./Test";
+import AdminScores from "./components/admin/AdminScores";
+import EditQuestions from "./components/editQuestions/EditQuestions";
 
 library.add(faIgloo);
 library.add(faHome);
@@ -71,16 +82,31 @@ library.add(faQuestionCircle);
 library.add(faSchool);
 library.add(faBell);
 library.add(faEnvelope);
-  library.add(faBirthdayCake);
-    library.add(faPhone);
-      library.add(faLayerGroup);
-        library.add(faMapMarker);
-          library.add(faCalculator);
+library.add(faBirthdayCake);
+library.add(faPhone);
+library.add(faLayerGroup);
+library.add(faMapMarker);
+library.add(faCalculator);
+library.add(faTrashAlt);
+library.add(faBan);
+library.add(faEdit);
+library.add(faUserEdit);
+library.add(faExclamationCircle);
+library.add(faExclamationTriangle);
+library.add(faCommentAlt);
+library.add(faGripHorizontal);
+library.add(faCogs);
+library.add(faSearch);
+library.add(faBars);
+library.add(faClipboardCheck)
+library.add(faMedal)
+library.add(faAngleDown)
+library.add(faAngleUp)
 
 function LoadingComponent() {
   return (
     <div className="d-flex justify-content-center">
-      <div className="spinner-border" role="status">
+      <div className="spinner-border text-primary" role="status">
         <span className="sr-only">Loading...</span>
       </div>
     </div>
@@ -106,9 +132,72 @@ const Stats = Loadable({
   loader: () => import("./components/stats/Stats"),
   loading: LoadingComponent
 });
+const AdminLevels = Loadable({
+  loader: () => import("./components/admin/AdminLevels"),
+  loading: LoadingComponent
+});
+const Login = Loadable({
+  loader: () => import("./components/login/Login"),
+  loading: LoadingComponent
+});
+const AdminQuiz = Loadable({
+  loader: () => import("./components/admin/AdminQuiz"),
+  loading: LoadingComponent
+});
+const AdminSchools = Loadable({
+  loader: () => import("./components/admin/AdminSchools"),
+  loading: LoadingComponent
+});
+const AdminStats = Loadable({
+  loader: () => import("./components/admin/AdminStats"),
+  loading: LoadingComponent
+});
+const AdminSubjects = Loadable({
+  loader: () => import("./components/admin/AdminSubjects"),
+  loading: LoadingComponent
+});
+const AdminUsers = Loadable({
+  loader: () => import("./components/admin/AdminUsers"),
+  loading: LoadingComponent
+});
+const Settings = Loadable({
+  loader: () => import("./components/settings/Settings"),
+  loading: LoadingComponent
+});
+const PublicProfile = Loadable({
+  loader: () => import("./components/profile/PublicProfile"),
+  loading: LoadingComponent
+});
+const Profile = Loadable({
+  loader: () => import("./components/profile/Profile"),
+  loading: LoadingComponent
+});
+const Contributor = Loadable({
+  loader: () => import("./components/contributor/Contributor"),
+  loading: LoadingComponent
+});
+const QuizCreate = Loadable({
+  loader: () => import("./components/quizcreate/QuizCreate"),
+  loading: LoadingComponent
+});
+const School = Loadable({
+  loader: () => import("./components/school/School"),
+  loading: LoadingComponent
+});
+const NotFound = Loadable({
+  loader: () => import("./components/NotFound"),
+  loading: LoadingComponent
+});
+const Register = Loadable({
+  loader: () => import("./components/register/Register"),
+  loading: LoadingComponent
+});
+
+
+
 
 class App extends Component {
-
+  
   render() {
     return (
       <Provider store={store}>
@@ -119,23 +208,81 @@ class App extends Component {
               <Sidebar />
 
               <div id="page-content-wrapper">
-                <div className="container-fluid">
-                  .
+                <div className="container-fluid mt-4">
                   <Switch>
                     <PublicRoute exact path="/login" component={Login} />
                     <PublicRoute exact path="/register" component={Register} />
                     <PrivateRoute exact path="/" component={Home} />
                     <PrivateRoute exact path="/stats" component={Stats} />
+
+                    <AdminRoute exact path="/admin" component={AdminStats} ruleId={5} />
+                    <AdminRoute exact path="/questions/:id" component={EditQuestions} ruleId={4} />
+                    <AdminRoute
+                    ruleId={4}
+                      exact
+                      path="/contrib"
+                      component={Contributor}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/quiz-create"
+                      component={QuizCreate}
+                      ruleId={4}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/admin-quiz"
+                      component={AdminQuiz}
+                      ruleId={3}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/admin-schools"
+                      component={AdminSchools}
+                      ruleId={9}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/admin-subjects"
+                      component={AdminSubjects}
+                      ruleId={2}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/admin-users"
+                      component={AdminUsers}
+                      ruleId={7}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/admin-scores"
+                      component={AdminScores}
+                      ruleId={6}
+                    />
+                    <AdminRoute
+                      exact
+                      path="/admin-levels"
+                      component={AdminLevels}
+                      ruleId={1}
+                    />
                     <PrivateRoute
                       exact
                       path="/subject/:subjectId"
                       component={Subject}
                     />
                     <PrivateRoute exact path="/quiz/:id" component={Quiz} />
-                    <PrivateRoute path="/settings/:setting" component={Settings} />
-                  
-                    <PrivateRoute path="/profile" component={Profile} />
-                    <PrivateRoute path="/test" component={Test} />
+                    <PrivateRoute
+                      path="/settings/:setting"
+                      component={Settings}
+                    />
+                    <PrivateRoute exact path="/profile" component={Profile} />
+                    <PrivateRoute
+                      exact
+                      path="/user/:id"
+                      component={PublicProfile}
+                    />
+                    <PrivateRoute exact path="/school/:id" component={School} />
+
                     <Route component={NotFound} />
                   </Switch>
                 </div>
@@ -160,6 +307,35 @@ function PrivateRoute({ component: Component, ...rest }) {
           <Redirect
             to={{
               pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+function checkPermission(permissions,ruleId) {
+  const found = permissions.some(el => el.ruleId === ruleId);
+  if (found) return true
+  else return false
+}
+
+function AdminRoute({ component: Component, ruleId, ...rest }) {
+  
+    const decoded = jwt_decode(localStorage.usertoken);
+  const permissions = decoded.role.permissions;
+  
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        checkPermission(permissions,ruleId) ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
               state: { from: props.location }
             }}
           />
