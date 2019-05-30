@@ -178,6 +178,7 @@ class Admin extends React.Component {
                     <tr>
                       <th scope="col">Matiére</th>
                       <th scope="col">Actions</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>

@@ -128,7 +128,7 @@ class Stats extends React.Component {
                       return (
                         <tr key={index}>
                           <th scope="row">{index + 1}</th>
-                          <td><Link to={"/school/"+score.school.id} >{score.school.name}</Link></td>
+                          <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : " "}</td>
                           <td>{Math.round(score.total_medals / 100)}</td>
                           <td>{Math.round(score.total_medals / 10) % 10}</td>
                           <td>{(Math.round(score.total_medals) % 100) % 10}</td>
@@ -138,7 +138,7 @@ class Stats extends React.Component {
                   </tbody>
                 </table>
               </Tab>
-              <Tab eventKey="scores" title="Top Scores">
+              <Tab eventKey="scores" title="Meilleurs Scores">
                 <table className="table table-sm table-hover">
                   <thead>
                     <tr>
@@ -165,7 +165,7 @@ class Stats extends React.Component {
                 </table>
               </Tab>
             
-              <Tab eventKey="topschools" title="Top Scores (Etablissments)">
+              <Tab eventKey="topschools" title="Meilleurs Scores (Etablissments)">
                 <table className="table table-sm table-hover">
                   <thead>
                     <tr>
@@ -179,7 +179,7 @@ class Stats extends React.Component {
                       return (
                         <tr key={index}>
                           <th scope="row">{index + 1}</th>
-                          <td><Link to={"/school/"+score.school.id} >{score.school.name}</Link></td>
+                          <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : " "}</td>
                           <td>{score.total_score}</td>
                         </tr>
                       );

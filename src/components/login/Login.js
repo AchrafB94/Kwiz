@@ -3,15 +3,19 @@ import { login } from '../../redux/actions/userActions'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { Alert } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Login extends React.Component{
     constructor() {
+
         super()
         this.state = {
             email: '',
             password: '',
             showAlert: false,
+            message: ""
         }
+       
 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -30,15 +34,35 @@ class Login extends React.Component{
         }
 
         this.props.login(user).then(res => {
+
+            console.log(res)
             
-            window.location.replace('/')
+            if(res.code === 1001) {
+                this.setState({showAlert: true,
+                message: "L'adresse Email ou le mot de passe est incorrect. Veuillez essayer à nouveau." })
+            }
+            else if(res.code === 1002) {
+                this.setState({showAlert: true,
+                    message: "L'adresse Email ou le mot de passe est incorrect. Veuillez essayer à nouveau." })
+            }
+            else if(res.code === 1003) {
+                this.setState({showAlert: true, message: "Erreur de connexion."})
+            }
+            else if(res.code === 1004) {
+                this.setState({showAlert: true, message: "Votre compte n'a pas encore été vérifié, vérifiez dans votre boîte de réception."})
+            }
+            else if(res.code === 1005) {
+                this.setState({showAlert: true, message: "Votre compte a été désactivé par l'administration."})
+            }
+            
+            else {
+                localStorage.setItem('usertoken', res)
+                 window.location.replace('/') }
+            
            
             
         }).catch(err => {
-            
-            this.setState({
-                showAlert: true
-            })
+            this.setState({showAlert: true, message: "Erreur de connexion."})
         })
     }
 
@@ -51,8 +75,9 @@ class Login extends React.Component{
                 <div className="col-md-6 mt-5 mx-auto">
            <form  onSubmit={this.onSubmit}>
                         <h1 className="h3 mb-3 font-weight-normal">Bienvenue sur KWIZ!</h1>
-                        {this.state.showAlert ?  <Alert dismissible onClose={handleClose} variant="info">  <p>
-  L'adresse Email ou le mot de passe est incorrect. Veuillez essayer à nouveau. 
+                        {this.state.showAlert ?  <Alert dismissible onClose={handleClose} variant="info">  
+                        <p> <FontAwesomeIcon icon="exclamation-triangle" /> {this.state.message}
+   
   </p>
 </Alert> : ""}
                        
@@ -79,12 +104,13 @@ class Login extends React.Component{
                                 required
                             />
                         </div>
-                        <button type="submit"
+                        
+          <button type="submit"
                             className="btn btn-lg btn-info btn-block">
                             Connectez-vous
                         </button>
                         <div className="form-group">
-                            <Link to="/oublie">Mot de passe oublié?</Link>{" - "} 
+                            <Link to="/passwordreset">Mot de passe oublié?</Link>{" - "} 
                             <Link to="/register">Vous n'avez pas un compte encore?</Link>
                         </div>
 

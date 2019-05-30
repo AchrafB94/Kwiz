@@ -7,6 +7,18 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getLevels } from "../../redux/actions/levelActions";
 
+
+function isStrongPwd1(password) {
+ 
+  var regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+
+  var validPassword = regExp.test(password);
+
+  return validPassword;
+
+}
+
+
 class Register extends React.Component {
   constructor() {
     super();
@@ -27,6 +39,7 @@ class Register extends React.Component {
 
       showPasswordAlert: false,
       showRegisterAlert: false,
+      showPasswordRules: false,
 
     };
 
@@ -55,7 +68,13 @@ class Register extends React.Component {
 onSubmit(e) {
     e.preventDefault();
 
-    if (this.state.password === this.state.passwordconfirm) {
+    if(!isStrongPwd1(this.state.password)) {
+ 
+      this.setState({showPasswordRules: true})
+
+  }
+
+   else if (this.state.password === this.state.passwordconfirm) {
   const user = {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
@@ -105,16 +124,10 @@ onSubmit(e) {
   }
 
   render() {
-    const handleClose = () => this.setState({ showPasswordAlert: false });
-    const passwordAlert = (
-        <Alert dismissible onClose={handleClose} variant="info">
-  <Alert.Heading>Oups, ces mots de passe ne correspondent pas!</Alert.Heading>
-  <p>
-  Assurez-vous de taper le mot de passe correct et essayez à nouveau!
-  </p>
-</Alert>
+    const handleClose = () => this.setState({ showPasswordAlert: false, showPasswordRules: false, showRegisterAlert: false });
+   
        
-    );
+
 
     const registerAlert = (
       <Alert dismissible onClose={() => this.setState({ showRegisterAlert: false })} variant="danger">
@@ -190,23 +203,28 @@ Un compte avec cet email existe déjà.
                 />
               </div>
             </div>
+            <Alert dismissible show={this.state.showPasswordAlert} onClose={handleClose} variant="info">
+  <Alert.Heading>Oups, ces mots de passe ne correspondent pas!</Alert.Heading>
+  <p>
+  Assurez-vous de taper le mot de passe correct et essayez à nouveau!
+  </p>
+</Alert>
             <div className="row">
-              {this.state.showPasswordAlert ? passwordAlert : ""}
+              
               <div className="form-group col-6">
                 <label htmlFor="password">Mot de passe</label>
                 <input
                   type="password"
                   className="form-control"
                   minLength="8"
+                  maxLength="15"
                   name="password"
                   placeholder="Votre mot de passe"
                   onChange={this.onChange}
                   required
                 />
 
-                <small id="fileHelp" className="form-text text-muted">
-                  Minimum 8 caractéres.
-                </small>
+
               </div>
 
               <div className="form-group col-6">
@@ -218,13 +236,33 @@ Un compte avec cet email existe déjà.
                   className="form-control"
                   name="passwordconfirm"
                   minLength="8"
+                  maxLength="15"
                   placeholder="Confirmez votre mot de passe"
                   onChange={this.onChange}
                   required
                 />
               </div>
-            </div>
 
+              <Alert dismissible show={this.state.showPasswordRules} onClose={handleClose} variant="info">
+  <Alert.Heading> Le mot de passe doit :</Alert.Heading>
+  <p className="form-text text-muted">
+
+    <ul>
+    <li>avoir entre 8 et 15 caractères</li>
+    <li>respecter les règles suivantes :</li>
+    <ul>
+    <li>avoir au moins une minuscule</li>
+    <li>avoir au moins une majuscule</li>
+    <li>avoir au moins un chiffre</li>
+    <li>avoir au moins un caractère spécial (!@#$%*())</li>
+    </ul>
+    </ul>  
+  </p>
+</Alert>
+
+      
+            </div>
+            <hr />
             <center>
               <div className="form-check form-check-inline">
                 <input
@@ -257,7 +295,7 @@ Un compte avec cet email existe déjà.
               </div>
             </center>
 
-            <hr />
+         
 
             <div className="row">
 

@@ -181,6 +181,7 @@ class AdminLevels extends React.Component {
                     <tr>
                       <th scope="col">Niveau</th>
                       <th scope="col">Actions</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>

@@ -5,11 +5,12 @@ import jwt_decode from "jwt-decode";
 import axios from 'axios'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUser, updateUser, updateImage } from "../../redux/actions/userActions";
+import { getUser, updateUser, updateImage, changePassword } from "../../redux/actions/userActions";
 import { getLevels } from "../../redux/actions/levelActions";
 import { getSchools, addSchool } from "../../redux/actions/schoolActions";
 
 import Select from 'react-select';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Settings extends React.Component {
   constructor(props) {
@@ -31,12 +32,13 @@ class Settings extends React.Component {
       newPasswordConfirm: "",
 
       showPasswordAlert: false,
+      showWrongPasswrodAlert: false,
       
       file: null,
       showFileAlert: false,
       fileAlert: ""
     };
-    this.handlePasswordSumbit = this.handlePasswordSubmit.bind(this);
+    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onSubmitFile = this.onSubmitFile.bind(this)
@@ -68,7 +70,7 @@ class Settings extends React.Component {
       gender,
       schoolId,
       image,
-      userClass
+      classroom,
     } = nextProps.user;
     this.setState({
       id,
@@ -80,7 +82,7 @@ class Settings extends React.Component {
       gender,
       schoolId,
       image,
-      userClass
+      classroom,
     });
   }
 
@@ -167,10 +169,19 @@ class Settings extends React.Component {
 
     } else {
       const passwordData = {
+        id: this.state.id,
         oldPassword: oldPassword,
         newPassword: newPassword
       }
-      this.props.updatePassword(passwordData)
+      this.props.changePassword(passwordData).then(result => {
+        
+        if(result.code === 1011) {
+          window.location.replace("/")
+        }else if(result.code === 1012) {
+          this.setState({showWrongPasswrodAlert: true})
+        }
+        
+      })
      
     }
   }
@@ -393,6 +404,26 @@ this.props.history.push("/")
                     </div>
                   </center>
 
+                  <div className="input-group">
+  <select className="custom-select" 
+  id="inputLevelSelect"
+  name="levelId"
+                          defaultValue={levelId}
+                          onChange={this.onChange}>
+   {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
+  </select>
+</div>
+
+<div className=" container mt-5 mb-5">
+        <div className="input-group">
+        <Select className="col-10" name="schoolId"
+isClearable
+onChange={this.handleSchoolChange}
+onInputChange={this.handleSchoolInputChange}
+options={options}
+/></div>
+           </div>
+
                   <br />
 
                   <button
@@ -403,29 +434,35 @@ this.props.history.push("/")
                   </button>
                 </form>
             </div>
+                   
+
           </Tab>
-          <Tab eventKey="email" id="email" title="Email">
-            <div className="col-6">
-              <h3>Modifier votre adresse Email</h3>
-            </div>
-          </Tab>
+         
           <Tab eventKey="password" title="Mot de passe">
             <div className="container mt-5 mb-5">
               <form onSubmit={this.handlePasswordSubmit}>
                 <h3>Modifier votre mot de passe</h3>
-                {this.state.showPasswordAlert ? (
-                  <Alert dismissible variant="info">
+                
+                  <Alert dismissible onClose={() => this.setState({showPasswordAlert: false})} show={this.state.showPasswordAlert} variant="info">
                     <Alert.Heading>
-                      Oups, ces mots de passe ne correspondent pas!
+                      <FontAwesomeIcon icon="exclamation-triangle" /> Oups, ces mots de passe ne correspondent pas!
                     </Alert.Heading>
                     <p>
                       Assurez-vous de taper le mot de passe correct et essayez à
                       nouveau!
                     </p>
                   </Alert>
-                ) : (
-                  ""
-                )}
+
+                  <Alert dismissible onClose={() => this.setState({showWrongPasswrodAlert: false})} show={this.state.showWrongPasswrodAlert} variant="danger">
+                    <Alert.Heading>
+                      <FontAwesomeIcon icon="exclamation-triangle" /> mauvais mot de passe! réessayer.
+                    </Alert.Heading>
+                    <p>
+                      Assurez-vous de taper le mot de passe correct et essayez à
+                      nouveau!
+                    </p>
+                  </Alert>
+             
                 <div className="form-group ">
                   <label htmlFor="oldPassword">
                     Votre mot de passe courant
@@ -473,44 +510,6 @@ this.props.history.push("/")
               </form>
             </div>
           </Tab>
-          <Tab eventKey="level" title="Niveau">
-          <div className=" container mt-5 mb-5">
-          <form onSubmit={this.onSubmit}>
-                <h3>Modifier votre niveau</h3>
-                <div className="input-group">
-  <select className="custom-select" 
-  id="inputLevelSelect"
-  name="levelId"
-                          defaultValue={levelId}
-                          onChange={this.onChange}>
-   {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
-  </select>
-  <div className="input-group-append">
-    <button className="btn btn-outline-info" type="submit">Enregistrer</button>
-  </div>
-</div>
-                    </form></div>
-                  
-          </Tab>
-          
-          <Tab eventKey="school" title="Etablissment">
-          <div className=" container mt-5 mb-5">
-        
-                <h3>Modifier l'etablissment</h3>
-                <form onSubmit={this.onSubmit}>
-                <div className="input-group">
-                <Select className="col-10" name="schoolId"
-        isClearable
-        onChange={this.handleSchoolChange}
-        onInputChange={this.handleSchoolInputChange}
-        options={options}
-      />
-       <div className="input-group-append">
-    <button className="btn btn-outline-info" type="submit">Enregistrer</button>
-  </div></div>
-      </form>
-                   </div>
-          </Tab>
           <Tab eventKey="photo" title="Photo de profile">
           <div className=" container mt-5 mb-5">
           
@@ -556,5 +555,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getUser, updateUser, updateImage,  getSchools, addSchool, getLevels  }
+  { getUser, updateUser, updateImage,  getSchools, addSchool, getLevels, changePassword  }
 )(Settings);

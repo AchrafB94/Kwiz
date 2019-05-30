@@ -1,5 +1,5 @@
 import React from "react";
-import QuizList from "../quiz/QuizList";
+import QuizList from "./QuizList";
 import LastThree from "../cards/LastThree";
 import TopSchools from "../cards/TopSchools";
 import TopUsers from "../cards/TopUsers";

@@ -92,7 +92,7 @@ class LastThree extends React.Component {
                       <tr>
                         <td>Etablissement</td>
                         <td>
-                          <strong><Link to={"/school/"+winner.school.id} >{winner.school.name}</Link></strong>
+                          <strong>{winner.school ? <Link to={"/school/"+winner.school.id} >{winner.school.name}</Link> : "" }</strong>
                         </td>
                       </tr>
                       <tr>

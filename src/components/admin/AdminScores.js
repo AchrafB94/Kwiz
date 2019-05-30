@@ -8,7 +8,7 @@ import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
 import { Link } from "react-router-dom";
 import {getSubjects} from "../../redux/actions/subjectActions"
-
+import { getLevels } from "../../redux/actions/levelActions";
 import {filterScores} from "../../redux/actions/scoreActions"
 
 class AdminStats extends React.Component {
@@ -16,7 +16,7 @@ class AdminStats extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            subjectId: 1,
+            subjectId: 'all',
             levelId: 1,
         }
         this.onChange = this.onChange.bind(this);
@@ -27,6 +27,7 @@ class AdminStats extends React.Component {
   componentDidMount() {
     this.props.getScores();
     this.props.getSubjects();
+    this.props.getLevels()
   }
 
   medalImage(number) {
@@ -68,92 +69,106 @@ class AdminStats extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container-fluid">
         <div className="card bg-light">
           <div className="card-header">
             {" "}
             <form onSubmit={this.onSumbit} className="form-inline float-right">
-
-        <label htmlFor="levelId" >
+  <div class="form-row">
+    <div class="col">
+    <label htmlFor="levelId">
                   Niveau
-                  <select
-                    className="form-control"
-                    name="levelId"
-                    defaultValue={this.state.levelId}
-                    onChange={this.onChange}
-                  >
-                    <option value="1">Primaire</option>
-                    <option value="2">Secondaire</option>
-                    <option value="3">Universitaire</option>
-                    <option value="4">Tout Publique</option>
-                  </select>
+                  <select className="form-control" 
+                       
+                          name="levelId"
+                          defaultValue={this.state.levelId}
+                          onChange={this.handleChange}>
+   {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
+  </select>
                 </label>
-        <label htmlFor="subjectId">Matiére
+    </div>
+    <div class="col">
+    <label htmlFor="subjectId">Matiére
 
-        <select className="form-control" name="subjectId" defaultValue={this.state.subjectId} onChange={this.onChange} >
-        <option value="all">Toutes les matiéres</option>
-        {this.props.subjects.map(subject => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
-        </select>
-        
-        </label>
+<select className="form-control" name="subjectId" defaultValue={this.state.subjectId} onChange={this.onChange} >
+<option value="all">Toutes les matiéres</option>
+{this.props.subjects.map(subject => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
+</select>
+
+</label>
+    </div>
+    <div className="col">
+    <button type="submit" className="btn btn-info">Obtenir des scores</button>
+    </div>
+  </div>
+</form>
+           
+     
         
       
       
-        <button type="submit" className="btn btn-info">Filtrer</button>
- 
- </form>
+     
             
-            <h2>Activité des joueurs</h2>
+            <h2>Scores</h2>
           </div>
           <div className="card-text">
-            <div className="activity-feed">
+              <table className="table table-striped">
+                <tr>
+                <th>Nom</th>
+                <th>Quiz</th>
+                <th>Matiére</th>
+                <th>Niveau</th>
+                <th>Recompense</th>
+                <th>Points</th>
+                <th>Pourcentage</th>
+                <th>Temps (secondes)</th>
+                <th>Date</th>
+
+                </tr>
+                
+     
             {this.props.filteredScores.map(score => (
-                <div key={score.id} className="feed-item">
-                  <div className="date">
-                  Niveau {score.level.name} - {score.subject.name} - <Link to={"/quiz/" + score.quiz.id}>{score.quiz.name}</Link>{" "}
-                    - {score.createdAt}
-                  </div>
-                  {score.medal > 0 ? (
-                    <div className="text">
-                      {" "}
-                      <b><Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname}</Link> </b>
-                      a remporté{" "}
-                      <img
+
+                    <tr key={score.id}>
+                        <td><Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname}</Link> </td>
+                        <td><Link to={"/quiz/" + score.quiz.id}>{score.quiz.name}</Link></td>
+                        <td>{score.subject.name}</td>
+                        <td>{score.level.name}</td>
+                        <td>{score.medal > 0 ? <div>  <img
                         src={this.medalImage(score.medal)}
                         alt=""
                         height="25"
-                      />{" "}
-                      <b>{this.medalName(score.medal)}</b> avec un score de{" "}
-                      {score.score} points en {score.time} secondes.
-                    </div>
-                  ) : (
-                    <div className="text">
-                      <b><Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname} </Link></b>
-                      a obtenu {score.score} points en {score.time} secondes.
-                    </div>
-                  )}
-                </div>
+                      />  <b>{this.medalName(score.medal)}</b></div> : " " } </td>
+                        <td>{score.score}</td>
+                        <td>{score.percentage}%</td>
+                        <td>{score.time}</td>
+                        <td>{score.createdAt}</td>
+
+
+                    </tr>
+
               ))}
-              
+                       </table>
             </div>
           </div>
         </div>
-      </div>
     );
   }
 }
 
 AdminStats.propTypes = {
   filteredScores: PropTypes.array.isRequired,
-  subjects: PropTypes.array.isRequired
+  subjects: PropTypes.array.isRequired,
+  levels: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
   filteredScores: state.score.filteredScores,
-  subjects: state.subjects.subjects
+  subjects: state.subjects.subjects,
+  levels: state.levels.levels
 });
 
 export default connect(
   mapStateToProps,
-  { getScores, getSubjects, filterScores }
+  { getScores, getSubjects, filterScores, getLevels }
 )(AdminStats);

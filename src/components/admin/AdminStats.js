@@ -102,13 +102,13 @@ class AdminStats extends React.Component {
               <div className="card-header">Les matiéres les plus jouées <Link to="/admin-subjects"><button className="float-right btn-sm btn-info">Toutes les matiéres</button></Link></div>
               <div className="card-text">
                 <ul className="list-group list-group-hover">
-                  {this.props.popularSubjects.map(score => {
+                  {this.props.popularSubjects.map((score,index) => {
                     return (
                       <li
                         key={score.played}
                         className="list-group-item d-flex justify-content-between align-items-center"
                       >
-                        {score.subject.name}
+                        #{index + 1} - {score.subject.name}
                         <span className="badge badge-primary badge-pill">
                           {score.played}
                         </span>
@@ -121,7 +121,7 @@ class AdminStats extends React.Component {
             </div>
             <br />
             <div className="card bg-light">
-              <div className="card-header">Quiz ajoutés cette semaine <Link to="/admin-quiz"><button className="float-right btn-sm btn-info">Tous les Quizz</button></Link></div>
+              <div className="card-header">Les quiz les plus populaires <Link to="/admin-quiz"><button className="float-right btn-sm btn-info">Tous les Quizz</button></Link></div>
               <div className="card-text">
               <div className="activity-feed">
               {this.props.quizzes.map(quiz => <div className="feed-item" key={quiz.id}>
@@ -147,7 +147,7 @@ class AdminStats extends React.Component {
               <td>{user.image ? <img src={"http://localhost/kwiz/public/images/"+user.image} height="25" width="25" className="thumbnail" alt="" /> 
                 : <img src={defaultPhoto} height="25" width="25" className="thumbnail" alt="" />}</td>
                 <td><Link to={"/user/"+user.id}>{user.firstname+" "+user.lastname}</Link></td>
-                <td><Link to={"/school/"+user.school.id}>{user.school ? user.school.name : ''}</Link></td>
+                <td>{user.school ? <Link to={"/school/"+user.school.id}>{user.school ? user.school.name : ''}</Link> : " "}</td>
                 </tr>
                 )}</tbody>
                </table>

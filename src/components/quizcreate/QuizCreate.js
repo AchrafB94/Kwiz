@@ -19,7 +19,7 @@ class QuizCreate extends React.Component{
             subjectId: 1,
             userId: "",
 
-            number: 1,
+            number: 3,
             defaultValue: "0"
 
             
@@ -138,7 +138,7 @@ class QuizCreate extends React.Component{
         </div>
         <div className="form-group col-2" >
         <label htmlFor="answers_number">Nombre des réponses:</label>
-        <input className="form-control" type="number" name={"answers_number_"+(q+1)} defaultValue="2" min="2" max="20"  onChange={this.onChange} />
+        <input className="form-control" type="number" name={"answers_number_"+(q+1)} defaultValue="2" min="2" max="6"  onChange={this.onChange} />
         </div>
 
 
@@ -156,8 +156,10 @@ class QuizCreate extends React.Component{
             }
 
         return ( 
-        <div className="container card bg-light">
-          <div className="card-header">Création de quiz</div>
+        <div className="container">
+          <div className="card bg-light">
+          <h2 className="card-header">Créer un quiz</h2>
+       <div className="card-body">
         <form onSubmit={this.onSubmit}>
 
         <div className="form-group col-6">
@@ -199,13 +201,16 @@ class QuizCreate extends React.Component{
         </div>
         <div className="form-group col-2">
         <label htmlFor="number">Nombre de questions:</label>
-        <input className="form-control"  type="number" name="number" min="1" max="5" onChange={this.onChange}  value={this.state.number}/>
+        <input className="form-control"  type="number" name="number" min="3" max="30" onChange={this.onChange}  value={this.state.number}/>
         </div>
         </div>
       {questions}
 
-<input type="submit" className="btn btn-info" value="Publier" />
-      </form> </div>)
+          <div className="form-inline float-right" >
+      <input type="submit" className="btn btn-lg btn-info float-right" value="Enregistrer" />
+          </div>
+     
+      </form></div> </div></div>)
     }
 }
 QuizCreate.propTypes = {

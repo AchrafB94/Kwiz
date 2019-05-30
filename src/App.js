@@ -9,6 +9,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+
 import Sidebar from "./components/sidebar/Sidebar";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -54,12 +55,17 @@ import {
   faClipboardCheck,
   faAngleDown,
   faAngleUp,
-  faMedal
+  faMedal,
+  faRedo,
+  faInfo
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./bootstrap.min.css";
 import AdminScores from "./components/admin/AdminScores";
 import EditQuestions from "./components/editQuestions/EditQuestions";
+import Confirmation from "./components/Confirmation";
+import LoginPasswordReset from "./components/login/LoginPasswordReset";
+import ConfirmationPassword from "./components/ConfirmationPassword";
 
 library.add(faIgloo);
 library.add(faHome);
@@ -102,6 +108,8 @@ library.add(faClipboardCheck)
 library.add(faMedal)
 library.add(faAngleDown)
 library.add(faAngleUp)
+library.add(faRedo)
+library.add(faInfo)
 
 function LoadingComponent() {
   return (
@@ -212,6 +220,10 @@ class App extends Component {
                   <Switch>
                     <PublicRoute exact path="/login" component={Login} />
                     <PublicRoute exact path="/register" component={Register} />
+                    <PublicRoute exact path="/passwordreset/" component={LoginPasswordReset} />
+                    <PublicRoute exact path="/confirm/:token" component={Confirmation} />
+                    <PublicRoute exact path="/confirmpassword/:token" component={ConfirmationPassword} />
+
                     <PrivateRoute exact path="/" component={Home} />
                     <PrivateRoute exact path="/stats" component={Stats} />
 

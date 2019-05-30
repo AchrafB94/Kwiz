@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 import {
   getNewestUser, usersCount
 } from "../../redux/actions/userActions";
-import {getQuestionsCount, getQuizPlayedSum} from '../../redux/actions/quizActions';
+import {getQuestionsCount} from '../../redux/actions/quizActions';
+import {countScores} from '../../redux/actions/scoreActions';
 import './UserCard.css'
 class UserCard extends React.Component{
 
@@ -14,7 +15,7 @@ class UserCard extends React.Component{
         this.props.usersCount()
         this.props.getNewestUser()
         this.props.getQuestionsCount()
-        this.props.getQuizPlayedSum()
+        this.props.countScores()
         
     }
 
@@ -23,7 +24,7 @@ class UserCard extends React.Component{
         
     if (this.props.count == null) return null;
     if (this.props.questionsCount == null) return null;
-    if (this.props.quizzesSumPlayed == null) return null;
+    if (this.props.scoreCount == null) return null;
     if (this.props.newestUser == null) return null;
         
         return(
@@ -39,7 +40,7 @@ class UserCard extends React.Component{
     
     <p className="text-muted float-center"> <b  id="numbers">{this.props.questionsCount}</b> questions </p>
             <p className="text-muted text-center"> <b id="numbers">{this.props.count}</b> utilisateurs inscrits </p>
-            <p className="text-muted float-right"> quizz joués <b  id="numbers">{this.props.quizzesSumPlayed}</b> fois  </p>
+            <p className="text-muted float-right"> quizz joués <b  id="numbers">{this.props.scoreCount}</b> fois  </p>
             </div>
   </div>
 
@@ -52,7 +53,7 @@ class UserCard extends React.Component{
 UserCard.propTypes = {
     count: PropTypes.number.isRequired,
     questionsCount: PropTypes.number.isRequired,
-    quizzesSumPlayed: PropTypes.number.isRequired,
+    scoreCount: PropTypes.number.isRequired,
     newestUser: PropTypes.array.isRequired,
     usersCount: PropTypes.func.isRequired,
     getNewestUser: PropTypes.func.isRequired,
@@ -63,13 +64,13 @@ UserCard.propTypes = {
   const mapStateToProps = state => ({
     count: state.user.count,
     questionsCount: state.quiz.questionsCount,
-    quizzesSumPlayed: state.quiz.quizzesSumPlayed,
+    scoreCount: state.score.scoreCount,
     newestUser: state.user.newestUser
 
   });
   
   export default connect(
     mapStateToProps,
-    { getNewestUser,usersCount, getQuestionsCount, getQuizPlayedSum }
+    { getNewestUser,usersCount, getQuestionsCount, countScores }
   )(UserCard);
   

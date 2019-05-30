@@ -28,7 +28,7 @@ class TopSchools extends React.Component {
   <tbody>
     {top.map((score,index) => {return <tr key={index}>
       <th scope="row">#{index + 1}</th>
-      <td><Link to={"/school/"+score.school.id} >{score.school.name}</Link></td>
+      <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : ""}</td>
       <td>{score.total_score} points</td>
     </tr>})}
     

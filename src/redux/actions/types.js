@@ -36,6 +36,7 @@ export const UPDATE_LEVEL = 'UPDATE_LEVEL'
 
 
 //SCORE
+export const COUNT_SCORES = 'COUNT_SCORES'
 export const GET_SCORES = 'GET_SCORES'
 export const NEW_SCORES = 'NEW_SCORES'
 export const FILTER_SCORES = 'FILTER_SCORES'
@@ -81,6 +82,10 @@ export const USERS_ONLINE = 'USERS_ONLINE'
 export const UPDATE_IMAGE = 'UPDATE_IMAGE'
 export const GET_NEW_MEMBERS = 'GET_NEW_MEMBERS'
 export const CHECK_PERMISSION = 'CHECK_PERMISSION'
+export const ADD_CONTRIBUTOR = 'ADD_CONTRIBUTOR'
+export const DELETE_USER = 'DELETE_USER'
+export const BLOCK_USER =  'BLOCK_USER'
+export const UNBLOCK_USER = 'UNBLOCK_USER'
 
 
 

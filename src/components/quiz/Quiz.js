@@ -287,11 +287,10 @@ class Quiz extends React.Component {
         <hr className="my-4" />
         <p className="lead">
           {" "}
-          Ce quiz contient <b>{questions.length} questions</b> et a été pris{" "}
-          <b>{quiz.played} fois</b>.{" "}
+          Ce quiz contient <b>{questions.length} questions</b>.
         </p>
         <p>
-          Cliquez sur le bouton <i>"Démarrer"</i> pour lancer ce questionnaire.
+          <FontAwesomeIcon icon="info-circle" /> Cliquez sur le bouton <i>"Démarrer"</i> pour lancer ce questionnaire.
           Bonne chance!
         </p>
         <p className="lead">
@@ -354,8 +353,8 @@ class Quiz extends React.Component {
             <p className="lead">{quiz.description}</p>
             <br />
             {this.props.winner ? <Alert variant="info">
-                <Alert.Heading>Quiz fermé!</Alert.Heading>
-                <p>Vous avez déjà joué à ce quiz et remporté une médaille!</p>
+              
+                <p> <FontAwesomeIcon icon="exclamation-triangle" size="lg" /> Quiz fermé: Vous avez déjà remporté une médaille pour cette semaine!</p>
               </Alert> : 
             quiz.rank === 0 ? (
               this.state.currentQuestion === 0  ? (

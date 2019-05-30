@@ -270,6 +270,7 @@ class AdminSchools extends React.Component {
                       <th scope="col">Région</th>
                       <th scope="col">Pays</th>
                       <th scope="col">Actions</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>

@@ -1,7 +1,7 @@
 import React from "react";
 import TopUsersBySubject from "../cards/TopUsersBySubject";
 import TopSchoolsBySubject from "../cards/TopSchoolsBySubject";
-import QuizBySubject from "../quiz/QuizBySubject";
+import QuizBySubject from "./QuizBySubject";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 
 
 import {withRouter} from 'react-router-dom'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 class Subject extends React.Component {
 
 
@@ -38,7 +39,9 @@ class Subject extends React.Component {
             <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 mt-4">
             
               
-                <h1>{this.props.subject.name}</h1>
+                <h1><span className="badge badge-info">
+                   <FontAwesomeIcon icon="book" /> {" "}{this.props.subject.name}
+                    </span></h1>
              
 
               <QuizBySubject subjectId={subjectId} />

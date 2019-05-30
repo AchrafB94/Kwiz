@@ -20,7 +20,7 @@ import {
     NEW_SCORES,
     GET_WINNERS_BY_QUIZ,
     USER_MEDALS_BY_SCHOOL,
-    SCHOOL_SUM_MEDALS,SAVE_ANSWER, ADD_SCORE, GET_SCORES, FILTER_SCORES
+    SCHOOL_SUM_MEDALS,SAVE_ANSWER, ADD_SCORE, GET_SCORES, FILTER_SCORES, COUNT_SCORES
 
   } from "../actions/types";
 
@@ -49,7 +49,7 @@ const initialState = {
     winnersByQuiz: [],
     choices: [],
     score: {},
-    filteredScores: []
+    filteredScores: [],
     
 };
 
@@ -80,7 +80,8 @@ export default function(state = initialState, action) {
         case USER_MEDALS_BY_SCHOOL: return {...state, userMedalsBySchool: action.payload};
         case SCHOOL_SUM_MEDALS: return {...state, schoolMedalSum: action.payload};
         case GET_SCORES: return {...state, scores: action.payload};
-        case FILTER_SCORES: return {...state, filteredScores: action.payload}
+        case FILTER_SCORES: return {...state, filteredScores: action.payload};
+        case COUNT_SCORES: return {...state, scoreCount: action.payload}
          default: return state;
     }
 }

@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import gold from "../../images/gold.png";
 import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
+import { getLevels } from "../../redux/actions/levelActions";
 import {
    
     getQuizzesByUser, editQuiz
@@ -23,6 +24,7 @@ constructor(props) {
       showModify: false,
       showDelete: false,
       showMedalists: false,
+      showOrganize: false,
       id: null,
       name: '',
       subjectId: null,
@@ -30,11 +32,12 @@ constructor(props) {
       description: '',
       userId: null,
       quizzes: [],
-      rank: null
+      rank: null,
+      oldRank: null,
+      items: []
     }
 
     this.handleClose = this.handleClose.bind(this);
-    this.rankUp = this.rankUp.bind(this);
     this.handleModify = this.handleModify.bind(this)
     this.handleChange = this.handleChange.bind(this);
   }
@@ -47,9 +50,12 @@ componentDidMount() {
     const userId = decoded.id;
     this.setState({userId: userId})
     this.props.getQuizzesByUser(userId);
+    this.props.getLevels()
 
 
   }
+
+
 
 
   handleChange(e) {
@@ -60,7 +66,7 @@ componentDidMount() {
   
 
 handleClose() {
-    this.setState({ showDelete: false,showModify: false,showMedalists: false});
+    this.setState({ showDelete: false,showModify: false,showMedalists: false,showOrganize: false});
   }
 
 
@@ -71,7 +77,9 @@ onClickModify = (quiz) => {
         name: quiz.name,
         description: quiz.description,
         levelId: quiz.levelId,
-        subjectId: quiz.subjectId
+        subjectId: quiz.subjectId,
+        rank: quiz.rank,
+        oldRank: quiz.rank
     })
 }
 
@@ -81,7 +89,10 @@ handleModify() {
         name: this.state.name,
         description: this.state.description,
         levelId: this.state.levelId,
-        subjectId: this.state.subjectId
+        subjectId: this.state.subjectId,
+
+        newRank: this.state.rank,
+        oldRank: this.state.oldRank,
     }
 
 
@@ -89,6 +100,8 @@ handleModify() {
     this.setState({showModify: false})
     window.location.reload()
 }
+
+
 
 onClickDelete = (id,rank) => {
 
@@ -112,6 +125,7 @@ onClickDelete = (id,rank) => {
     })
     
 }
+
 medalImage(number) {
   switch (number) {
     case 100:
@@ -124,14 +138,31 @@ medalImage(number) {
       return null;
   }
 }
-  rankUp = (id,rank) => { 
-    this.props.rankUp(id,rank,this.state.userId)
-    window.location.reload()
-  }
+
 
   render() {
+
     return (
       <div className="container-fluid">
+
+<Modal show={this.state.showOrganize} onHide={this.handleClose} >
+      <Modal.Header closeButton>
+        <Modal.Title>Organizer le fil d'attente</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+
+      </Modal.Body>
+      <Modal.Footer>
+      <Button  variant="danger" onClick={this.handleOrganize} >
+          Enregistrer
+        </Button>
+        <Button variant="secondary" onClick={this.handleClose}>
+          Annuler
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
+
 <Modal show={this.state.showDelete} onHide={this.handleClose} >
       <Modal.Header closeButton>
         <Modal.Title>Attention!</Modal.Title>
@@ -190,6 +221,16 @@ medalImage(number) {
       </Modal.Header>
       <Modal.Body>
       <div className="form-group">
+      <label htmlFor="rank">
+                   Position dans le fil d'attente
+                  <select className="form-control" 
+                       
+                          name="rank"
+                          defaultValue={this.state.rank}
+                          onChange={this.handleChange}>
+    {this.props.quizzes.filter(quiz => quiz.rank > 0).map(quiz => { return   <option key={quiz.id} value={quiz.rank}>{quiz.rank}</option>})}
+  </select>
+                </label> <br />
                 <label htmlFor="name">Nom</label>
                 <input
                   type="text"
@@ -201,19 +242,18 @@ medalImage(number) {
                 />
                  <label htmlFor="description">Description</label>
                  <textarea className="form-control" name="description" rows="5" value={this.state.description} onChange={this.handleChange}></textarea>
+                   
+
+                   
                    <label htmlFor="levelId">
                   Niveau
-                  <select
-                    className="form-control"
-                    name="levelId"
-                    defaultValue={this.state.levelId}
-                    onChange={this.handleChange}
-                  >
-                    <option value="1">Primaire</option>
-                    <option value="2">Secondaire</option>
-                    <option value="3">Universitaire</option>
-                    <option value="4">Tout Publique</option>
-                  </select>
+                  <select className="form-control" 
+                       
+                          name="levelId"
+                          defaultValue={this.state.levelId}
+                          onChange={this.handleChange}>
+   {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
+  </select>
                 </label>
                 
                 <label htmlFor="subjectId">Matiére
@@ -255,7 +295,6 @@ medalImage(number) {
       <th scope="col">Nom du quiz</th>
       <th scope="col">Matiére</th>
       <th scope="col">Niveau</th>
-      <th scope="col">Joué</th>
       <th scope="col">Ajouté le</th>
       <th scope="col">Modifié le</th>
       <th scope="col">Actions</th>
@@ -267,25 +306,25 @@ medalImage(number) {
     <td><b>{quiz.name}</b> </td>
       <td>{quiz.subject.name}</td>
       <td>{quiz.level.name}</td>
-      <td>{quiz.played} fois</td>
       <td>{quiz.createdAt}</td>
       <td>{quiz.updatedAt}</td>
-      <td><button className="btn-sm btn-warning" onClick={this.onClickMedalists.bind(this,quiz.id)}><FontAwesomeIcon icon="medal" /> Voir les médaillées</button></td>
-  
+      <td><button className="btn-sm btn-primary" onClick={this.onClickModify.bind(this, quiz)}><FontAwesomeIcon icon="edit"  /> Modifier le quiz</button></td>
+      <td><Link to={"/questions/"+quiz.id} ><button className="btn-sm btn-info"><FontAwesomeIcon icon="question-circle" /> Gérer les questions</button></Link></td>
+      <td><button className="btn-sm btn-warning" onClick={this.onClickMedalists.bind(this,quiz.id)}><FontAwesomeIcon icon="medal" /> Les médaillées</button></td>
+      <td> <button onClick={this.onClickDelete.bind(this, quiz.id,quiz.rank)} className="btn-sm btn-danger"><FontAwesomeIcon icon="trash-alt" /> Supprimer</button></td>
       </tr>
       </tbody></table>
    </div>})}
 <hr />
-    <h3>Fil d'attente</h3>
+
+    <h3>Les quizz en attente</h3>
         <table className="table  table-hover" >
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th></th>
       <th scope="col">Nom du quiz</th>
       <th scope="col">Matiére</th>
       <th scope="col">Niveau</th>
-      <th scope="col">Joué</th>
       <th scope="col">Ajouté le</th>
       <th scope="col">Modifié le</th>
       <th scope="col">Actions</th>
@@ -297,12 +336,9 @@ medalImage(number) {
   <tbody>
   {this.props.quizzes.filter(quiz => quiz.rank > 0).map(quiz => {return <tr key={quiz.id}>
     <td>{quiz.rank}</td>
-    <td>{quiz.rank > 1 ? <button className="btn btn-sm btn-light" title="Cliquez ici pour augmenter le rang de ce quiz." onClick={this.rankUp.bind(this,quiz.id,quiz.rank)} ><FontAwesomeIcon icon="angle-up" /></button> 
-    : "" }</td>
     <td><b> {quiz.name}</b> </td>
       <td>{quiz.subject.name}</td>
       <td>{quiz.level.name}</td>
-      <td>{quiz.played} fois</td>
       <td>{quiz.createdAt}</td>
       <td>{quiz.updatedAt}</td>
       <td><button className="btn-sm btn-primary" onClick={this.onClickModify.bind(this, quiz)}><FontAwesomeIcon icon="edit"  /> Modifier le quiz</button></td>
@@ -325,14 +361,16 @@ medalImage(number) {
 Contributor.propTypes = {
   quizzes: PropTypes.array.isRequired,
   subjects: PropTypes.array.isRequired,
-  winnersByQuiz: PropTypes.array
+  winnersByQuiz: PropTypes.array,
+  levels: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
 
   quizzes: state.quiz.quizzes,
   subjects: state.subjects.subjects,
-  winnersByQuiz: state.score.winnersByQuiz
+  winnersByQuiz: state.score.winnersByQuiz,
+  levels: state.levels.levels
   
 });
 
@@ -345,7 +383,8 @@ export default connect(
     rankUp,
     editQuiz,
     getSubjects,
-    getWinnersByQuiz
+    getWinnersByQuiz,
+    getLevels
 
   }
 )(Contributor);

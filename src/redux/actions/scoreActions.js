@@ -24,7 +24,8 @@ import {
     SCHOOL_SUM_MEDALS,
     ADD_SCORE,
     GET_SCORES,
-    FILTER_SCORES
+    FILTER_SCORES,
+    COUNT_SCORES
 
   } from "./types";
   import axios from "axios";
@@ -35,16 +36,16 @@ import {
       `http://localhost:4000/scores/`,
       scoreData
     );
-    await axios.put(`http://localhost:4000/quiz/updatePlayed/${scoreData.quizId}`);
-  
-    if(scoreData.medal !== 0) {
-      await axios.put(`http://localhost:4000/quiz/updateMedals/${scoreData.quizId}/${scoreData.medal}`)
-    }
-  
     if(scoreData.medal === 1) {
       
       await axios.put(`http://localhost:4000/quiz/close/${scoreData.quizId}`,contribId)
     }
+
+    else if(scoreData.medal === 10 || scoreData.medal === 100) {
+      await axios.put(`http://localhost:4000/quiz/updateMedals/${scoreData.quizId}/${scoreData.medal}`)
+    }
+  
+
     
     dispatch({
       type: ADD_SCORE,
@@ -287,3 +288,11 @@ export const getScores = () => async dispatch => {
       });
     
   };
+
+  export const countScores = () => async dispatch => {
+    const result = await axios.get('http://localhost:4000/scores/count/');
+    dispatch({
+      type: COUNT_SCORES,
+      payload: result.data
+    })
+  }
