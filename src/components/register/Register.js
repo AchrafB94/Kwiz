@@ -6,7 +6,7 @@ import { register } from "../../redux/actions/userActions"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getLevels } from "../../redux/actions/levelActions";
-
+import Recaptcha from 'react-recaptcha'
 
 function isStrongPwd1(password) {
  
@@ -33,19 +33,22 @@ class Register extends React.Component {
       levelId: 1,
       schoolId: 1,
       school: "",
-      class: "",
+      classroom: "",
       gender: "",
+      isVerified: false,
 
 
       showPasswordAlert: false,
       showRegisterAlert: false,
-      showPasswordRules: false,
+      showPasswordRules: false
 
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.handleOptionChange = this.handleOptionChange.bind(this);
+    this.recaptchaLoaded = this.recaptchaLoaded.bind(this)
+    this.verifyCallback = this.verifyCallback.bind(this);
   }
 
   componentDidMount() {
@@ -74,7 +77,7 @@ onSubmit(e) {
 
   }
 
-   else if (this.state.password === this.state.passwordconfirm) {
+   else if (this.state.password === this.state.passwordconfirm && this.state.isVerified) {
   const user = {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
@@ -84,7 +87,7 @@ onSubmit(e) {
         phone: this.state.phone,
         levelId: this.state.levelId,
         schoolId: this.state.schoolId,
-        class: this.state.class,
+        classroom: this.state.classroom,
         gender: this.state.gender,
       };
 
@@ -94,7 +97,7 @@ onSubmit(e) {
         if(res.code === 10) {
           this.setState({showRegisterAlert: true})
         } else {
-          this.props.history.push(`/login`);
+          this.props.history.push(`/registered`);
         }
         
         
@@ -122,7 +125,16 @@ onSubmit(e) {
   };
   handleSchoolInputChange = (inputValue, actionMeta) => {
   }
-
+  recaptchaLoaded() {
+        
+  }
+  verifyCallback(response) {
+      if (response) {
+        this.setState({
+          isVerified: true
+        })
+      }
+  }
   render() {
     const handleClose = () => this.setState({ showPasswordAlert: false, showPasswordRules: false, showRegisterAlert: false });
    
@@ -156,6 +168,7 @@ Un compte avec cet email existe déjà.
                   name="firstname"
                   placeholder="Votre prénom"
                   onChange={this.onChange}
+                  maxLength={20}
                   required
                 />
               </div>
@@ -167,6 +180,7 @@ Un compte avec cet email existe déjà.
                   name="lastname"
                   placeholder="Votre nom"
                   onChange={this.onChange}
+                  maxLength={20}
                   required
                 />
               </div>
@@ -209,6 +223,14 @@ Un compte avec cet email existe déjà.
   Assurez-vous de taper le mot de passe correct et essayez à nouveau!
   </p>
 </Alert>
+
+<Alert dismissible show={this.state.showPasswordRules} onClose={handleClose} variant="info">
+  <p>
+
+  Votre mot de passe doit avoir entre 8 et 15 caractères et au moins une miniscule, une majiscule et un chiffre.
+  </p>
+</Alert>
+
             <div className="row">
               
               <div className="form-group col-6">
@@ -242,25 +264,9 @@ Un compte avec cet email existe déjà.
                   required
                 />
               </div>
-
-              <Alert dismissible show={this.state.showPasswordRules} onClose={handleClose} variant="info">
-  <Alert.Heading> Le mot de passe doit :</Alert.Heading>
-  <p className="form-text text-muted">
-
-    <ul>
-    <li>avoir entre 8 et 15 caractères</li>
-    <li>respecter les règles suivantes :</li>
-    <ul>
-    <li>avoir au moins une minuscule</li>
-    <li>avoir au moins une majuscule</li>
-    <li>avoir au moins un chiffre</li>
-    <li>avoir au moins un caractère spécial (!@#$%*())</li>
-    </ul>
-    </ul>  
-  </p>
-</Alert>
-
-      
+              <small id="passwordHelpBlock" class="form-text text-muted">
+  Votre mot de passe doit avoir entre 8 et 15 caractères et au moins une miniscule, une majiscule et un chiffre.
+  </small>
             </div>
             <hr />
             <center>
@@ -308,6 +314,7 @@ Un compte avec cet email existe déjà.
                     name="levelId"
                     defaultValue={this.state.levelId}
                     onChange={this.onChange}
+                    required
                   >
                     {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
                   </select>
@@ -320,20 +327,30 @@ Un compte avec cet email existe déjà.
         onChange={this.handleSchoolChange}
         onInputChange={this.handleSchoolInputChange}
         options={options}
+        placeholder="Selectionnez votre école"
       />
               </div>
 
               <div className="form-group  col-2">
-                <label htmlFor="class">Classe</label>
+                <label htmlFor="classroom">Classe</label>
                 <input
                   type="text"
                   className="form-control"
-                  name="class"
+                  name="classroom"
+                  required
                   onChange={this.onChange}
                 />
               </div>
             </div>
-
+            <center>
+                        <Recaptcha
+                        
+    sitekey="6Lcc_6UUAAAAAN-RSROaUYNu71SM7bkQUzLW8sgE"
+    render="explicit"
+    onloadCallback={this.recaptchaLoaded}
+   verifyCallback={this.verifyCallback}
+  /></center>
+                        <br />
             <button type="submit" className="btn btn-lg btn-info btn-block">
               S'incrire
             </button>

@@ -7,18 +7,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     getQuizzesCount,
     getQuestionsCount,
-    getQuizPlayedSum,
   } from "../../redux/actions/quizActions";
-
+  import  {countScores} from "../../redux/actions/scoreActions"
   import { countSubjects} from '../../redux/actions/subjectActions'
   import { countSchools} from '../../redux/actions/schoolActions'
 
-class AdminTop extends React.Component{
+class AdminCount extends React.Component{
     componentDidMount() {
         this.props.getQuizzesCount();
         this.props.getQuestionsCount();
         this.props.usersCount();
-        this.props.getQuizPlayedSum();
+        this.props.countScores();
         this.props.countSubjects()
         this.props.countSchools()
     }
@@ -52,23 +51,23 @@ class AdminTop extends React.Component{
         <span className="badge badge-info">
           {" "}
           <FontAwesomeIcon icon="check" size="lg" />{" "}
-          {this.props.quizzesSumPlayed} Participations
+          {this.props.scoreCount} Participations
         </span>{" "}
       </h2></center>
         )
     }
 }
 
-AdminTop.propTypes = {
+AdminCount.propTypes = {
     
 quizzesCount: PropTypes.number.isRequired,
 questionsCount: PropTypes.number.isRequired,
-quizzesSumPlayed: PropTypes.number.isRequired,
+scoreCount: PropTypes.number.isRequired,
 count: PropTypes.number.isRequired,
 
 }
 const mapStateToProps = state => ({
-    quizzesSumPlayed: state.quiz.quizzesSumPlayed,
+    scoreCount: state.score.scoreCount,
     quizzesCount: state.quiz.quizzesCount,
     questionsCount: state.quiz.questionsCount,
     count: state.user.count,
@@ -82,10 +81,10 @@ export default connect(
   
         getQuizzesCount,
         getQuestionsCount,
-        getQuizPlayedSum,
         usersCount,
         countSubjects,
-        countSchools
+        countSchools,
+        countScores
   
     }
-  )(AdminTop);
+  )(AdminCount);

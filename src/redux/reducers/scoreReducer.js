@@ -20,7 +20,7 @@ import {
     NEW_SCORES,
     GET_WINNERS_BY_QUIZ,
     USER_MEDALS_BY_SCHOOL,
-    SCHOOL_SUM_MEDALS,SAVE_ANSWER, ADD_SCORE, GET_SCORES, FILTER_SCORES, COUNT_SCORES
+    SCHOOL_SUM_MEDALS,SAVE_ANSWER, ADD_SCORE, GET_SCORES, FILTER_SCORES, COUNT_SCORES, POPULAR_QUIZZES, TOP_USERS_BY_PARTICIPATIONS
 
   } from "../actions/types";
 
@@ -34,6 +34,7 @@ const initialState = {
     usersByScore: [],
     usersBySubject: [],
     usersByMedals: [],
+    usersByParticipations: [],
     threeWinners: [],
     average: [],
     scoreCount: 0,
@@ -50,6 +51,7 @@ const initialState = {
     choices: [],
     score: {},
     filteredScores: [],
+    popularQuizzes: []
     
 };
 
@@ -71,6 +73,7 @@ export default function(state = initialState, action) {
         case USER_SUM_SCORE: return {...state, scoreSum: action.payload};
         case USER_SUM_MEDALS: return {...state, medalSum: action.payload};
         case POPULAR_SUBJECTS: return {...state, popularSubjects: action.payload};
+        case POPULAR_QUIZZES: return {...state, popularQuizzes: action.payload};
         case TOP_SCHOOLS_THIS_WEEK: return {...state, popularSchools: action.payload};
         case TOP_USERS_THIS_WEEK: return {...state, popularUsers: action.payload};
         case CHECK_WINNER: return {...state, winner: action.payload};
@@ -81,7 +84,8 @@ export default function(state = initialState, action) {
         case SCHOOL_SUM_MEDALS: return {...state, schoolMedalSum: action.payload};
         case GET_SCORES: return {...state, scores: action.payload};
         case FILTER_SCORES: return {...state, filteredScores: action.payload};
-        case COUNT_SCORES: return {...state, scoreCount: action.payload}
+        case COUNT_SCORES: return {...state, scoreCount: action.payload};
+        case TOP_USERS_BY_PARTICIPATIONS: return {...state, usersByParticipations: action.payload}
          default: return state;
     }
 }

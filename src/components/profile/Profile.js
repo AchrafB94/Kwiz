@@ -114,9 +114,6 @@ class Profile extends Component {
                 </td>
                 <td>
                   {this.props.user.email}{" "}
-                  <Link to="/settings/email" >
-                    <button className="btn-light btn-sm">Modifier</button>
-                  </Link>
                 </td>
               </tr>
               <tr>
@@ -136,9 +133,7 @@ class Profile extends Component {
                   <FontAwesomeIcon icon="layer-group" /> Niveau
                 </td>
                 <td>{this.props.user.level.name}
-                <Link to="/settings/level">
-                    <button className="btn-light btn-sm">Modifier</button>
-                  </Link>
+
                   </td>
                 
               </tr>
@@ -148,16 +143,14 @@ class Profile extends Component {
                 </td>
                 <td>
                   <Link to={"/school/"+this.props.user.school.id}> {this.props.user.school.name}</Link>
-                  <Link to="/settings/school">
-                    <button className="btn-light btn-sm">Modifier</button>
-                  </Link>
+
                 </td>
               </tr>
               <tr>
                 <td>
                   <FontAwesomeIcon icon="calculator" /> Classe
                 </td>
-                <td>{this.props.user.class}</td>
+                <td>{this.props.user.classroom}</td>
               </tr>
               </tbody>
             </table>

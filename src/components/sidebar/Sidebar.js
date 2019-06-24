@@ -49,12 +49,12 @@ class Sidebar extends React.Component {
 
        <div>
       {this.checkPermission(permissions,5) ? <Link  to={"/admin/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="cogs" /> Administration</Link>: ""}
-       {this.checkPermission(permissions,7) ? <Link  to={"/admin-users/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="user" /> Utilisateurs</Link>: ""}
-       {this.checkPermission(permissions,9) ? <Link  to={"/admin-schools/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="school" /> Etablissements</Link>: ""}
-      {this.checkPermission(permissions,1) ?  <Link  to={"/admin-levels/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="plus" /> Niveaux</Link>: ""}
-       {this.checkPermission(permissions,2) ? <Link  to={"/admin-subjects/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="book" /> Matiéres</Link>: ""}
-       {this.checkPermission(permissions,3) ? <Link  to={"/admin-quiz/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="clipboard-list" /> Quizz</Link> : ""}
-       {this.checkPermission(permissions,6) ? <Link  to={"/admin-scores/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="clipboard-check" /> Scores</Link>: ""}
+       {this.checkPermission(permissions,7) ? <Link  to={"/admin/users/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="user" /> Utilisateurs</Link>: ""}
+       {this.checkPermission(permissions,9) ? <Link  to={"/admin/schools/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="school" /> Etablissements</Link>: ""}
+      {this.checkPermission(permissions,1) ?  <Link  to={"/admin/levels/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="plus" /> Niveaux</Link>: ""}
+       {this.checkPermission(permissions,2) ? <Link  to={"/admin/subjects/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="book" /> Matiéres</Link>: ""}
+       {this.checkPermission(permissions,3) ? <Link  to={"/admin/quiz/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="clipboard-list" /> Quizz</Link> : ""}
+       {this.checkPermission(permissions,6) ? <Link  to={"/admin/scores/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="clipboard-check" /> Scores</Link>: ""}
   
        {this.checkPermission(permissions,4) ?  <Link  to={"/contrib/"} id="admin" className="list-group-item list-group-item-action" > <FontAwesomeIcon icon="question-circle" /> Mes Quizz</Link>: ""}
        </div>

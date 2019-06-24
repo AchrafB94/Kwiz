@@ -57,15 +57,18 @@ import {
   faAngleUp,
   faMedal,
   faRedo,
-  faInfo
+  faInfo,
+  faUnlockAlt,
+  faDatabase
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./bootstrap.min.css";
 import AdminScores from "./components/admin/AdminScores";
-import EditQuestions from "./components/editQuestions/EditQuestions";
+import EditQuestions from "./components/contributor/EditQuestions";
 import Confirmation from "./components/Confirmation";
 import LoginPasswordReset from "./components/login/LoginPasswordReset";
 import ConfirmationPassword from "./components/ConfirmationPassword";
+import RegisterComplete from "./components/register/RegisterComplete";
 
 library.add(faIgloo);
 library.add(faHome);
@@ -110,6 +113,8 @@ library.add(faAngleDown)
 library.add(faAngleUp)
 library.add(faRedo)
 library.add(faInfo)
+library.add(faUnlockAlt)
+library.add(faDatabase)
 
 function LoadingComponent() {
   return (
@@ -185,7 +190,7 @@ const Contributor = Loadable({
   loading: LoadingComponent
 });
 const QuizCreate = Loadable({
-  loader: () => import("./components/quizcreate/QuizCreate"),
+  loader: () => import("./components/contributor/QuizCreate"),
   loading: LoadingComponent
 });
 const School = Loadable({
@@ -223,57 +228,58 @@ class App extends Component {
                     <PublicRoute exact path="/passwordreset/" component={LoginPasswordReset} />
                     <PublicRoute exact path="/confirm/:token" component={Confirmation} />
                     <PublicRoute exact path="/confirmpassword/:token" component={ConfirmationPassword} />
+                    <PublicRoute exact path="/registered" component={RegisterComplete} />
 
                     <PrivateRoute exact path="/" component={Home} />
                     <PrivateRoute exact path="/stats" component={Stats} />
 
-                    <AdminRoute exact path="/admin" component={AdminStats} ruleId={5} />
-                    <AdminRoute exact path="/questions/:id" component={EditQuestions} ruleId={4} />
+                    <AdminRoute exact path="/admin/" component={AdminStats} ruleId={5} />
+                    <AdminRoute exact path="/contrib/questions/:id" component={EditQuestions} ruleId={4} />
                     <AdminRoute
                     ruleId={4}
                       exact
-                      path="/contrib"
+                      path="/contrib/"
                       component={Contributor}
                     />
                     <AdminRoute
                       exact
-                      path="/quiz-create"
+                      path="/contrib/create"
                       component={QuizCreate}
                       ruleId={4}
                     />
                     <AdminRoute
                       exact
-                      path="/admin-quiz"
+                      path="/admin/quiz"
                       component={AdminQuiz}
                       ruleId={3}
                     />
                     <AdminRoute
                       exact
-                      path="/admin-schools"
+                      path="/admin/schools"
                       component={AdminSchools}
                       ruleId={9}
                     />
                     <AdminRoute
                       exact
-                      path="/admin-subjects"
+                      path="/admin/subjects"
                       component={AdminSubjects}
                       ruleId={2}
                     />
                     <AdminRoute
                       exact
-                      path="/admin-users"
+                      path="/admin/users"
                       component={AdminUsers}
                       ruleId={7}
                     />
                     <AdminRoute
                       exact
-                      path="/admin-scores"
+                      path="/admin/scores"
                       component={AdminScores}
                       ruleId={6}
                     />
                     <AdminRoute
                       exact
-                      path="/admin-levels"
+                      path="/admin/levels"
                       component={AdminLevels}
                       ruleId={1}
                     />

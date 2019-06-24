@@ -43,12 +43,13 @@ class AdminQuiz extends React.Component {
   }
 
   
-  onClickDelete = (id,rank) => {
+  onClickDelete = (id,rank,userId) => {
 
     this.setState({
         showDelete: true,
         id: id,
-        rank: rank
+        rank: rank,
+        userId: userId
     })
 }
   handleDelete = () => {
@@ -188,16 +189,13 @@ switch (number) {
   </thead>
   <tbody>
   {this.props.quizzes.filter(quiz => quiz.name.toLowerCase().match(this.state.search)).map(quiz => {return <tr key={quiz.id}>
-      <th scope="row"><b>{quiz.name}</b> </th>
+      <th scope="row"><b><Link to="/admin/quiz/" onClick={this.onClickDetails.bind(this,quiz.id)}>{quiz.name}</Link></b> </th>
       <td>{quiz.subject.name}</td>
       <td>{quiz.level.name}</td>
       {quiz.user ? <td><Link to={"/user/"+quiz.user.id} >{quiz.user.firstname+" "+quiz.user.lastname}</Link></td> : <td></td>}
       <td>{quiz.createdAt}</td>
       <td>{quiz.updatedAt}</td>
       <td>{quiz.rank === 0 ? <b>Disponbile ({quiz.medals}/3 gagnants).</b>  : "Non jouable." }</td>
-      <td>
-        <button className="btn-sm btn-info " onClick={this.onClickDetails.bind(this,quiz.id)}><FontAwesomeIcon icon="info-circle" /> Details</button>
-          </td>
           <td><button className="btn-sm btn-warning" onClick={this.onClickMedalists.bind(this,quiz.id)}><FontAwesomeIcon icon="medal" /> Les médaillées</button></td>
      
           <td> <button className="btn-sm btn-danger" onClick={this.onClickDelete.bind(this,quiz.id,quiz.rank,quiz.userId)}><FontAwesomeIcon icon="trash-alt" /> Supprimer</button> </td>
@@ -205,15 +203,10 @@ switch (number) {
     
   </tbody>
 </table>
-      
-        
-        </div>
-
         </div>
         </div>
-
         </div>
-            </div>
+</div></div>
     );
   }
 }

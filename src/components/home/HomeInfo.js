@@ -8,7 +8,7 @@ import {
 } from "../../redux/actions/userActions";
 import {getQuestionsCount} from '../../redux/actions/quizActions';
 import {countScores} from '../../redux/actions/scoreActions';
-import './UserCard.css'
+import './HomeInfo.css'
 class UserCard extends React.Component{
 
     componentDidMount() {
@@ -29,7 +29,7 @@ class UserCard extends React.Component{
         
         return(
             <div className="card bg-light mb-3">
-    <div className="card-header">
+    <div className="card-header text-center">
   <small className="text-muted">
                 Nouveau Membre: <b>{this.props.newestUser.map(user => <Link key={user.id} to={"/user/"+user.id} >{user.firstname+" "+user.lastname}</Link> )}</b>
               </small>
@@ -38,9 +38,7 @@ class UserCard extends React.Component{
 
     <div className="card-text">
     
-    <p className="text-muted float-center"> <b  id="numbers">{this.props.questionsCount}</b> questions </p>
-            <p className="text-muted text-center"> <b id="numbers">{this.props.count}</b> utilisateurs inscrits </p>
-            <p className="text-muted float-right"> quizz joués <b  id="numbers">{this.props.scoreCount}</b> fois  </p>
+    <p className="small text-muted float-center"> <b  id="numbers">{this.props.questionsCount}</b> questions - <b id="numbers">{this.props.count}</b> utilisateurs inscrits - quizz joués <b  id="numbers">{this.props.scoreCount}</b> fois  </p>
             </div>
   </div>
 
@@ -57,8 +55,7 @@ UserCard.propTypes = {
     newestUser: PropTypes.array.isRequired,
     usersCount: PropTypes.func.isRequired,
     getNewestUser: PropTypes.func.isRequired,
-    getQuestionsCount: PropTypes.func.isRequired,
-    getQuizPlayedSum: PropTypes.func.isRequired
+    getQuestionsCount: PropTypes.func.isRequired
   };
   
   const mapStateToProps = state => ({

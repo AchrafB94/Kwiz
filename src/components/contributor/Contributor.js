@@ -14,7 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Modal, Button } from "react-bootstrap"
 import { getWinnersByQuiz } from "../../redux/actions/scoreActions";
-import { deleteQuiz, rankUp } from "../../redux/actions/quizActions";
+import { getQuiz,deleteQuiz } from "../../redux/actions/quizActions";
 import { getSubjects } from "../../redux/actions/subjectActions";
 class Contributor extends React.Component {
 
@@ -34,7 +34,8 @@ constructor(props) {
       quizzes: [],
       rank: null,
       oldRank: null,
-      items: []
+      items: [],
+      showDetails: false,
     }
 
     this.handleClose = this.handleClose.bind(this);
@@ -56,7 +57,11 @@ componentDidMount() {
   }
 
 
-
+  onClickDetails = (id) => {
+    this.props.getQuiz(id)
+    this.setState({showDetails: true})
+  }
+    
 
   handleChange(e) {
           
@@ -145,19 +150,26 @@ medalImage(number) {
     return (
       <div className="container-fluid">
 
-<Modal show={this.state.showOrganize} onHide={this.handleClose} >
+    <Modal show={this.state.showDetails} onHide={() => this.setState({showDetails: false})} >
       <Modal.Header closeButton>
-        <Modal.Title>Organizer le fil d'attente</Modal.Title>
+        <Modal.Title>{this.props.quiz.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-
+      {this.props.quiz.questions ? this.props.quiz.questions.map((question,index) => {
+        return <div key={question.id}>
+           <h5>{index +1}. {question.text}</h5>
+           {question.answers.map(answer => {
+             return <div key={answer.id}>
+               <p>({answer.isCorrect ?  <i id="check-icon"><FontAwesomeIcon icon="check" /></i> : <i id="times-icon"><FontAwesomeIcon icon="times" /></i>}) {answer.text}  </p>
+                </div>
+           })}
+           <hr />
+        </div>
+      }) : " "}
       </Modal.Body>
       <Modal.Footer>
-      <Button  variant="danger" onClick={this.handleOrganize} >
-          Enregistrer
-        </Button>
-        <Button variant="secondary" onClick={this.handleClose}>
-          Annuler
+        <Button variant="secondary" onClick={() => this.setState({showDetails: false})}>
+          Fermer
         </Button>
       </Modal.Footer>
     </Modal>
@@ -198,7 +210,7 @@ medalImage(number) {
         {this.props.winnersByQuiz.map(score => {return (
             <tr key={score.id}>
             <td><img src={this.medalImage(score.medal)} height="25" alt="medal" /> <Link to={"/user/"+score.userId} >{score.user.firstname+" "+score.user.lastname}</Link></td>
-            <td> <Link to={"/school/"+score.schoolId} >{score.school.name}</Link></td>
+            <td> {score.school ? <Link to={"/school/"+score.schoolId} >{score.school.name}</Link> : "" } </td>
             <td>{score.createdAt}</td>
             </tr>
 
@@ -221,7 +233,8 @@ medalImage(number) {
       </Modal.Header>
       <Modal.Body>
       <div className="form-group">
-      <label htmlFor="rank">
+        {this.state.rank === 0 ? "" :
+              <label htmlFor="rank">
                    Position dans le fil d'attente
                   <select className="form-control" 
                        
@@ -230,7 +243,7 @@ medalImage(number) {
                           onChange={this.handleChange}>
     {this.props.quizzes.filter(quiz => quiz.rank > 0).map(quiz => { return   <option key={quiz.id} value={quiz.rank}>{quiz.rank}</option>})}
   </select>
-                </label> <br />
+      </label>} <br />
                 <label htmlFor="name">Nom</label>
                 <input
                   type="text"
@@ -280,49 +293,20 @@ medalImage(number) {
         <div className="col-12">
         <div className="card bg-light" >
         <div className="card-header">
-        <Link to="/quiz-create">
+        <Link to="/contrib/create">
         <button className="btn float-right btn-outline-primary">
               <FontAwesomeIcon icon="plus" /> Créer un nouveau Quiz
             </button></Link>
         <h3>Mes Quizz</h3>
             </div>
         <div className="card-body">
-        {this.props.quizzes.filter(quiz => quiz.rank === 0).map(quiz => {return <div key={quiz.id}>
-          <h3>Quiz disponible - {quiz.medals}/3 gagnants</h3>
-          <table className="table" >
-  <thead>
-    <tr>
-      <th scope="col">Nom du quiz</th>
-      <th scope="col">Matiére</th>
-      <th scope="col">Niveau</th>
-      <th scope="col">Ajouté le</th>
-      <th scope="col">Modifié le</th>
-      <th scope="col">Actions</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-    <td><b>{quiz.name}</b> </td>
-      <td>{quiz.subject.name}</td>
-      <td>{quiz.level.name}</td>
-      <td>{quiz.createdAt}</td>
-      <td>{quiz.updatedAt}</td>
-      <td><button className="btn-sm btn-primary" onClick={this.onClickModify.bind(this, quiz)}><FontAwesomeIcon icon="edit"  /> Modifier le quiz</button></td>
-      <td><Link to={"/questions/"+quiz.id} ><button className="btn-sm btn-info"><FontAwesomeIcon icon="question-circle" /> Gérer les questions</button></Link></td>
-      <td><button className="btn-sm btn-warning" onClick={this.onClickMedalists.bind(this,quiz.id)}><FontAwesomeIcon icon="medal" /> Les médaillées</button></td>
-      <td> <button onClick={this.onClickDelete.bind(this, quiz.id,quiz.rank)} className="btn-sm btn-danger"><FontAwesomeIcon icon="trash-alt" /> Supprimer</button></td>
-      </tr>
-      </tbody></table>
-   </div>})}
-<hr />
 
-    <h3>Les quizz en attente</h3>
         <table className="table  table-hover" >
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Nom du quiz</th>
+    <th scope="col">Nom du quiz</th>
+      <th scope="col">Etat</th>
+     
       <th scope="col">Matiére</th>
       <th scope="col">Niveau</th>
       <th scope="col">Ajouté le</th>
@@ -334,15 +318,16 @@ medalImage(number) {
     </tr>
   </thead>
   <tbody>
-  {this.props.quizzes.filter(quiz => quiz.rank > 0).map(quiz => {return <tr key={quiz.id}>
-    <td>{quiz.rank}</td>
-    <td><b> {quiz.name}</b> </td>
+  {this.props.quizzes.map(quiz => {return <tr key={quiz.id}>
+ 
+    <td><b><Link to="/contrib/" onClick={this.onClickDetails.bind(this,quiz.id)}> {quiz.name}</Link></b> </td>
+    <td>{quiz.rank === 0 ? <p>Disponible ({quiz.medals}/3 gagnants)</p> : <p>En attente (position: {quiz.rank})</p> }</td>
       <td>{quiz.subject.name}</td>
       <td>{quiz.level.name}</td>
       <td>{quiz.createdAt}</td>
       <td>{quiz.updatedAt}</td>
       <td><button className="btn-sm btn-primary" onClick={this.onClickModify.bind(this, quiz)}><FontAwesomeIcon icon="edit"  /> Modifier le quiz</button></td>
-      <td><Link to={"/questions/"+quiz.id} ><button className="btn-sm btn-info"><FontAwesomeIcon icon="question-circle" /> Gérer les questions</button></Link></td>
+      <td><Link to={"/contrib/questions/"+quiz.id} ><button className="btn-sm btn-info"><FontAwesomeIcon icon="question-circle" /> Gérer les questions</button></Link></td>
       <td><button className="btn-sm btn-warning" onClick={this.onClickMedalists.bind(this,quiz.id)}><FontAwesomeIcon icon="medal" /> Les médaillées</button></td>
       <td> <button onClick={this.onClickDelete.bind(this, quiz.id,quiz.rank)} className="btn-sm btn-danger"><FontAwesomeIcon icon="trash-alt" /> Supprimer</button></td>
     </tr>})}
@@ -360,6 +345,7 @@ medalImage(number) {
 
 Contributor.propTypes = {
   quizzes: PropTypes.array.isRequired,
+  quiz: PropTypes.object.isRequired,
   subjects: PropTypes.array.isRequired,
   winnersByQuiz: PropTypes.array,
   levels: PropTypes.array.isRequired
@@ -368,6 +354,7 @@ Contributor.propTypes = {
 const mapStateToProps = state => ({
 
   quizzes: state.quiz.quizzes,
+  quiz: state.quiz.quiz,
   subjects: state.subjects.subjects,
   winnersByQuiz: state.score.winnersByQuiz,
   levels: state.levels.levels
@@ -380,11 +367,11 @@ export default connect(
 
     getQuizzesByUser,
     deleteQuiz,
-    rankUp,
     editQuiz,
     getSubjects,
     getWinnersByQuiz,
-    getLevels
+    getLevels,
+    getQuiz
 
   }
 )(Contributor);

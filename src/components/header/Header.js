@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, withRouter } from 'react-router-dom'
 import {Navbar,} from 'react-bootstrap'
+import Logo from '../../images/logo.png'
  
 /*
 
@@ -77,18 +78,11 @@ class Header extends React.Component{
         return(
 <div>
 <Navbar bg="light" expand="lg" className="border-bottom">
-<a className="navbar-brand" href="/">KWIZ LOGO KWIZ</a>
+<Link className="navbar-brand" to="/">
+  <img src={Logo} alt="logo" height="30" style={{width: "10rem"}} />
+
+</Link>
 <ul className="navbar-nav ">
-            <li className="nav-item">
-                <Link to="/" className="nav-link">
-                <FontAwesomeIcon icon="home" /> Accueil
-                </Link>
-            </li>
-            <li className="nav-item">
-                <Link to="/stats" className="nav-link">
-                <FontAwesomeIcon icon="list-ol" /> Statistiques
-                </Link>
-            </li>
             </ul>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">

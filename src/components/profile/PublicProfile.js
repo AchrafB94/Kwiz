@@ -137,7 +137,7 @@ class PublicProfile extends Component {
                 <td>
                   <FontAwesomeIcon icon="calculator" /> Classe
                 </td>
-                <td>{this.props.user.class}</td>
+                <td>{this.props.user.classroom}</td>
               </tr>
            
               </tbody>

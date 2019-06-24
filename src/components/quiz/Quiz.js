@@ -1,5 +1,5 @@
 import React from "react";
-import MedalCard from "../cards/MedalCard";
+import MedalCard from "./MedalCard";
 import Question from "./Question";
 import TopUsersBySubject from "../cards/TopUsersBySubject";
 import TopSchoolsBySubject from "../cards/TopSchoolsBySubject";
@@ -12,6 +12,7 @@ import { checkWinner, addScore } from "../../redux/actions/scoreActions";
 import "./Quiz.css";
 import QuizSuggestions from "./QuizSuggestions";
 import { Modal, Button, ProgressBar, Alert } from "react-bootstrap";
+import StatsButton from "../stats/StatsButton";
 
 class Quiz extends React.Component {
   constructor(props) {
@@ -160,10 +161,11 @@ class Quiz extends React.Component {
       score,
       percentage,
       time: this.state.count,
+      contribId: this.props.quiz.userId,
       medal
     };
-
-    this.props.addScore(scoreData,this.props.quiz.userId);
+console.log(scoreData)
+    this.props.addScore(scoreData);
 
     this.setState({
       score: score,
@@ -354,7 +356,7 @@ class Quiz extends React.Component {
             <br />
             {this.props.winner ? <Alert variant="info">
               
-                <p> <FontAwesomeIcon icon="exclamation-triangle" size="lg" /> Quiz fermé: Vous avez déjà remporté une médaille pour cette semaine!</p>
+                <Alert.Heading> <FontAwesomeIcon icon="exclamation-triangle" /> Le quiz est terminé: Vous avez déjà remporté une médaille pour cette semaine!</Alert.Heading>
               </Alert> : 
             quiz.rank === 0 ? (
               this.state.currentQuestion === 0  ? (
@@ -394,11 +396,7 @@ class Quiz extends React.Component {
             name={subject.name}
           />
 
-          <div>
-            <button type="button" className="btn btn-info btn-block">
-              Toutes les Statistiques
-            </button>
-          </div>
+            <StatsButton />
         </div>
       </div>
     );

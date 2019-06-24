@@ -1,15 +1,14 @@
 import React from "react";
-import QuizList from "./QuizList";
-import LastThree from "../cards/LastThree";
+import QuizList from "./HomeQuizList";
+import LastThree from "./HomeWinners";
 import TopSchools from "../cards/TopSchools";
 import TopUsers from "../cards/TopUsers";
-import UserCard from "../cards/UsersCard";
-import {Link} from 'react-router-dom'
+import UserCard from "./HomeInfo";
 
 
 
 import './Home.css'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import StatsButton from "../stats/StatsButton";
 
 class Home extends React.Component {
 
@@ -35,8 +34,9 @@ class Home extends React.Component {
             <UserCard />
               <TopSchools limit="5" />
               <TopUsers limit="5" />
-              <div><Link to="/stats" type="button" className="btn btn-info btn-block"><FontAwesomeIcon icon="list-ol" size="lg" /> Toutes les Statistiques</Link></div>
-            </div>
+              <StatsButton />
+                 </div>
+              
            
           </div>
           

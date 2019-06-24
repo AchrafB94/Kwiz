@@ -12,6 +12,16 @@ import { getSchools, addSchool } from "../../redux/actions/schoolActions";
 import Select from 'react-select';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+function isStrongPwd1(password) {
+ 
+  var regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+
+  var validPassword = regExp.test(password);
+
+  return validPassword;
+
+}
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -21,15 +31,17 @@ class Settings extends React.Component {
       lastname: "",
       birthdate: "",
       phone: "",
+      email: "",
       levelId: 1,
       schoolId: null,
       image: "",
       gender: "",
       userClass: "",
-
+      classroom: "",
       oldPassword: "",
       newPassword: "",
       newPasswordConfirm: "",
+      showPasswordRules: false,
 
       showPasswordAlert: false,
       showWrongPasswrodAlert: false,
@@ -71,6 +83,7 @@ class Settings extends React.Component {
       schoolId,
       image,
       classroom,
+      email
     } = nextProps.user;
     this.setState({
       id,
@@ -83,6 +96,7 @@ class Settings extends React.Component {
       schoolId,
       image,
       classroom,
+      email
     });
   }
 
@@ -118,10 +132,11 @@ class Settings extends React.Component {
       birthdate,
       levelId,
       schoolId,
-      phone
+      phone,
+      classroom
     } = this.state;
 
-    console.log(schoolId)
+    
 
     const updUser = {
       id,
@@ -130,7 +145,8 @@ class Settings extends React.Component {
       birthdate,
       levelId,
       schoolId,
-      phone
+      phone,
+      classroom
     };
     
   this.props.updateUser(updUser);
@@ -159,7 +175,13 @@ class Settings extends React.Component {
     e.preventDefault()
     const { newPassword, newPasswordConfirm, oldPassword } = this.state
 
-    if (newPassword !== newPasswordConfirm) {
+    if(!isStrongPwd1(this.state.newPassword)) {
+ 
+      this.setState({showPasswordRules: true})
+
+  }
+
+    else if (newPassword !== newPasswordConfirm) {
       this.setState({
         showPasswordAlert: true,
         password: "",
@@ -181,7 +203,7 @@ class Settings extends React.Component {
           this.setState({showWrongPasswrodAlert: true})
         }
         
-      })
+      }).catch(error => console.log(error.message))
      
     }
   }
@@ -253,7 +275,9 @@ onSubmitFile(e) {
   e.preventDefault();
     
     if(this.state.file) {
-      const filename = Date.now()+'-'+this.state.file.name
+      const filetype =  this.state.file.name.split('.')
+      console.log(filetype)
+      const filename = this.state.email+'.'+filetype[1]
     const data = new FormData() 
     data.append('file', this.state.file, filename)
     axios.post("http://localhost:4000/users/upload", data, {
@@ -293,7 +317,8 @@ this.props.history.push("/")
       firstname,
       lastname,
       birthdate,
-      levelId,
+      
+      classroom,
       phone,
       oldPassword,
       newPassword,
@@ -321,6 +346,7 @@ this.props.history.push("/")
                         placeholder="Votre prénom"
                         value={firstname}
                         onChange={this.onChange}
+                        maxLength={20}
                         required
                       />
                     </div>
@@ -333,6 +359,7 @@ this.props.history.push("/")
                         placeholder="Votre nom"
                         value={lastname}
                         onChange={this.onChange}
+                        maxLength={20}
                         required
                       />
                     </div>
@@ -359,17 +386,6 @@ this.props.history.push("/")
                         onChange={this.onChange}
                       />
                     </div>
-                    <div className="form-group col-3">
-                      <label htmlFor="class">Classe</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="class"
-                        value={this.state.class}
-                        onChange={this.onChange}
-                      />
-                    </div>
-
                   </div>
 
                   <center>
@@ -404,25 +420,48 @@ this.props.history.push("/")
                     </div>
                   </center>
 
-                  <div className="input-group">
-  <select className="custom-select" 
-  id="inputLevelSelect"
-  name="levelId"
-                          defaultValue={levelId}
-                          onChange={this.onChange}>
-   {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
-  </select>
-</div>
+                  <div className="row">
 
-<div className=" container mt-5 mb-5">
-        <div className="input-group">
-        <Select className="col-10" name="schoolId"
-isClearable
+
+<div className="form-group  col-3">
+  <label htmlFor="levelId">
+    Niveau
+    <select
+      className="custom-select"
+      name="levelId"
+      defaultValue={this.state.levelId}
+      onChange={this.onChange}
+      required
+    >
+      {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
+    </select>
+  </label>
+</div>
+<div className="form-group  col-7">
+  <label htmlFor="schoolId">Etablissement</label>
+  
+  <Select
+  
 onChange={this.handleSchoolChange}
 onInputChange={this.handleSchoolInputChange}
 options={options}
-/></div>
-           </div>
+placeholder="Selectionnez votre école"
+/>
+</div>
+
+<div className="form-group  col-2">
+  <label htmlFor="classroom">Classe</label>
+  <input
+    type="text"
+    className="form-control"
+    name="classroom"
+    required
+    onChange={this.onChange}
+    value={classroom}
+  />
+</div>
+</div>
+
 
                   <br />
 
@@ -462,6 +501,21 @@ options={options}
                       nouveau!
                     </p>
                   </Alert>
+                  <Alert dismissible show={this.state.showPasswordRules} onClose={() => this.setState({showPasswordRules: false})} variant="info">
+  <Alert.Heading> Le mot de passe doit :</Alert.Heading>
+  <p className="form-text text-muted">
+
+    <ul>
+    <li>avoir entre 8 et 15 caractères</li>
+    <li>respecter les règles suivantes :</li>
+    <ul>
+    <li>avoir au moins une minuscule</li>
+    <li>avoir au moins une majuscule</li>
+    <li>avoir au moins un chiffre</li>
+    </ul>
+    </ul>  
+  </p>
+</Alert>
              
                 <div className="form-group ">
                   <label htmlFor="oldPassword">
@@ -474,6 +528,8 @@ options={options}
                     name="oldPassword"
                     value={oldPassword}
                     onChange={this.onChange}
+                    maxLength='15'
+                    minLength='8'
                     required
                   />
                 </div>
@@ -487,6 +543,8 @@ options={options}
                     name="newPassword"
                     value={newPassword}
                     onChange={this.onChange}
+                    maxLength='15'
+                    minLength='8'
                     required
                   />
                 </div>
@@ -500,6 +558,8 @@ options={options}
                     name="newPasswordConfirm"
                     value={newPasswordConfirm}
                     onChange={this.onChange}
+                    maxLength='15'
+                    minLength='8'
                     required
                   />
                 </div>

@@ -69,7 +69,7 @@ class Question extends React.Component {
                 value={answer.isCorrect}
                 onChange={this.handleMultipleChange.bind(this)}
                 />{" "}
-              <span className="label-text"> {answer.text+" "+answer.isCorrect} </span>
+              <span className="label-text"> {answer.text} </span>
             </label>
           </div>
                  
@@ -81,7 +81,7 @@ class Question extends React.Component {
                   value={answer.isCorrect}
                   onChange={this.handleChange.bind(this)}
                 />{" "}
-                <span className="label-text">{answer.text+" "+answer.isCorrect}</span>
+                <span className="label-text">{answer.text}</span>
               </label>
             </div>
           );

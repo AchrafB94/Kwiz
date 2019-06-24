@@ -16,7 +16,7 @@ class QuizList extends React.Component {
     switch(length) {
       case 0: return "Aucun challenge n'est disponible pour le moment"
       case 1: return "Un seul challenge est disponible!"
-      default: return length+" nouveaux challenges sont disponibles!"
+      default: return length+" challenges sont actuellement disponibles!"
     }
   }
 
@@ -29,19 +29,19 @@ class QuizList extends React.Component {
           <div className="row no-gutters">
             <div className="col">
               <div className="card-block">
-                <h4>
+                <h3>
                 <Link to={"/quiz/" + quiz.id} ><span className="badge badge-secondary">
           Niveau {quiz.level.name}
                     </span>
                     
                     </Link>{" "}
-                  <Link to={"/subject/" + quiz.subject.id}>
+                  {quiz.subject ? <Link to={"/subject/" + quiz.subject.id}>
                     <span className="badge badge-info">
                     {" "}{quiz.subject.name}
                     </span>
-                  </Link>{" "}
+                  </Link> : "" }{" "}
                   <Link to={"/quiz/" + quiz.id}>{quiz.name}</Link>
-                </h4>
+                </h3>
               </div>
             </div>
           </div>

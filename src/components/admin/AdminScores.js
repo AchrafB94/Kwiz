@@ -74,20 +74,20 @@ class AdminStats extends React.Component {
           <div className="card-header">
             {" "}
             <form onSubmit={this.onSumbit} className="form-inline float-right">
-  <div class="form-row">
-    <div class="col">
+  <div className="form-row">
+    <div className="col">
     <label htmlFor="levelId">
                   Niveau
                   <select className="form-control" 
                        
                           name="levelId"
                           defaultValue={this.state.levelId}
-                          onChange={this.handleChange}>
+                          onChange={this.onChange}>
    {this.props.levels.map(level => <option key={level.id} value={level.id}>{level.name}</option>)}
   </select>
                 </label>
     </div>
-    <div class="col">
+    <div className="col">
     <label htmlFor="subjectId">Matiére
 
 <select className="form-control" name="subjectId" defaultValue={this.state.subjectId} onChange={this.onChange} >
@@ -112,7 +112,8 @@ class AdminStats extends React.Component {
             <h2>Scores</h2>
           </div>
           <div className="card-text">
-              <table className="table table-striped">
+              <table className="table">
+                <thead>
                 <tr>
                 <th>Nom</th>
                 <th>Quiz</th>
@@ -123,10 +124,9 @@ class AdminStats extends React.Component {
                 <th>Pourcentage</th>
                 <th>Temps (secondes)</th>
                 <th>Date</th>
-
                 </tr>
-                
-     
+                </thead>
+              <tbody>
             {this.props.filteredScores.map(score => (
 
                     <tr key={score.id}>
@@ -138,7 +138,7 @@ class AdminStats extends React.Component {
                         src={this.medalImage(score.medal)}
                         alt=""
                         height="25"
-                      />  <b>{this.medalName(score.medal)}</b></div> : " " } </td>
+                      />  <b>{this.medalName(score.medal)}</b></div> : "" } </td>
                         <td>{score.score}</td>
                         <td>{score.percentage}%</td>
                         <td>{score.time}</td>
@@ -148,7 +148,7 @@ class AdminStats extends React.Component {
                     </tr>
 
               ))}
-                       </table>
+                  </tbody>     </table>
             </div>
           </div>
         </div>

@@ -7,11 +7,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {getSubject} from '../../redux/actions/subjectActions'
 
-import { Link } from "react-router-dom";
 
 
 import {withRouter} from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import StatsButton from "../stats/StatsButton";
 class Subject extends React.Component {
 
 
@@ -51,7 +51,7 @@ class Subject extends React.Component {
               <br />
               <TopUsersBySubject limit="5" subjectId={subjectId} name={this.props.subject.name} />
               <TopSchoolsBySubject limit="5" subjectId={subjectId} name={this.props.subject.name}/>
-              <Link to="/stats" type="button" className="btn btn-info btn-block">Toutes les Statistiques</Link></div>
+              <StatsButton /></div>
           </div>
     );
   }

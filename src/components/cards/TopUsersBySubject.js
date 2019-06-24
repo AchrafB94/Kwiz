@@ -19,8 +19,6 @@ class TopSchools extends React.Component {
 
   render() {
 
-    const top = this.props.usersBySubject.slice(0,this.props.limit)
-
   
     return(
       <div className="card bg-light mb-3">
@@ -30,7 +28,7 @@ class TopSchools extends React.Component {
         <table className="table table-striped">
 
   <tbody>
-    {top.map((score,index) => {return <tr key={index}>
+    {this.props.usersBySubject.map((score,index) => {return <tr key={index}>
       <th scope="row">{index + 1}</th>
       <td>{score.user.firstname+" "+score.user.lastname}</td>
       <td>{score.total_score} points</td>

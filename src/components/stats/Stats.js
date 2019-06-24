@@ -11,7 +11,8 @@ import {
   getSchoolsBySubject,
   getSchoolsByMedals,
   getSchoolsByLevel,
-  getPopularSubjects
+  getPopularSubjects,
+  getUserScoresByParticipations
 } from "../../redux/actions/scoreActions";
 import {
   getQuizzesCount,
@@ -42,6 +43,8 @@ class Stats extends React.Component {
     this.props.getUsersByMedals();
     this.props.getSchoolsByScore();
     this.props.getSchoolsByMedals();
+    this.props.getUserScoresByParticipations();
+    
     
 
   }
@@ -90,7 +93,7 @@ class Stats extends React.Component {
                           <td>
                             <Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname}</Link>
                           </td>
-                          <td><Link to={"/school/"+score.school.id} >{score.school.name}</Link></td>
+                          <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : "" }</td>
                           <td>{Math.round(score.total_medals / 100)}</td>
                           <td>{Math.round(score.total_medals / 10) % 10}</td>
                           <td>{(Math.round(score.total_medals) % 100) % 10}</td>
@@ -125,15 +128,17 @@ class Stats extends React.Component {
                   </thead>
                   <tbody>
                     {this.props.schoolsByMedals.map((score, index) => {
+                      if(score.school) {
                       return (
                         <tr key={index}>
                           <th scope="row">{index + 1}</th>
-                          <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : " "}</td>
+                          <td>{score.school ? <Link to={"/school/"+score.school.id} > {score.school.name}</Link> : " "}</td>
                           <td>{Math.round(score.total_medals / 100)}</td>
                           <td>{Math.round(score.total_medals / 10) % 10}</td>
                           <td>{(Math.round(score.total_medals) % 100) % 10}</td>
                         </tr>
-                      );
+                      )}
+                      else return (" ")
                     })}
                   </tbody>
                 </table>
@@ -156,7 +161,7 @@ class Stats extends React.Component {
                           <td>
                           <Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname}</Link>
                           </td>
-                          <td><Link to={"/school/"+score.school.id} >{score.school.name}</Link></td>
+                          <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : ""}</td>
                           <td>{score.total_score}</td>
                         </tr>
                       );
@@ -176,13 +181,15 @@ class Stats extends React.Component {
                   </thead>
                   <tbody>
                     {this.props.schoolsByScore.map((score, index) => {
+                            if(score.school) {
                       return (
+                  
                         <tr key={index}>
                           <th scope="row">{index + 1}</th>
                           <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : " "}</td>
                           <td>{score.total_score}</td>
                         </tr>
-                      );
+                      )}else return (" ")
                     })}
                   </tbody>
                 </table>
@@ -194,11 +201,23 @@ class Stats extends React.Component {
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Nom</th>
+                      <th scope="col">Etablissement</th>
                       <th scope="col">Nombre de participations</th>
                     </tr>
                   </thead>
                   <tbody>
-                    
+                  {this.props.usersByParticipations.map((score, index) => {
+                      return (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>
+                          <Link to={"/user/"+score.user.id} >{score.user.firstname + " " + score.user.lastname}</Link>
+                          </td>
+                          <td>{score.school ? <Link to={"/school/"+score.school.id} >{score.school.name}</Link> : "" }</td>
+                          <td>{score.played}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </Tab>
@@ -219,6 +238,7 @@ Stats.propTypes = {
   usersByMedals: PropTypes.array.isRequired,
   usersByLevel: PropTypes.array.isRequired,
   usersBySubject: PropTypes.array.isRequired,
+  usersByParticipations: PropTypes.array.isRequired,
 
   schoolsByLevel: PropTypes.array.isRequired,
   schoolsByMedals: PropTypes.array.isRequired,
@@ -268,6 +288,7 @@ const mapStateToProps = state => ({
   schoolsBySubject: state.score.schoolsBySubject,
   usersByLevel: state.score.usersByLevel,
   usersBySubject: state.score.usersBySubject,
+  usersByParticipations: state.score.usersByParticipations,
   popularSubjects: state.score.popularSubjects,
   quizzesSumPlayed: state.quiz.quizzesSumPlayed,
 
@@ -297,6 +318,7 @@ export default connect(
     topQuizzesBySubject,
     topQuizzesByUsers,
     getQuizPlayedSum,
+    getUserScoresByParticipations,
     usersCount
   }
 )(Stats);

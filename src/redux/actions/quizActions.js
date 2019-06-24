@@ -12,10 +12,16 @@ import {
   GET_NEW_QUIZZES,
   DELETE_QUIZ,
   CREATE_QUIZ,
-  CREATE_QUESTIONS,
-  IMPORT_QUESTION,
   EDIT_QUIZ,
-  CLOSE_QUIZ
+  CLOSE_QUIZ,
+  GET_QUESTIONS,
+  CREATE_QUESTION,
+  GET_QUESTION,
+  RENAME_QUESTION,
+  ADD_ANSWER,
+  EDIT_ANSWER,
+  REMOVE_QUESTION,
+  REMOVE_ANSWER
 } from "./types";
 import axios from "axios";
 
@@ -144,35 +150,30 @@ export const createQuiz = (quizData) => async dispatch => {
     });
 };
 
-export const createQuestions = (quizId,levelId,subjectId,questionsData,answersData,valuesData) => async dispatch => {
-
-
-    await axios.post(`http://localhost:4000/questions/create`,quizId,levelId,subjectId,questionsData,answersData,valuesData);
-  
-  
-
-
-    dispatch({
-      type: CREATE_QUESTIONS,
-    });
-};
-
-export const rankUp = (quizId,position,userId) => async dispatch => {
-  const data = {quizId,position,userId}
-  const result = await axios.put(`http://localhost:4000/quiz/rank/`,data);
+export const addQuestion = (questionsData) => async dispatch => {
+  const result = await axios.post(`http://localhost:4000/questions/`,questionsData);
   dispatch({
-    type: GET_QUIZZES_BY_USER,
+    type: CREATE_QUESTION,
     payload: result.data
   });
 };
 
-export const importQuestion = (subjectId,levelId) => async dispatch => {
-  const result = await axios.get(`http://localhost:4000/questions/import/${subjectId}/${levelId}`);
+export const addAnswer = (answerData) => async dispatch => {
+  const result = await axios.post(`http://localhost:4000/questions/answer`,answerData);
   dispatch({
-    type: IMPORT_QUESTION,
+    type: ADD_ANSWER,
     payload: result.data
   });
 };
+
+export const getQuestions = id => async dispatch => {
+  const result = await axios.get(`http://localhost:4000/questions/quiz/${id}`);
+  dispatch({
+    type: GET_QUESTIONS,
+    payload: result.data
+  });
+};
+
 
 export const editQuiz = (quiz) => async dispatch => {
   await axios.put(`http://localhost:4000/quiz/${quiz.id}`,quiz);
@@ -190,3 +191,44 @@ export const closeQuiz = (id,contribId) => async dispatch => {
 
     });
   };
+
+  export const getQuestion = id => async dispatch => {
+    const result = await axios.get(`http://localhost:4000/questions/${id}`);
+    dispatch({
+      type: GET_QUESTION,
+      payload: result.data
+    });
+  };
+
+  
+export const renameQuestion = (data) => async dispatch => {
+  await axios.put(`http://localhost:4000/questions/${data.id}`,data);
+  dispatch ({
+      type: RENAME_QUESTION,
+      payload: data
+  })
+}
+
+export const editAnswer = (data) => async dispatch => {
+  await axios.put(`http://localhost:4000/questions/answer/${data.id}`,data);
+  dispatch ({
+      type: EDIT_ANSWER,
+      payload: data
+  })
+}
+
+export const deleteQuestion = (id) => async dispatch => {
+  await axios.delete(`http://localhost:4000/questions/${id}`);
+  dispatch ({
+      type: REMOVE_QUESTION,
+      payload: id
+  })
+}
+
+export const deleteAnswer = (answerData) => async dispatch => {
+  await axios.delete(`http://localhost:4000/questions/answer/${answerData.questionId}/${answerData.id}`);
+  dispatch ({
+      type: REMOVE_ANSWER,
+      payload: answerData.id
+  })
+}

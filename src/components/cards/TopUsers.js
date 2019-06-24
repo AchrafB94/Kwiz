@@ -15,7 +15,6 @@ class TopUsers extends React.Component {
 
   render() {
 
-    const top = this.props.popularUsers.slice(0,this.props.limit-1)
 
   
     return(
@@ -26,7 +25,7 @@ class TopUsers extends React.Component {
         <table className="table table-striped table-borderless">
 
   <tbody>
-    {top.map((score,index) => {return <tr key={index}>
+    {this.props.popularUsers.map((score,index) => {return <tr key={index}>
       <th scope="row">#{index + 1}</th>
       <td><Link to={"/user/"+score.user.id} >{score.user.firstname+" "+score.user.lastname}</Link></td>
       <td>{score.total_score} points</td>

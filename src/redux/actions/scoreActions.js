@@ -25,18 +25,25 @@ import {
     ADD_SCORE,
     GET_SCORES,
     FILTER_SCORES,
-    COUNT_SCORES
+    COUNT_SCORES,
+    RESET_USER_SCORES,
+    POPULAR_QUIZZES,
+    TOP_USERS_BY_PARTICIPATIONS
 
   } from "./types";
   import axios from "axios";
 
 
-  export const addScore = (scoreData,contribId) => async dispatch => {
+  export const addScore = (scoreData) => async dispatch => {
+    console.log(scoreData)
     const resultScore = await axios.post(
       `http://localhost:4000/scores/`,
       scoreData
     );
     if(scoreData.medal === 1) {
+
+      
+      const contribId = {contribId: scoreData.contribId}
       
       await axios.put(`http://localhost:4000/quiz/close/${scoreData.quizId}`,contribId)
     }
@@ -151,6 +158,15 @@ export const getScores = () => async dispatch => {
     
   };
 
+  export const getUserScoresByParticipations = () => async dispatch => {
+    const result = await axios.get(`http://localhost:4000/scores/usersbyparticipations`);
+      dispatch({
+        type: TOP_USERS_BY_PARTICIPATIONS,
+        payload: result.data
+      });
+    
+  };
+
   export const getUsersThisWeek = () => async dispatch => {
 
     const result = await axios.get(`http://localhost:4000/scores/topusersThisWeek`);
@@ -195,6 +211,16 @@ export const getScores = () => async dispatch => {
     const result = await axios.get(`http://localhost:4000/scores/popularSubjects`);
       dispatch({
         type: POPULAR_SUBJECTS,
+        payload: result.data
+      });
+    
+  };
+
+  export const getPopularQuizzes = () => async dispatch => {
+
+    const result = await axios.get(`http://localhost:4000/scores/popularQuizzes`);
+      dispatch({
+        type: POPULAR_QUIZZES,
         payload: result.data
       });
     
@@ -294,5 +320,14 @@ export const getScores = () => async dispatch => {
     dispatch({
       type: COUNT_SCORES,
       payload: result.data
+    })
+  }
+
+  
+  export const resetUser = (user) => async dispatch => {
+    await axios.delete(`http://localhost:4000/scores/reset/${user.id}`)
+    dispatch({
+      type: RESET_USER_SCORES,
+      payload: user
     })
   }

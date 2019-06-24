@@ -6,8 +6,9 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getLastThreeWinners } from "../../redux/actions/scoreActions";
+import defaultPhoto from "../../images/default.png";
 
-import "./LastThree.css";
+import "./HomeWinners.css";
 
 class LastThree extends React.Component {
 
@@ -43,18 +44,6 @@ class LastThree extends React.Component {
     }
   }
 
-  borderColor(number) {
-    switch (number) {
-      case 100:
-        return "danger";
-      case 10:
-        return "primary";
-      case 1:
-        return "success";
-      default:
-        return null;
-    }
-  }
 
   render() {
 
@@ -70,22 +59,37 @@ class LastThree extends React.Component {
 
             {this.props.threeWinners.map(winner => {
               return (
-                <div id="medal" key={winner.id} className="col-4">
-                <div className={"card mb-3 border-"+this.borderColor(winner.medal)} >
-  <h6 className="card-header ">  <img
+                <div key={winner.id} className="col-4">
+                <div className={"card mb-3"} >
+  <p className="card-header text-center">  {" "+this.medalName(winner.medal)} en <b>{winner.subject.name} </b></p>
+  <div className="card-header">
+    <h4 className="card-title">
+    <img
+  className="float-right"
                             src={this.medalImage(winner.medal)}
                             alt=""
-                            height="30"
+                            height="50"
                             
-                          />{" "+this.medalName(winner.medal)} en {winner.subject.name} </h6>
-  <div className="card-body">
-    <h4 className="card-title"> <Link to={"/user/"+winner.user.id} ><img
-                            src={`http://localhost/kwiz/public/images/${winner.user.image}`}
-                            alt=""
-                            height="40"
-                           
-                          /> {winner.user.firstname + " " + winner.user.lastname}</Link></h4>
-    
+                          /> <Link to={"/user/"+winner.user.id} >
+      
+      {winner.user.image === "" ?    <img
+                              src={defaultPhoto}
+                              height="50"
+                              
+                              className="thumbnail"
+                              alt=""
+                            />
+: 
+<img
+                      src={`http://localhost/kwiz/public/images/${winner.user.image}`}
+                      alt=""
+                      height="50"
+                      className="thumbnail"
+                     
+                    />}
+ {" "+winner.user.firstname + " " + winner.user.lastname}</Link></h4>
+    </div>
+    <div className="card-body" >
     <table className="table table-borderless">
                     <tbody>
                     
@@ -98,7 +102,19 @@ class LastThree extends React.Component {
                       <tr>
                         <td>Classe</td>
                         <td>
-                          <strong>{winner.user.class}</strong>
+                          <strong>{winner.user.classroom}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Score</td>
+                        <td>
+                          <strong>{winner.score} points</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Temps</td>
+                        <td>
+                          <strong>{winner.time} secondes</strong>
                         </td>
                       </tr>
                     </tbody>

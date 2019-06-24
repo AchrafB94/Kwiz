@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { getSubjects } from "../../redux/actions/subjectActions";
 import { getLevels } from "../../redux/actions/levelActions";
-import { createQuiz, createQuestions,importQuestion } from "../../redux/actions/quizActions"
+import { createQuiz } from "../../redux/actions/quizActions"
 
 class QuizCreate extends React.Component{
 
@@ -19,7 +19,7 @@ class QuizCreate extends React.Component{
             subjectId: 1,
             userId: "",
 
-            number: 3,
+            number: 1,
             defaultValue: "0"
 
             
@@ -101,7 +101,6 @@ class QuizCreate extends React.Component{
     const quizData = {
       name, description, levelId, subjectId, userId, questionsData
   }
-   console.log(quizData)
    this.props.createQuiz(quizData)
    window.location.replace('/contrib')
 }
@@ -133,28 +132,18 @@ class QuizCreate extends React.Component{
              
               <div className="form-row">
               <div className="form-group col-10" >   
-               <label htmlFor={"question_"+(q+1)}>Texte du question:</label>
+               <label htmlFor={"question_"+(q+1)}>Texte de la question:</label>
         <input className="form-control" type="text" name={"question_"+(q+1)} required onChange={this.onChange}  maxLength="100" />
         </div>
         <div className="form-group col-2" >
         <label htmlFor="answers_number">Nombre des réponses:</label>
         <input className="form-control" type="number" name={"answers_number_"+(q+1)} defaultValue="2" min="2" max="6"  onChange={this.onChange} />
         </div>
-
-
 <br />
-
-
         <div className="form-row">
-        {answers}
-
-
-
-
-        </div>
+        {answers}  </div>
          </div></div>);
             }
-
         return ( 
         <div className="container">
           <div className="card bg-light">
@@ -229,7 +218,7 @@ QuizCreate.propTypes = {
     mapStateToProps,
     {
   
-      getSubjects,createQuiz,createQuestions, importQuestion, getLevels
+      getSubjects,createQuiz, getLevels
   
   
     }

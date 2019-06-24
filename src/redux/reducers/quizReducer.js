@@ -11,7 +11,10 @@ import {GET_QUIZZES, GET_QUIZ,   QUIZZES_COUNT,
     DELETE_QUIZ,
     CREATE_QUIZ,
     IMPORT_QUESTION,
-    EDIT_QUIZ} from '../actions/types';
+    EDIT_QUIZ,
+    CREATE_QUESTION,
+    GET_QUESTIONS,
+    GET_QUESTION} from '../actions/types';
     
 
 
@@ -26,7 +29,8 @@ const initialState = {
     quizzesByUsers: [],
     subject: {},
     quizzesSuggestions: [],
-    question: {}
+    question: {},
+    questions: []
 
 };
 
@@ -47,7 +51,10 @@ export default function(state = initialState, action) {
         case CREATE_QUIZ: return {...state, quiz: action.payload}
         case DELETE_QUIZ:  return {...state, quizzes: state.quizzes.filter(quiz => quiz.id !== action.payload)};
         case IMPORT_QUESTION: return {...state, question: action.payload};
-        case EDIT_QUIZ: return {...state, quizzes: state.quizzes.map(quiz => quiz.id === action.payload.id ? (quiz = action.payload) : quiz)}
+        case EDIT_QUIZ: return {...state, quizzes: state.quizzes.map(quiz => quiz.id === action.payload.id ? (quiz = action.payload) : quiz)};
+        case CREATE_QUESTION: return {...state, questions: [ ...state.questions, action.payload]};
+        case GET_QUESTIONS: return {...state, questions: action.payload};
+        case GET_QUESTION: return {...state, question: action.payload}
          default: return state;
     }
 }
