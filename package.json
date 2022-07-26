@@ -2,7 +2,7 @@
   "name": "kwizweb",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "https://achrafb94.github.io/Kwiz/",
+  "homepage": "https://achrafb94.github.io/Kwiz/",
   "engines": {
     "node": "12.x"
   },
