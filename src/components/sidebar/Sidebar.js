@@ -133,19 +133,21 @@ class Sidebar extends React.Component {
             </div>
           </div>
           <div className="list-group  list-group-flush">
-            {this.props.subjects.map((subject) => {
-              return (
-                <div key={subject.id}>
-                  <Link
-                    to={"/subject/" + subject.id}
-                    id="subject"
-                    className="list-group-item list-group-item-action"
-                  >
-                    {subject.name}
-                  </Link>
-                </div>
-              );
-            })}
+            {this.props.subjects
+              .sort((subject) => subject.name)
+              .map((subject) => {
+                return (
+                  <div key={subject.id}>
+                    <Link
+                      to={"/subject/" + subject.id}
+                      id="subject"
+                      className="list-group-item list-group-item-action"
+                    >
+                      {subject.name}
+                    </Link>
+                  </div>
+                );
+              })}
           </div>
         </div>
       );
