@@ -2,13 +2,19 @@ import React from "react";
 import "./Admin.css";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUsers, deleteUser, addContributor, blockUser, unblockUser } from "../../redux/actions/userActions";
+import {
+  getUsers,
+  deleteUser,
+  addContributor,
+  blockUser,
+  unblockUser,
+} from "../../redux/actions/userActions";
 import { resetUser } from "../../redux/actions/scoreActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Modal, Button, Alert } from "react-bootstrap"
+import { Modal, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import defaultPhoto from "../../images/default.png";
-
+import moment from "moment";
 
 class AdminUsers extends React.Component {
   constructor(props) {
@@ -40,108 +46,117 @@ class AdminUsers extends React.Component {
     this.props.getUsers();
   }
   handleClose() {
-    this.setState({ showAdd: false, showDelete: false, showDisable: false, showEnable: false, showReset: false});
+    this.setState({
+      showAdd: false,
+      showDelete: false,
+      showDisable: false,
+      showEnable: false,
+      showReset: false,
+    });
   }
   onClickAdd() {
-    this.setState({showAdd: true});
+    this.setState({ showAdd: true });
   }
   handleAdd() {
-    
-      const contribData = {
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        email: this.state.email,
-        password: this.state.password,
-      };
-      this.props.addContributor(contribData).then(result => {
-        if(result.code === 1006) {
-            this.setState({emailUsedAlert: true})
-        }else {
+    const contribData = {
+      firstname: this.state.firstname,
+      lastname: this.state.lastname,
+      email: this.state.email,
+      password: this.state.password,
+    };
+    this.props.addContributor(contribData).then((result) => {
+      if (result.code === 1006) {
+        this.setState({ emailUsedAlert: true });
+      } else {
         this.setState({ showAdd: false });
-        }
-      } )
-    
+      }
+    });
   }
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
   onClickDelete = (id) => {
-
     this.setState({
-        showDelete: true,
-        id: id
-    })
-}
+      showDelete: true,
+      id: id,
+    });
+  };
   handleDelete = () => {
     this.props.deleteUser(this.state.id);
-    this.setState({showDelete: false})
+    this.setState({ showDelete: false });
   };
 
   onClickDisable = (user) => {
-
     this.setState({
-        showDisable: true,
-        user: user
-    })
-}
+      showDisable: true,
+      user: user,
+    });
+  };
   handleDisable = () => {
     this.props.blockUser(this.state.user);
-    this.setState({showDisable: false})
-    window.location.reload()
+    this.setState({ showDisable: false });
+    window.location.reload();
   };
 
   onClickEnable = (user) => {
-
     this.setState({
       showEnable: true,
-      user: user
-    })
-}
+      user: user,
+    });
+  };
   handleEnable = () => {
     this.props.unblockUser(this.state.user);
-    this.setState({showEnable: false})
-    window.location.reload()
+    this.setState({ showEnable: false });
+    window.location.reload();
   };
 
   onClickReset = (user) => {
-
     this.setState({
       showReset: true,
-      user: user
-    })
-}
+      user: user,
+    });
+  };
   handleReset = () => {
     this.props.resetUser(this.state.user);
-    this.setState({showEnable: false})
-    window.location.reload()
+    this.setState({ showEnable: false });
+    window.location.reload();
   };
 
-
   getStatus = (status) => {
-    switch(status) {
-      case 'verified': return 'Verifié';
-      case 'unverified': return 'Non verifié';
-      case 'blocked': return 'Désactivé';
-      default: return ' '
+    switch (status) {
+      case "verified":
+        return "Verifié";
+      case "unverified":
+        return "Non verifié";
+      case "blocked":
+        return "Désactivé";
+      default:
+        return " ";
     }
-  }
+  };
   render() {
     return (
       <div className="container-fluid">
-          <Modal dismissable show={this.state.showAdd} onClose={this.handleClose} >
-      <Modal.Header closeButton>
-        <Modal.Title>Ajouter un nouveau contributeur</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <div className="form-row">
-      <Alert dismissible show={this.state.emailUsedAlert} onClose={() => this.setState({emailUsedAlert: false})} variant="danger">  
-                        <p> <FontAwesomeIcon icon="exclamation-triangle" /> L'email que vous avez saisie est déjà utilisée par un autre compte.
-   
-  </p>
-</Alert>
-      <div className="form-group col-6">
-  
+        <Modal dismissable show={this.state.showAdd} onClose={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Ajouter un nouveau contributeur</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="form-row">
+              <Alert
+                dismissible
+                show={this.state.emailUsedAlert}
+                onClose={() => this.setState({ emailUsedAlert: false })}
+                variant="danger"
+              >
+                <p>
+                  {" "}
+                  <FontAwesomeIcon icon="exclamation-triangle" /> L'email que
+                  vous avez saisie est déjà utilisée par un autre compte.
+                </p>
+              </Alert>
+              <div className="form-group col-6">
                 <label htmlFor="firstname">Prénom</label>
                 <input
                   type="text"
@@ -151,7 +166,10 @@ class AdminUsers extends React.Component {
                   onChange={this.handleChange}
                   required
                 />
-                </div>    <div className="form-group col-6">          <label htmlFor="lastname">Nom</label>
+              </div>{" "}
+              <div className="form-group col-6">
+                {" "}
+                <label htmlFor="lastname">Nom</label>
                 <input
                   type="text"
                   className="form-control"
@@ -161,118 +179,129 @@ class AdminUsers extends React.Component {
                   required
                 />
               </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  value={this.state.email}
-                  onChange={this.handleChange}
-                  required
-                />
-              </div>
-              <div className="form-row">
-                <div className="form-group col-6">
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                value={this.state.email}
+                onChange={this.handleChange}
+                required
+              />
+            </div>
+            <div className="form-row">
+              <div className="form-group col-6">
                 <label htmlFor="password">Mot de passe</label>
                 <input
                   type="password"
                   className="form-control"
                   name="password"
-                  minLength='8'
-                  maxLength='15'
+                  minLength="8"
+                  maxLength="15"
                   value={this.state.password}
                   onChange={this.handleChange}
                   required
                 />
-                </div>
               </div>
-              
-      </Modal.Body>
-      <Modal.Footer>
-      <Button  variant="primary" onClick={this.handleAdd} >
-          Ajouter
-        </Button>
-        <Button variant="secondary" onClick={this.handleClose}>
-          Annuler
-        </Button>
-      </Modal.Footer>
-    </Modal>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.handleAdd}>
+              Ajouter
+            </Button>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Annuler
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
-    <Modal show={this.state.showDelete} onHide={this.handleClose} >
-      <Modal.Header closeButton>
-        <Modal.Title>Attention!</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <p>Êtes-vous vraiment sûr de vouloir supprimer ce compte? ça supprimera tous ses quizz!</p>
-      </Modal.Body>
-      <Modal.Footer>
-      <Button  variant="danger" onClick={this.handleDelete} >
-          Supprimer
-        </Button>
-        <Button variant="secondary" onClick={this.handleClose}>
-          Annuler
-        </Button>
-      </Modal.Footer>
-    </Modal>
+        <Modal show={this.state.showDelete} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Attention!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>
+              Êtes-vous vraiment sûr de vouloir supprimer ce compte? ça
+              supprimera tous ses quizz!
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={this.handleDelete}>
+              Supprimer
+            </Button>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Annuler
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
-    <Modal show={this.state.showDisable} onHide={this.handleClose} >
-      <Modal.Header closeButton>
-        <Modal.Title>Attention!</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <p>Voulez-vous vraiment désactiver ce compte? Il ne pourra plus se connecter et participer!</p>
-      </Modal.Body>
-      <Modal.Footer>
-      <Button  variant="danger" onClick={this.handleDisable} >
-          Désactiver
-        </Button>
-        <Button variant="secondary" onClick={this.handleClose}>
-          Annuler
-        </Button>
-      </Modal.Footer>
-    </Modal>
+        <Modal show={this.state.showDisable} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Attention!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>
+              Voulez-vous vraiment désactiver ce compte? Il ne pourra plus se
+              connecter et participer!
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={this.handleDisable}>
+              Désactiver
+            </Button>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Annuler
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
-    <Modal show={this.state.showEnable} onHide={this.handleClose} >
-      <Modal.Header closeButton>
-        <Modal.Title>Attention!</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <p>Voulez-vous réactiver ce compte?</p>
-      </Modal.Body>
-      <Modal.Footer>
-      <Button  variant="danger" onClick={this.handleEnable} >
-          Réactiver
-        </Button>
-        <Button variant="secondary" onClick={this.handleClose}>
-          Annuler
-        </Button>
-      </Modal.Footer>
-    </Modal>
+        <Modal show={this.state.showEnable} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Attention!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Voulez-vous réactiver ce compte?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={this.handleEnable}>
+              Réactiver
+            </Button>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Annuler
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
-    <Modal show={this.state.showReset} onHide={this.handleClose} >
-      <Modal.Header closeButton>
-        <Modal.Title>Attention!</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <p>Réinitialiser ce compte supprimera tous ses scores mais ne supprimera pas le compte.</p>
-      </Modal.Body>
-      <Modal.Footer>
-      <Button  variant="danger" onClick={this.handleReset} >
-          Réinitialiser
-        </Button>
-        <Button variant="secondary" onClick={this.handleClose}>
-          Annuler
-        </Button>
-      </Modal.Footer>
-    </Modal>
+        <Modal show={this.state.showReset} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Attention!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>
+              Réinitialiser ce compte supprimera tous ses scores mais ne
+              supprimera pas le compte.
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={this.handleReset}>
+              Réinitialiser
+            </Button>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Annuler
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         <div className="card bg-light mb-5">
           <div className="card-header">
-              <button className="btn btn-primary float-right" onClick={this.onClickAdd.bind(this)}>
-                <FontAwesomeIcon icon="plus" /> Ajouter un contributeur
-              </button>
+            <button
+              className="btn btn-primary float-right"
+              onClick={this.onClickAdd.bind(this)}
+            >
+              <FontAwesomeIcon icon="plus" /> Ajouter un contributeur
+            </button>
             <h3>Gestion des Contributeurs</h3>
           </div>
           <div className="card-body">
@@ -287,8 +316,8 @@ class AdminUsers extends React.Component {
               </thead>
               <tbody>
                 {this.props.users
-                  .filter(user => user.roleId === 2)
-                  .map(user => {
+                  .filter((user) => user.roleId === 2)
+                  .map((user) => {
                     return (
                       <tr key={user.id}>
                         <td>
@@ -319,7 +348,10 @@ class AdminUsers extends React.Component {
                         <td>{user.email}</td>
                         <td>{user.createdAt}</td>
                         <td>
-                          <button className=" btn-danger" onClick={this.onClickDelete.bind(this,user.id)}>
+                          <button
+                            className=" btn-danger"
+                            onClick={this.onClickDelete.bind(this, user.id)}
+                          >
                             {" "}
                             <FontAwesomeIcon icon="trash-alt" /> Supprimer
                           </button>
@@ -366,14 +398,14 @@ class AdminUsers extends React.Component {
               </thead>
               <tbody>
                 {this.props.users
-                  .filter(user => user.roleId === 1)
+                  .filter((user) => user.roleId === 1)
                   .filter(
-                    user =>
+                    (user) =>
                       user.firstname.toLowerCase().match(this.state.search) ||
                       user.lastname.toLowerCase().match(this.state.search) ||
                       user.email.toLowerCase().match(this.state.search)
                   )
-                  .map(user => {
+                  .map((user) => {
                     return (
                       <tr key={user.id}>
                         <td>
@@ -414,26 +446,37 @@ class AdminUsers extends React.Component {
                           )}
                         </td>
                         <td>{user.classroom}</td>
-                        
                         <td>{user.phone}</td>
-                        <td>{user.birthdate}</td>
-                        <td>{user.createdAt}</td>
+                        <td>{moment(user.birthdate).format("D/MM/Y HH:mm")}</td>
+                        <td>{moment(user.createdAt).format("D/MM/Y HH:mm")}</td>
                         <td>{this.getStatus(user.status)}</td>
-                        {user.status === 'blocked' ?  <td>
-                          <button className=" btn-dark" onClick={this.onClickEnable.bind(this,user)}>
-                            {" "}
-                            <FontAwesomeIcon icon="unlock-alt" /> Débloquer
-                          </button>
-                        </td> :  <td>
-                          <button className=" btn-danger" onClick={this.onClickDisable.bind(this,user)}>
-                            {" "}
-                            <FontAwesomeIcon icon="ban" /> Désactiver
-                          </button>
-                        </td>}
+                        {user.status === "blocked" ? (
+                          <td>
+                            <button
+                              className=" btn-dark"
+                              onClick={this.onClickEnable.bind(this, user)}
+                            >
+                              {" "}
+                              <FontAwesomeIcon icon="unlock-alt" /> Débloquer
+                            </button>
+                          </td>
+                        ) : (
+                          <td>
+                            <button
+                              className=" btn-danger"
+                              onClick={this.onClickDisable.bind(this, user)}
+                            >
+                              {" "}
+                              <FontAwesomeIcon icon="ban" /> Désactiver
+                            </button>
+                          </td>
+                        )}
 
-                       
                         <td>
-                          <button className=" btn-secondary" onClick={this.onClickReset.bind(this,user)}>
+                          <button
+                            className=" btn-secondary"
+                            onClick={this.onClickReset.bind(this, user)}
+                          >
                             {" "}
                             <FontAwesomeIcon icon="redo" /> Réinitialiser
                           </button>
@@ -451,16 +494,18 @@ class AdminUsers extends React.Component {
 }
 
 AdminUsers.propTypes = {
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => ({
-  users: state.user.users
+const mapStateToProps = (state) => ({
+  users: state.user.users,
 });
 
-export default connect(
-  mapStateToProps,
-  {
-    getUsers, deleteUser, addContributor, blockUser, unblockUser, resetUser
-  }
-)(AdminUsers);
+export default connect(mapStateToProps, {
+  getUsers,
+  deleteUser,
+  addContributor,
+  blockUser,
+  unblockUser,
+  resetUser,
+})(AdminUsers);
