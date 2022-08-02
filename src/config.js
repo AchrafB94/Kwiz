@@ -1,5 +1,5 @@
 const config = {
-  APIEndpoint: "http://localhost:4000",
+  APIEndpoint: "https://kwizapp.herokuapp.com",
   headers: {
     "x-access-token": localStorage.usertoken,
   },
